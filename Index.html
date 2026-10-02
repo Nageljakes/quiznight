@@ -183,6 +183,26 @@
 
       <!-- Quick Nav Action Buttons -->
       <div class="flex items-center gap-2">
+        <!-- Question Set Selector Dropdown & Rotation -->
+        <div class="relative flex items-center">
+          <button id="setSelectorBtn" onclick="toggleSetDropdown()" class="px-2.5 py-1.5 bg-gray-900 hover:bg-gray-800 text-amber-300 font-bold rounded-lg text-xs transition flex items-center gap-1.5 border border-amber-500/40 active:scale-95 shadow-sm" title="Active Question Set (1 to 10)">
+            <i class="fa-solid fa-layer-group text-amber-400"></i>
+            <span id="headerSetBadge" class="font-bold text-amber-300">Set 1/10</span>
+            <i class="fa-solid fa-chevron-down text-[9px] text-gray-400"></i>
+          </button>
+          <button onclick="rotateToNextSet(true)" class="p-1.5 bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-amber-400 rounded-lg text-xs border border-gray-700 ml-1 transition" title="Rotate to Next Set (↻)">
+            <i class="fa-solid fa-rotate text-xs"></i>
+          </button>
+          <div id="setDropdownMenu" class="hidden absolute top-full mt-2 left-0 w-64 bg-gray-900 border border-gray-700 rounded-xl shadow-2xl py-2 z-50">
+            <div class="px-3 py-1 text-[10px] font-black uppercase tracking-wider text-gray-400 border-b border-gray-800 flex items-center justify-between">
+              <span>Question Sets (10x5x10)</span>
+              <span class="text-amber-400">10 Sets</span>
+            </div>
+            <div id="setDropdownList" class="max-h-64 overflow-y-auto divide-y divide-gray-800/60">
+            </div>
+          </div>
+        </div>
+
         <!-- User Profile & Score Display -->
         <button id="userProfileBtn" onclick="openUsernameModal(true)" class="px-3 py-1.5 bg-gray-900 hover:bg-gray-800 text-gray-200 font-bold rounded-lg text-xs transition flex items-center gap-1.5 border border-amber-500/30 active:scale-95 shadow-sm" title="Click to change your username / team">
           <i class="fa-solid fa-user-astronaut text-amber-400"></i>
@@ -332,7 +352,10 @@
         
         <!-- Top Card Subheader & Progress -->
         <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-6">
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <span id="cardSetBadge" class="bg-blue-500/20 text-blue-300 border border-blue-500/40 text-xs font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
+              Set 1
+            </span>
             <span id="cardRoundBadge" class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
               Round 1 • Easy
             </span>
@@ -673,653 +696,28 @@
       }
     }
     /* ==========================================================
-       PUB QUIZ MASTER DATA: 5 ESCALATING ROUNDS + TIE-BREAKERS
+       ROTATING PUB QUIZ MASTER SETS (10x5x10)
+       10 Sets x 5 Rounds x 10 Questions + Tie Breakers = 530 Questions
        ========================================================== */
-    const quizData = [
-      {
-            "roundId": 1,
-            "title": "Round 1: Bar Warm-Up",
-            "badge": "Round 1 \u2022 Easy",
-            "theme": "General Knowledge, Drinks & Everyday Trivia",
-            "difficultyText": "Level 1: Warm-up & Crowd Pleasers",
-            "hostVibe": "Get the room energized! Welcome teams, tease craft beers on tap, spin groovy tunes.",
-            "questions": [
-                  {
-                        "q": "In rugby union, how many total points is a converted try worth?",
-                        "options": [
-                              "A) 5 points",
-                              "B) 7 points",
-                              "C) 6 points",
-                              "D) 8 points"
-                        ],
-                        "a": "B) 7 points",
-                        "notes": "5 points for the grounding try, plus 2 points for the conversion kick."
-                  },
-                  {
-                        "q": "What popular shooter, famous across South African bars, is made by layering peppermint liqueur with Amarula or Cape Velvet?",
-                        "options": [
-                              "A) Blowjob",
-                              "B) Suitcase",
-                              "C) Springbokkie",
-                              "D) Soweto Toilet"
-                        ],
-                        "a": "C) Springbokkie",
-                        "notes": "Layers green and gold in a shooter glass."
-                  },
-                  {
-                        "q": "In the iconic 1986 action film Top Gun, what was Tom Cruise's fighter pilot callsign?",
-                        "options": [
-                              "A) Goose",
-                              "B) Maverick",
-                              "C) Iceman",
-                              "D) Viper"
-                        ],
-                        "a": "B) Maverick",
-                        "notes": "Pete 'Maverick' Mitchell. Goose was his RIO wingman."
-                  },
-                  {
-                        "q": "In cricket, how many legal balls are bowled in a standard over?",
-                        "options": [
-                              "A) 6 balls",
-                              "B) 5 balls",
-                              "C) 8 balls",
-                              "D) 4 balls"
-                        ],
-                        "a": "A) 6 balls",
-                        "notes": "Wides and no-balls do not count towards the 6."
-                  },
-                  {
-                        "q": "What is the only mammal on Earth capable of true, sustained flight?",
-                        "options": [
-                              "A) Flying Squirrel",
-                              "B) Sugar Glider",
-                              "C) Bat",
-                              "D) Flying Lemur"
-                        ],
-                        "a": "C) Bat",
-                        "notes": "Flying squirrels and sugar gliders only glide; bats have true powered flight."
-                  },
-                  {
-                        "q": "What fictional city does Batman protect from villains like the Joker and the Penguin?",
-                        "options": [
-                              "A) Metropolis",
-                              "B) Star City",
-                              "C) Gotham City",
-                              "D) Central City"
-                        ],
-                        "a": "C) Gotham City",
-                        "notes": "Superman guards Metropolis; Batman rules Gotham."
-                  },
-                  {
-                        "q": "In website addresses, what do the three letters 'WWW' stand for?",
-                        "options": [
-                              "A) World Wide Web",
-                              "B) Wide World Web",
-                              "C) Web World Wide",
-                              "D) Wireless World Web"
-                        ],
-                        "a": "A) World Wide Web",
-                        "notes": "Invented by British computer scientist Tim Berners-Lee in 1989."
-                  },
-                  {
-                        "q": "In the classic board game Monopoly, what colour are the two most expensive properties, Mayfair and Park Lane?",
-                        "options": [
-                              "A) Green",
-                              "B) Red",
-                              "C) Dark Blue",
-                              "D) Yellow"
-                        ],
-                        "a": "C) Dark Blue",
-                        "notes": "The ultimate high-rent set on the board."
-                  },
-                  {
-                        "q": "What is the primary chemical element that makes up roughly 78% of the air we breathe?",
-                        "options": [
-                              "A) Oxygen",
-                              "B) Nitrogen",
-                              "C) Carbon Dioxide",
-                              "D) Hydrogen"
-                        ],
-                        "a": "B) Nitrogen",
-                        "notes": "Oxygen accounts for about 21%, Nitrogen makes up 78%."
-                  },
-                  {
-                        "q": "What colour is the inner bullseye on a standard regulation pub dartboard?",
-                        "options": [
-                              "A) Green",
-                              "B) Black",
-                              "C) Red",
-                              "D) Yellow"
-                        ],
-                        "a": "C) Red",
-                        "notes": "Outer ring is green (25 points); inner bull is red (50 points)."
-                  }
-            ]
-      },
-      {
-            "roundId": 2,
-            "title": "Round 2: The Beat & The Screen",
-            "badge": "Round 2 \u2022 Moderate",
-            "theme": "Rock, Pop, Movies & TV Anthems",
-            "difficultyText": "Level 2: Pop Culture, Big Screen & Bar Anthems",
-            "hostVibe": "DJ JC's home turf! Drop an audio riff or instrumental backing track between questions.",
-            "questions": [
-                  {
-                        "q": "Which Australian hard rock band gave us legendary pub singalongs like Thunderstruck, Highway to Hell, and Back in Black?",
-                        "options": [
-                              "A) Iron Maiden",
-                              "B) AC/DC",
-                              "C) Def Leppard",
-                              "D) Black Sabbath"
-                        ],
-                        "a": "B) AC/DC",
-                        "notes": "Fronted by Brian Johnson with Angus Young on lead guitar."
-                  },
-                  {
-                        "q": "In the 1984 sci-fi action classic The Terminator, what famous three-word line does Arnold Schwarzenegger deliver at the police station desk?",
-                        "options": [
-                              "A) Hasta la vista",
-                              "B) I'll be back",
-                              "C) Come with me",
-                              "D) Get to chopper"
-                        ],
-                        "a": "B) I'll be back",
-                        "notes": "Delivered right before crashing a car through the front door."
-                  },
-                  {
-                        "q": "Freddie Mercury was the legendary, operatic lead singer of which British rock band?",
-                        "options": [
-                              "A) Queen",
-                              "B) The Who",
-                              "C) Led Zeppelin",
-                              "D) The Rolling Stones"
-                        ],
-                        "a": "A) Queen",
-                        "notes": "Brian May on guitar, Roger Taylor on drums, John Deacon on bass."
-                  },
-                  {
-                        "q": "In the smash-hit 90s sitcom Friends, what is the name of the coffee shop where the six friends hang out on the orange couch?",
-                        "options": [
-                              "A) Monk's Diner",
-                              "B) Central Perk",
-                              "C) MacLaren's Pub",
-                              "D) The Beanery"
-                        ],
-                        "a": "B) Central Perk",
-                        "notes": "Featuring Gunther behind the espresso counter."
-                  },
-                  {
-                        "q": "Which American rock band had a massive global hit in 1987 with Sweet Child O' Mine, featuring Slash's iconic opening guitar riff?",
-                        "options": [
-                              "A) Aerosmith",
-                              "B) Bon Jovi",
-                              "C) Guns N' Roses",
-                              "D) M\u00f6tley Cr\u00fce"
-                        ],
-                        "a": "C) Guns N' Roses",
-                        "notes": "From their diamond-selling debut album Appetite for Destruction."
-                  },
-                  {
-                        "q": "In The Lord of the Rings, what was the original name of the creature who was corrupted by the One Ring and became Gollum?",
-                        "options": [
-                              "A) Bilbo",
-                              "B) D\u00e9agol",
-                              "C) Sm\u00e9agol",
-                              "D) Peregrin"
-                        ],
-                        "a": "C) Sm\u00e9agol",
-                        "notes": "He killed his cousin D\u00e9agol to claim the ring."
-                  },
-                  {
-                        "q": "Michael Jackson's iconic 1983 horror-themed music video featured dancing zombies and narration by Vincent Price. What was the song?",
-                        "options": [
-                              "A) Beat It",
-                              "B) Billie Jean",
-                              "C) Bad",
-                              "D) Thriller"
-                        ],
-                        "a": "D) Thriller",
-                        "notes": "Directed by John Landis."
-                  },
-                  {
-                        "q": "Who played the Roman general Maximus Decimus Meridius in Ridley Scott's 2000 epic blockbuster Gladiator?",
-                        "options": [
-                              "A) Gerard Butler",
-                              "B) Mel Gibson",
-                              "C) Russell Crowe",
-                              "D) Christian Bale"
-                        ],
-                        "a": "C) Russell Crowe",
-                        "notes": "Won the Academy Award for Best Actor for the role."
-                  },
-                  {
-                        "q": "Which Norwegian band sang the 1985 synth-pop smash hit Take On Me, famous for its groundbreaking pencil-sketch animation video?",
-                        "options": [
-                              "A) a-ha",
-                              "B) Duran Duran",
-                              "C) Tears for Fears",
-                              "D) Depeche Mode"
-                        ],
-                        "a": "A) a-ha",
-                        "notes": "Fronted by Morten Harket hitting the famous high F-sharp note."
-                  },
-                  {
-                        "q": "In Quentin Tarantino's Pulp Fiction, what do they call a McDonald's Quarter Pounder with Cheese in Paris?",
-                        "options": [
-                              "A) Le Big Mac",
-                              "B) A Royale with Cheese",
-                              "C) Fromage Deluxe",
-                              "D) Parisian Burger"
-                        ],
-                        "a": "B) A Royale with Cheese",
-                        "notes": "Vincent Vega explains it is because of the metric system!"
-                  }
-            ]
-      },
-      {
-            "roundId": 3,
-            "title": "Round 3: Rugby, Cricket & Sports",
-            "badge": "Round 3 \u2022 Medium-Hard",
-            "theme": "Rugby, Cricket, Racing & Great Sporting Feats",
-            "difficultyText": "Level 3: Athletic Feats & Stadium Legends",
-            "hostVibe": "Competitive juices are flowing! Remind teams that points start mattering heavily here.",
-            "questions": [
-                  {
-                        "q": "How many Rugby World Cup tournament titles have the Springboks won?",
-                        "options": [
-                              "A) 2 titles",
-                              "B) 3 titles",
-                              "C) 4 titles",
-                              "D) 5 titles"
-                        ],
-                        "a": "C) 4 titles",
-                        "notes": "1995, 2007, 2019, and 2023. The only nation with four titles!"
-                  },
-                  {
-                        "q": "In cricket, what specific term is used when a batsman is dismissed for zero on the very first ball they face?",
-                        "options": [
-                              "A) Diamond Duck",
-                              "B) Golden Duck",
-                              "C) Silver Duck",
-                              "D) Royal Pair"
-                        ],
-                        "a": "B) Golden Duck",
-                        "notes": "A diamond duck is out without facing a ball (e.g. run-out at non-striker's end)."
-                  },
-                  {
-                        "q": "In a rugby union starting lineup, which position wears the number 15 jersey on the pitch?",
-                        "options": [
-                              "A) Flyhalf",
-                              "B) Scrumhalf",
-                              "C) Outside Centre",
-                              "D) Fullback"
-                        ],
-                        "a": "D) Fullback",
-                        "notes": "The last line of defense (e.g. Percy Montgomery, Damian Willemse)."
-                  },
-                  {
-                        "q": "Who holds the all-time world record for the highest individual score in a single Test match innings with 400 runs not out?",
-                        "options": [
-                              "A) Sachin Tendulkar",
-                              "B) Brian Lara",
-                              "C) Don Bradman",
-                              "D) Jacques Kallis"
-                        ],
-                        "a": "B) Brian Lara",
-                        "notes": "Scored against England in Antigua in April 2004."
-                  },
-                  {
-                        "q": "Which German racing legend won five consecutive Formula 1 World Championships with Ferrari between 2000 and 2004?",
-                        "options": [
-                              "A) Sebastian Vettel",
-                              "B) Nico Rosberg",
-                              "C) Michael Schumacher",
-                              "D) Ayrton Senna"
-                        ],
-                        "a": "C) Michael Schumacher",
-                        "notes": "Won 7 world drivers championships in total."
-                  },
-                  {
-                        "q": "In the 1995 Rugby World Cup final at Ellis Park, which Springbok flyhalf kicked the winning drop goal in extra time against the All Blacks?",
-                        "options": [
-                              "A) Jannie de Beer",
-                              "B) Joel Stransky",
-                              "C) Henry Honiball",
-                              "D) Naas Botha"
-                        ],
-                        "a": "B) Joel Stransky",
-                        "notes": "Final score was 15-12 in historic extra time."
-                  },
-                  {
-                        "q": "In the 1992 Cricket World Cup, which South African fielder produced the most famous run-out in history by diving horizontal through the air to shatter the stumps against Pakistan?",
-                        "options": [
-                              "A) Herschelle Gibbs",
-                              "B) Gary Kirsten",
-                              "C) Jonty Rhodes",
-                              "D) Hansie Cronje"
-                        ],
-                        "a": "C) Jonty Rhodes",
-                        "notes": "Dismissing Inzamam-ul-Haq in Brisbane."
-                  },
-                  {
-                        "q": "Known as 'The Greatest', which legendary heavyweight boxing champion famously coined the phrase 'Float like a butterfly, sting like a bee'?",
-                        "options": [
-                              "A) Mike Tyson",
-                              "B) Joe Frazier",
-                              "C) Muhammad Ali",
-                              "D) George Foreman"
-                        ],
-                        "a": "C) Muhammad Ali",
-                        "notes": "Defeated George Foreman in the Rumble in the Jungle."
-                  },
-                  {
-                        "q": "How many major golf championships has Tiger Woods won in his career so far?",
-                        "options": [
-                              "A) 12 Majors",
-                              "B) 15 Majors",
-                              "C) 18 Majors",
-                              "D) 20 Majors"
-                        ],
-                        "a": "B) 15 Majors",
-                        "notes": "Second only to Jack Nicklaus with 18."
-                  },
-                  {
-                        "q": "Alongside captain Siya Kolisi, who served as head coach when the Springboks won the 2019 Rugby World Cup in Japan?",
-                        "options": [
-                              "A) Heyneke Meyer",
-                              "B) Jacques Nienaber",
-                              "C) Rassie Erasmus",
-                              "D) Allister Coetzee"
-                        ],
-                        "a": "C) Rassie Erasmus",
-                        "notes": "Johan 'Rassie' Erasmus led the Boks to a 32-12 triumph over England."
-                  }
-            ]
-      },
-      {
-            "roundId": 4,
-            "title": "Round 4: Around The World & Bar Science",
-            "badge": "Round 4 \u2022 Hard",
-            "theme": "Oceans, Brewing, Braai & Everyday Science",
-            "difficultyText": "Level 4: Craft Beer Mastery & Scientific Curiosity",
-            "hostVibe": "Tailored specifically for Beerbox Midrand! Craft beer lovers and foodies will shine here.",
-            "questions": [
-                  {
-                        "q": "What is the largest and deepest ocean on Earth, covering more than 30% of the planet's surface?",
-                        "options": [
-                              "A) Atlantic Ocean",
-                              "B) Indian Ocean",
-                              "C) Arctic Ocean",
-                              "D) Pacific Ocean"
-                        ],
-                        "a": "D) Pacific Ocean",
-                        "notes": "Larger than all Earth's landmass combined."
-                  },
-                  {
-                        "q": "What natural flower cone provides beer with its characteristic bitterness, aroma, and head retention during brewing?",
-                        "options": [
-                              "A) Barley",
-                              "B) Hops",
-                              "C) Malt",
-                              "D) Rye"
-                        ],
-                        "a": "B) Hops",
-                        "notes": "The four main beer ingredients: Water, Malt, Hops, Yeast."
-                  },
-                  {
-                        "q": "In which European capital city would you find the ancient Roman Colosseum?",
-                        "options": [
-                              "A) Athens",
-                              "B) Madrid",
-                              "C) Rome",
-                              "D) Florence"
-                        ],
-                        "a": "C) Rome",
-                        "notes": "Completed in 80 AD under Emperor Titus."
-                  },
-                  {
-                        "q": "How many total bones are in a typical adult human skeleton?",
-                        "options": [
-                              "A) 184 bones",
-                              "B) 206 bones",
-                              "C) 224 bones",
-                              "D) 250 bones"
-                        ],
-                        "a": "B) 206 bones",
-                        "notes": "Babies start with ~270 bones which fuse into 206 as adults."
-                  },
-                  {
-                        "q": "What is the fastest land animal on Earth, capable of sprinting over 100 km/h in short bursts?",
-                        "options": [
-                              "A) Lion",
-                              "B) Cheetah",
-                              "C) Springbok",
-                              "D) Leopard"
-                        ],
-                        "a": "B) Cheetah",
-                        "notes": "Can accelerate from 0 to 100 km/h in roughly 3 seconds."
-                  },
-                  {
-                        "q": "What is the cardinal, golden rule of cooking a traditional potjiekos once the heavy cast-iron lid is closed over the coals?",
-                        "options": [
-                              "A) Stir every 15 minutes",
-                              "B) Add extra beer constantly",
-                              "C) You never stir the pot",
-                              "D) Remove the lid often"
-                        ],
-                        "a": "C) You never stir the pot",
-                        "notes": "The layered ingredients must cook undisturbed."
-                  },
-                  {
-                        "q": "Which planet in our solar system is nicknamed the 'Red Planet' due to iron oxide rust covering its surface?",
-                        "options": [
-                              "A) Venus",
-                              "B) Mars",
-                              "C) Jupiter",
-                              "D) Mercury"
-                        ],
-                        "a": "B) Mars",
-                        "notes": "Fourth planet from the sun."
-                  },
-                  {
-                        "q": "What botanical berry gives Gin its signature required flavor profile?",
-                        "options": [
-                              "A) Elderberry",
-                              "B) Cranberry",
-                              "C) Juniper berry",
-                              "D) Blackberry"
-                        ],
-                        "a": "C) Juniper berry",
-                        "notes": "Without juniper, it legally cannot be called gin."
-                  },
-                  {
-                        "q": "What is the official federal capital city of Australia?",
-                        "options": [
-                              "A) Sydney",
-                              "B) Melbourne",
-                              "C) Brisbane",
-                              "D) Canberra"
-                        ],
-                        "a": "D) Canberra",
-                        "notes": "Purpose-built capital chosen as a compromise between Sydney and Melbourne."
-                  },
-                  {
-                        "q": "What three classic fillings make up the holy trinity inside an authentic braaibroodjie alongside cheddar cheese?",
-                        "options": [
-                              "A) Ham, cheese, mustard",
-                              "B) Onion, tomato, chutney",
-                              "C) Bacon, egg, mayo",
-                              "D) Mushroom, pepper, garlic"
-                        ],
-                        "a": "B) Onion, tomato, chutney",
-                        "notes": "With butter on the outside of the bread for that perfect braai crust."
-                  }
-            ]
-      },
-      {
-            "roundId": 5,
-            "title": "Round 5: Pub Mastermind Decider",
-            "badge": "Round 5 \u2022 Extreme",
-            "theme": "High-Stakes Trivia, Deciders & Brainbusters",
-            "difficultyText": "Level 5: Maximum Difficulty Brainbusters",
-            "hostVibe": "Tension is at its peak! Announce the top 3 teams on the mic before firing these off.",
-            "questions": [
-                  {
-                        "q": "In The Lord of the Rings trilogy, what is the name of the fiery volcano in Mordor where Frodo must cast the One Ring to destroy it?",
-                        "options": [
-                              "A) Erebor",
-                              "B) Mount Doom",
-                              "C) Orthanc",
-                              "D) Caradhras"
-                        ],
-                        "a": "B) Mount Doom",
-                        "notes": "Also called Orodruin in Elvish."
-                  },
-                  {
-                        "q": "In a standard game of English pub darts, what is the maximum mathematical score a player can achieve in a single turn of three darts?",
-                        "options": [
-                              "A) 150",
-                              "B) 160",
-                              "C) 180",
-                              "D) 200"
-                        ],
-                        "a": "C) 180",
-                        "notes": "Three treble 20s. DJ JC: Hit them with a big 'ONE HUNDRED AND EIGHTY!'"
-                  },
-                  {
-                        "q": "In what calendar year did the Berlin Wall fall, initiating the reunification of Germany and end of the Cold War?",
-                        "options": [
-                              "A) 1987",
-                              "B) 1989",
-                              "C) 1991",
-                              "D) 1993"
-                        ],
-                        "a": "B) 1989",
-                        "notes": "November 9, 1989."
-                  },
-                  {
-                        "q": "In modern computer hardware and mobile device cables, what does the abbreviation 'USB' stand for?",
-                        "options": [
-                              "A) Universal System Bridge",
-                              "B) Unified Serial Port",
-                              "C) Universal Serial Bus",
-                              "D) Uniform Standard Bus"
-                        ],
-                        "a": "C) Universal Serial Bus",
-                        "notes": "Introduced in 1996."
-                  },
-                  {
-                        "q": "Which legendary English rock guitarist was nicknamed 'Slowhand' and played with The Yardbirds, Cream, and recorded solo hits like Layla and Wonderful Tonight?",
-                        "options": [
-                              "A) Jeff Beck",
-                              "B) Jimmy Page",
-                              "C) Eric Clapton",
-                              "D) Mark Knopfler"
-                        ],
-                        "a": "C) Eric Clapton",
-                        "notes": "Inducted three times into the Rock and Roll Hall of Fame."
-                  },
-                  {
-                        "q": "What is the distinctive and flamboyant collective English noun for a group or flock of flamingos?",
-                        "options": [
-                              "A) A Gaggle",
-                              "B) A Flamboyance",
-                              "C) A Murder",
-                              "D) A Colony"
-                        ],
-                        "a": "B) A Flamboyance",
-                        "notes": "A flamboyance of flamingos."
-                  },
-                  {
-                        "q": "What is the name of the deepest surveyed oceanic trench on planet Earth, located in the western Pacific Ocean?",
-                        "options": [
-                              "A) Mariana Trench",
-                              "B) Puerto Rico Trench",
-                              "C) Java Trench",
-                              "D) Tonga Trench"
-                        ],
-                        "a": "A) Mariana Trench",
-                        "notes": "Plunges down nearly 11,000 meters in Challenger Deep."
-                  },
-                  {
-                        "q": "Who directed the iconic Hollywood blockbusters Jaws, Jurassic Park, Raiders of the Lost Ark, and Saving Private Ryan?",
-                        "options": [
-                              "A) James Cameron",
-                              "B) Ridley Scott",
-                              "C) Steven Spielberg",
-                              "D) Martin Scorsese"
-                        ],
-                        "a": "C) Steven Spielberg",
-                        "notes": "The most commercially successful director in film history."
-                  },
-                  {
-                        "q": "What three alcoholic ingredients are mixed in equal parts to create a classic Italian Negroni cocktail?",
-                        "options": [
-                              "A) Vodka, Kahl\u00faa, Cream",
-                              "B) Gin, Campari, Sweet Vermouth",
-                              "C) Tequila, Triple Sec, Lime",
-                              "D) Rum, Mint, Soda"
-                        ],
-                        "a": "B) Gin, Campari, Sweet Vermouth",
-                        "notes": "1:1:1 ratio, traditionally garnished with an orange peel."
-                  },
-                  {
-                        "q": "South Africa has three official capital cities: Pretoria (Executive) and Cape Town (Legislative). Which city is the Judicial capital?",
-                        "options": [
-                              "A) Durban",
-                              "B) Johannesburg",
-                              "C) Bloemfontein",
-                              "D) Gqeberha"
-                        ],
-                        "a": "C) Bloemfontein",
-                        "notes": "Located in the Free State; seat of the Supreme Court of Appeal."
-                  }
-            ]
-      },
-      {
-            "roundId": 6,
-            "title": "Sudden-Death Tie-Breakers",
-            "badge": "Overtime \u2022 Closest Number",
-            "theme": "Closest to the Pin Estimations",
-            "difficultyText": "Overtime: Closest Estimate Wins!",
-            "hostVibe": "Have tied team captains write down a single numeric estimate on paper. Closest number takes 1st place!",
-            "questions": [
-                  {
-                        "q": "How many meters high is Table Mountain above sea level at its highest point (Maclear's Beacon)?",
-                        "options": [
-                              "A) 980 meters",
-                              "B) 1,086 meters",
-                              "C) 1,220 meters",
-                              "D) 1,450 meters"
-                        ],
-                        "a": "B) 1,086 meters",
-                        "notes": "Maclear's Beacon is 1,086 meters above sea level."
-                  },
-                  {
-                        "q": "In what calendar year did the original Sony PlayStation console first release in South Africa and Europe?",
-                        "options": [
-                              "A) 1993",
-                              "B) 1994",
-                              "C) 1995",
-                              "D) 1997"
-                        ],
-                        "a": "C) 1995",
-                        "notes": "September 1995 in Europe/SA."
-                  },
-                  {
-                        "q": "How many total matches were played across the entire 2023 Rugby World Cup tournament in France?",
-                        "options": [
-                              "A) 40 matches",
-                              "B) 48 matches",
-                              "C) 52 matches",
-                              "D) 64 matches"
-                        ],
-                        "a": "B) 48 matches",
-                        "notes": "40 pool matches + 8 knockout games."
-                  }
-            ]
-      }
-];
+    function getQuizSets() {
+      return (typeof window !== 'undefined' && Array.isArray(window.quizSets) && window.quizSets.length > 0)
+        ? window.quizSets
+        : [];
+    }
+
+    function getUserAnswersKey(setIdx) {
+      return `beerbox_user_answers_set_${setIdx}`;
+    }
+
+    let currentSetIndex = parseInt(localStorage.getItem('beerbox_quiz_set_index') || '0', 10);
+    const initialSets = getQuizSets();
+    if (isNaN(currentSetIndex) || currentSetIndex < 0 || (initialSets.length > 0 && currentSetIndex >= initialSets.length)) {
+      currentSetIndex = 0;
+    }
+
+    let activeQuizSet = initialSets[currentSetIndex] || (initialSets[0] || null);
+    let quizData = activeQuizSet ? activeQuizSet.rounds : [];
+
     /* ==========================================================
        APPLICATION STATE & PERSISTENCE
        ========================================================== */
@@ -1331,7 +729,7 @@
     let timerRunning = false;
     let hostAnswerRevealed = false;
     let currentUsername = localStorage.getItem('beerbox_quiz_username') || '';
-    let userAnswers = JSON.parse(localStorage.getItem('beerbox_user_answers') || '{}');
+    let userAnswers = JSON.parse(localStorage.getItem(getUserAnswersKey(currentSetIndex)) || '{}');
 
     // Default Teams for Beerbox Midrand
     const DEFAULT_TEAMS = [
@@ -1392,6 +790,117 @@
     }
 
     /* ==========================================================
+       ROTATING QUESTION SET CONTROLS (10x5x10)
+       ========================================================== */
+    function rotateToNextSet(autoStart = false) {
+      const sets = getQuizSets();
+      if (!sets || sets.length === 0) return;
+      const nextIdx = (currentSetIndex + 1) % sets.length;
+      loadActiveSet(nextIdx, autoStart);
+    }
+
+    function loadActiveSet(setIdx, autoStart = false) {
+      const sets = getQuizSets();
+      if (!sets || sets.length === 0) return;
+      
+      currentSetIndex = ((setIdx % sets.length) + sets.length) % sets.length;
+      localStorage.setItem('beerbox_quiz_set_index', currentSetIndex);
+      
+      activeQuizSet = sets[currentSetIndex];
+      quizData = activeQuizSet.rounds;
+      userAnswers = JSON.parse(localStorage.getItem(getUserAnswersKey(currentSetIndex)) || '{}');
+
+      currentRoundIndex = 0;
+      currentQuestionIndex = 0;
+      hostAnswerRevealed = false;
+
+      updateSetDisplayUI();
+      updateRoundTabsUI();
+      recalculateScoresForCurrentSet();
+      renderTeamsTable();
+      renderCurrentQuestion();
+
+      if (autoStart && currentMode === 'ask') {
+        startAutoTimerForCurrentQuestion();
+      }
+    }
+
+    function toggleSetDropdown() {
+      const menu = document.getElementById('setDropdownMenu');
+      if (menu) menu.classList.toggle('hidden');
+    }
+
+    // Close set dropdown if clicked outside
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('setDropdownMenu');
+      const btn = document.getElementById('setSelectorBtn');
+      if (menu && !menu.classList.contains('hidden')) {
+        if (!menu.contains(e.target) && !btn.contains(e.target)) {
+          menu.classList.add('hidden');
+        }
+      }
+    });
+
+    function updateSetDisplayUI() {
+      const sets = getQuizSets();
+      if (!sets || sets.length === 0 || !activeQuizSet) return;
+      
+      const badge = document.getElementById('headerSetBadge');
+      if (badge) {
+        badge.textContent = `Set ${activeQuizSet.setId}/10`;
+        badge.title = activeQuizSet.setName;
+      }
+
+      const cardBadge = document.getElementById('cardSetBadge');
+      if (cardBadge) {
+        cardBadge.textContent = `Set ${activeQuizSet.setId}: ${activeQuizSet.setName.replace(/^Set \d+:\s*/, '')}`;
+      }
+
+      const listContainer = document.getElementById('setDropdownList');
+      if (listContainer) {
+        listContainer.innerHTML = '';
+        sets.forEach((s, idx) => {
+          const item = document.createElement('button');
+          const isActive = idx === currentSetIndex;
+          item.className = `w-full text-left px-3 py-2 text-xs flex items-center justify-between transition ${isActive ? 'bg-amber-500/20 text-amber-300 font-bold border-l-2 border-amber-400' : 'text-gray-300 hover:bg-gray-800 hover:text-white'}`;
+          item.onclick = () => {
+            loadActiveSet(idx, true);
+            toggleSetDropdown();
+          };
+          item.innerHTML = `
+            <div class="truncate pr-2">
+              <span class="font-bold text-white">${s.setName}</span>
+              <p class="text-[10px] text-gray-400 truncate">${s.theme || ''}</p>
+            </div>
+            ${isActive ? '<i class="fa-solid fa-check text-amber-400 shrink-0"></i>' : ''}
+          `;
+          listContainer.appendChild(item);
+        });
+      }
+    }
+
+    function recalculateScoresForCurrentSet() {
+      const userTeam = ensureUserTeam();
+      if (!userTeam) return;
+      
+      // Calculate scores for rounds 0 to 4 based on userAnswers for current set
+      userTeam.scores = [0, 0, 0, 0, 0];
+      for (let r = 0; r < 5; r++) {
+        let rScore = 0;
+        for (let q = 0; q < 10; q++) {
+          const key = `r${r}_q${q}`;
+          if (userAnswers[key] && userAnswers[key].isCorrect) {
+            rScore++;
+          }
+        }
+        userTeam.scores[r] = rScore;
+      }
+      recalculateScores();
+      saveTeams();
+      updateUserHeaderDisplay();
+    }
+
+    /* ==========================================================
        USERNAME ONBOARDING & MODAL
        ========================================================== */
     function checkUsernameOnLoad() {
@@ -1440,9 +949,12 @@
       currentUsername = name;
       localStorage.setItem('beerbox_quiz_username', currentUsername);
       
+      // Rotate to next question set on each login
+      rotateToNextSet(false);
+
       ensureUserTeam();
       updateUserHeaderDisplay();
-      recalculateScores();
+      recalculateScoresForCurrentSet();
       renderTeamsTable();
       closeUsernameModal();
       playSFX('fanfare');
@@ -1455,9 +967,10 @@
     function continueAsHost() {
       currentUsername = 'Host';
       localStorage.setItem('beerbox_quiz_username', currentUsername);
+      rotateToNextSet(false);
       ensureUserTeam();
       updateUserHeaderDisplay();
-      recalculateScores();
+      recalculateScoresForCurrentSet();
       renderTeamsTable();
       closeUsernameModal();
       if (currentMode === 'ask') {
@@ -1469,12 +982,25 @@
        UI RENDERING FUNCTIONS
        ========================================================== */
     function initApp() {
+      const sets = getQuizSets();
+      currentSetIndex = parseInt(localStorage.getItem('beerbox_quiz_set_index') || '0', 10);
+      if (isNaN(currentSetIndex) || currentSetIndex < 0 || (sets.length > 0 && currentSetIndex >= sets.length)) {
+        currentSetIndex = 0;
+      }
+      if (sets.length > 0) {
+        activeQuizSet = sets[currentSetIndex];
+        quizData = activeQuizSet.rounds;
+      }
+      userAnswers = JSON.parse(localStorage.getItem(getUserAnswersKey(currentSetIndex)) || '{}');
+
       teams = loadTeams();
       checkUsernameOnLoad();
+      updateSetDisplayUI();
       updateUserHeaderDisplay();
-      renderCurrentQuestion();
+      recalculateScoresForCurrentSet();
       renderTeamsTable();
       updateRoundTabsUI();
+      renderCurrentQuestion();
     }
 
     function switchRound(index) {
@@ -1493,6 +1019,14 @@
       for (let i = 0; i <= 5; i++) {
         const tab = document.getElementById(`roundTab-${i}`);
         if (!tab) continue;
+
+        if (quizData && quizData[i]) {
+          const titleSpan = tab.querySelector('.font-display');
+          if (titleSpan) {
+            titleSpan.textContent = quizData[i].title.replace(/^Round \d+:\s*/, '');
+          }
+        }
+
         if (i === currentRoundIndex) {
           tab.classList.remove('bg-gray-900/60', 'border-gray-800', 'text-gray-400');
           tab.classList.add('bg-amber-500/20', 'border-amber-500/60', 'text-amber-300', 'glow-gold');
@@ -1642,17 +1176,13 @@
         isCorrect: isCorrect,
         timedOut: false
       };
-      localStorage.setItem('beerbox_user_answers', JSON.stringify(userAnswers));
+      localStorage.setItem(getUserAnswersKey(currentSetIndex), JSON.stringify(userAnswers));
 
       if (isCorrect) {
         playSFX('correct');
         const userTeam = ensureUserTeam();
         if (userTeam) {
-          const rIdx = Math.min(currentRoundIndex, 4);
-          userTeam.scores[rIdx] = (userTeam.scores[rIdx] || 0) + 1;
-          recalculateScores();
-          saveTeams();
-          updateUserHeaderDisplay();
+          recalculateScoresForCurrentSet();
           renderTeamsTable();
         }
       } else {
@@ -1673,7 +1203,7 @@
         isCorrect: false,
         timedOut: true
       };
-      localStorage.setItem('beerbox_user_answers', JSON.stringify(userAnswers));
+      localStorage.setItem(getUserAnswersKey(currentSetIndex), JSON.stringify(userAnswers));
 
       const round = quizData[currentRoundIndex];
       const q = round.questions[currentQuestionIndex];
@@ -1685,6 +1215,9 @@
       const q = round.questions[currentQuestionIndex];
       const totalQ = round.questions.length;
 
+      if (document.getElementById('cardSetBadge') && activeQuizSet) {
+        document.getElementById('cardSetBadge').textContent = `Set ${activeQuizSet.setId}: ${activeQuizSet.setName.replace(/^Set \d+:\s*/, '')}`;
+      }
       document.getElementById('cardRoundBadge').textContent = round.badge;
       document.getElementById('cardQuestionNumber').textContent = `Question ${currentQuestionIndex + 1} of ${totalQ}`;
       
@@ -1704,7 +1237,9 @@
 
       // Sync TV Presentation Header
       const tvBadge = document.getElementById('tvRoundBadge');
-      if (tvBadge) tvBadge.textContent = `${round.badge} • ${round.title.toUpperCase()}`;
+      if (tvBadge && activeQuizSet) {
+        tvBadge.textContent = `SET ${activeQuizSet.setId} • ${round.badge.toUpperCase()} • ${round.title.toUpperCase()}`;
+      }
       const tvProg = document.getElementById('tvQuestionProgress');
       if (tvProg) tvProg.textContent = `Question ${currentQuestionIndex + 1} of ${totalQ}`;
       
