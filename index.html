@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DJ JC @ Beerbox Midrand - Live Pub Quiz Night</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Google Fonts: Syne & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              gold: '#F59E0B',
+              beer: '#FBBF24',
+              amber: '#D97706',
+              foam: '#FEF3C7',
+              dark: '#0B0F19',
+              card: '#111827',
+              accent: '#EF4444',
+              neon: '#10B981'
+            }
+          },
+          fontFamily: {
+            display: ['Outfit', 'sans-serif'],
+            body: ['"Plus Jakarta Sans"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #080C14;
+      color: #F3F4F6;
+      overflow-x: hidden;
+    }
+    .font-display {
+      font-family: 'Outfit', sans-serif;
+    }
+    /* DJ turntable spinning animation */
+    @keyframes vinyl-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .spin-vinyl {
+      animation: vinyl-spin 4s linear infinite;
+    }
+    .paused {
+      animation-play-state: paused;
+    }
+    /* Glow highlights */
+    .glow-gold {
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.35);
+    }
+    .glow-red {
+      box-shadow: 0 0 25px rgba(239, 68, 68, 0.4);
+    }
+    /* Glass card backdrop */
+    .glass-panel {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0B0F19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #F59E0B;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
+  <!-- TOP CONTROL DECK & HEADER -->
+  <header class="sticky top-0 z-50 glass-panel border-b border-amber-500/20 px-4 py-3">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- DJ JC & Beerbox Brand Hub -->
+      <div class="flex items-center space-x-3">
+        <div class="relative w-11 h-11 rounded-full bg-gradient-to-tr from-amber-600 via-amber-400 to-yellow-200 flex items-center justify-center p-0.5 shadow-lg shadow-amber-500/30">
+          <div class="w-full h-full bg-gray-950 rounded-full flex items-center justify-center relative overflow-hidden group">
+            <i class="fa-solid fa-compact-disc text-amber-400 text-xl spin-vinyl group-hover:text-amber-300"></i>
+            <span class="absolute bottom-0 text-[7px] font-black tracking-tighter uppercase text-amber-500 bg-gray-900 px-1 rounded-sm">DJ JC</span>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl font-extrabold tracking-tight font-display bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent">
+              BEERBOX PUB QUIZ
+            </h1>
+            <span class="bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+              Midrand
+            </span>
+          </div>
+          <p class="text-xs text-gray-400 flex items-center gap-1.5">
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Hosted live by <strong class="text-gray-200">DJ JC</strong>
+          </p>
+        </div>
+      </div>
+
+      <!-- Live DJ Audio Effects Deck -->
+      <div class="flex items-center gap-1 sm:gap-2 bg-gray-950/80 p-1.5 rounded-xl border border-gray-800">
+        <span class="text-[10px] uppercase font-bold text-gray-400 px-2 hidden md:inline-flex items-center gap-1">
+          <i class="fa-solid fa-sliders text-amber-400"></i> FX Pad
+        </span>
+        <button onclick="playSFX('airhorn')" title="DJ Airhorn" class="px-2.5 py-1.5 bg-red-600/30 hover:bg-red-600 border border-red-500/40 text-red-200 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 active:scale-95">
+          <i class="fa-solid fa-bullhorn text-xs"></i> <span>Horn</span>
+        </button>
+        <button onclick="playSFX('correct')" title="Correct Ding" class="px-2.5 py-1.5 bg-emerald-600/30 hover:bg-emerald-600 border border-emerald-500/40 text-emerald-200 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 active:scale-95">
+          <i class="fa-solid fa-circle-check text-xs"></i> <span>Ding</span>
+        </button>
+        <button onclick="playSFX('wrong')" title="Wrong Buzzer" class="px-2.5 py-1.5 bg-rose-600/30 hover:bg-rose-600 border border-rose-500/40 text-rose-200 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 active:scale-95">
+          <i class="fa-solid fa-circle-xmark text-xs"></i> <span>Buzz</span>
+        </button>
+        <button onclick="playSFX('drumroll')" title="Suspense Drumroll" class="px-2.5 py-1.5 bg-amber-600/30 hover:bg-amber-600 border border-amber-500/40 text-amber-200 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 active:scale-95">
+          <i class="fa-solid fa-drum text-xs"></i> <span>Suspense</span>
+        </button>
+        <button onclick="playSFX('fanfare')" title="Winner Fanfare" class="px-2.5 py-1.5 bg-purple-600/30 hover:bg-purple-600 border border-purple-500/40 text-purple-200 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 active:scale-95">
+          <i class="fa-solid fa-trophy text-xs"></i> <span>Cheer</span>
+        </button>
+      </div>
+
+      <!-- Quick Nav Action Buttons -->
+      <div class="flex items-center gap-2">
+        <button id="toggleScoreboardBtn" onclick="toggleScoreboardModal()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-gray-950 font-bold rounded-lg text-xs transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 active:scale-95">
+          <i class="fa-solid fa-list-ol"></i>
+          <span>Leaderboard</span>
+          <span id="teamBadgeCount" class="bg-gray-950 text-amber-300 text-[10px] px-1.5 py-0.2 rounded-full">4</span>
+        </button>
+        <button onclick="toggleFullscreen()" title="Toggle Fullscreen" class="p-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg text-xs border border-gray-700 transition">
+          <i class="fa-solid fa-expand"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+  <!-- MAIN QUIZ ARENA -->
+  <main class="max-w-6xl w-full mx-auto px-4 py-5 flex-1 flex flex-col gap-6">
+
+    <!-- ROUND TABS BAR -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+      <button onclick="switchRound(0)" id="roundTab-0" class="round-tab flex-1 min-w-[130px] p-3 rounded-xl border border-amber-500/50 bg-amber-500/20 text-amber-300 font-bold text-xs transition flex flex-col items-center gap-1">
+        <div class="flex items-center gap-1 text-[11px] uppercase tracking-wider text-amber-400">
+          <i class="fa-solid fa-beer-mug-empty"></i> Round 1
+        </div>
+        <span class="text-white font-display text-sm font-semibold truncate max-w-full">The Icebreaker</span>
+        <div class="flex text-[9px] text-amber-400">
+          <i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i>
+        </div>
+      </button>
+
+      <button onclick="switchRound(1)" id="roundTab-1" class="round-tab flex-1 min-w-[130px] p-3 rounded-xl border border-gray-800 bg-gray-900/60 hover:bg-gray-800 text-gray-400 font-medium text-xs transition flex flex-col items-center gap-1">
+        <div class="flex items-center gap-1 text-[11px] uppercase tracking-wider">
+          <i class="fa-solid fa-headphones"></i> Round 2
+        </div>
+        <span class="text-gray-300 font-display text-sm font-semibold truncate max-w-full">Beats & Screens</span>
+        <div class="flex text-[9px] text-amber-400">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i>
+        </div>
+      </button>
+
+      <button onclick="switchRound(2)" id="roundTab-2" class="round-tab flex-1 min-w-[130px] p-3 rounded-xl border border-gray-800 bg-gray-900/60 hover:bg-gray-800 text-gray-400 font-medium text-xs transition flex flex-col items-center gap-1">
+        <div class="flex items-center gap-1 text-[11px] uppercase tracking-wider">
+          <i class="fa-solid fa-earth-africa"></i> Round 3
+        </div>
+        <span class="text-gray-300 font-display text-sm font-semibold truncate max-w-full">World & Arena</span>
+        <div class="flex text-[9px] text-amber-400">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i>
+        </div>
+      </button>
+
+      <button onclick="switchRound(3)" id="roundTab-3" class="round-tab flex-1 min-w-[130px] p-3 rounded-xl border border-gray-800 bg-gray-900/60 hover:bg-gray-800 text-gray-400 font-medium text-xs transition flex flex-col items-center gap-1">
+        <div class="flex items-center gap-1 text-[11px] uppercase tracking-wider">
+          <i class="fa-solid fa-flask"></i> Round 4
+        </div>
+        <span class="text-gray-300 font-display text-sm font-semibold truncate max-w-full">Hops & Science</span>
+        <div class="flex text-[9px] text-amber-400">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
+        </div>
+      </button>
+
+      <button onclick="switchRound(4)" id="roundTab-4" class="round-tab flex-1 min-w-[130px] p-3 rounded-xl border border-gray-800 bg-gray-900/60 hover:bg-gray-800 text-gray-400 font-medium text-xs transition flex flex-col items-center gap-1">
+        <div class="flex items-center gap-1 text-[11px] uppercase tracking-wider text-rose-400">
+          <i class="fa-solid fa-skull"></i> Round 5
+        </div>
+        <span class="text-gray-300 font-display text-sm font-semibold truncate max-w-full">The Mastermind</span>
+        <div class="flex text-[9px] text-rose-400">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        </div>
+      </button>
+
+      <button onclick="switchRound(5)" id="roundTab-5" class="round-tab min-w-[120px] p-3 rounded-xl border border-purple-800/60 bg-purple-950/20 hover:bg-purple-900/40 text-purple-300 font-medium text-xs transition flex flex-col items-center gap-1">
+        <div class="flex items-center gap-1 text-[11px] uppercase tracking-wider text-purple-400">
+          <i class="fa-solid fa-bolt"></i> Extra
+        </div>
+        <span class="text-purple-200 font-display text-sm font-semibold truncate">Tie-Breakers</span>
+        <span class="text-[9px] bg-purple-900/60 px-2 py-0.5 rounded-full text-purple-300">Closest Num</span>
+      </button>
+    </div>
+    <!-- STAGE MODE SWITCH (QUESTION PRESENTATION vs ROUND ANSWERS REVEAL) -->
+    <div class="flex items-center justify-between flex-wrap gap-3 bg-gray-900/80 p-2.5 rounded-xl border border-gray-800">
+      <div class="flex items-center gap-2">
+        <div class="inline-flex p-1 bg-gray-950 rounded-lg border border-gray-800">
+          <button id="modeAskBtn" onclick="setMode('ask')" class="px-4 py-1.5 rounded-md text-xs font-bold transition bg-amber-500 text-gray-950 shadow">
+            <i class="fa-solid fa-microphone-lines mr-1.5"></i> Ask Questions (Live)
+          </button>
+          <button id="modeRevealBtn" onclick="setMode('reveal')" class="px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition">
+            <i class="fa-solid fa-key mr-1.5"></i> End-of-Round Reveal
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Pacing & Timer Widget -->
+        <div class="flex items-center gap-2 bg-gray-950 px-3 py-1.5 rounded-lg border border-gray-800">
+          <i class="fa-regular fa-clock text-amber-400 text-sm"></i>
+          <span id="timerDisplay" class="font-mono text-base font-extrabold text-amber-300">00:45</span>
+          <button onclick="toggleTimer()" id="timerControlBtn" class="text-xs bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 font-bold px-2 py-0.5 rounded transition">
+            Start
+          </button>
+          <button onclick="resetTimer()" class="text-xs text-gray-500 hover:text-gray-300 transition" title="Reset Timer">
+            <i class="fa-solid fa-rotate-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- VIEW A: LIVE ASKING VIEW (BIG SCREEN READY) -->
+    <div id="viewAsk" class="flex flex-col gap-4">
+      <div class="glass-panel p-6 sm:p-10 rounded-3xl border border-gray-800 shadow-2xl relative overflow-hidden transition-all duration-300" id="mainQuestionCard">
+        
+        <!-- Top Card Subheader & Progress -->
+        <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-6">
+          <div class="flex items-center gap-3">
+            <span id="cardRoundBadge" class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+              Round 1 • Easy
+            </span>
+            <span id="cardQuestionNumber" class="text-gray-400 text-sm font-semibold">
+              Question 1 of 10
+            </span>
+          </div>
+          <div class="flex items-center gap-1.5" id="dotsContainer">
+            <!-- Question dots rendered via JS -->
+          </div>
+        </div>
+
+        <!-- Big Stage Question Text -->
+        <div class="min-h-[180px] flex items-center justify-center py-6 text-center">
+          <h2 id="liveQuestionText" class="text-2xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-white leading-tight drop-shadow-md">
+            Loading Question...
+          </h2>
+        </div>
+
+        <!-- Subtle Answer Peek for Host behind DJ deck -->
+        <div class="mt-6 pt-4 border-t border-gray-800 flex items-center justify-between text-xs text-gray-500">
+          <div class="flex items-center gap-2">
+            <button onclick="toggleHostAnswerSecret()" class="text-gray-400 hover:text-amber-400 transition flex items-center gap-1">
+              <i class="fa-solid fa-eye-slash" id="secretIcon"></i>
+              <span id="secretText">Peek Official Answer (Host Only)</span>
+            </button>
+            <span id="hostSecretAnswer" class="hidden font-mono font-bold text-amber-400 bg-gray-950 px-2.5 py-1 rounded-md border border-amber-500/30"></span>
+          </div>
+          <span class="italic text-gray-500 hidden sm:inline">Beerbox Midrand House Rules: Strictly No Shazam!</span>
+        </div>
+      </div>
+
+      <!-- Question Stepper Buttons -->
+      <div class="flex items-center justify-between gap-4 mt-2">
+        <button onclick="prevQuestion()" id="prevBtn" class="flex-1 sm:flex-none px-6 py-3.5 rounded-2xl bg-gray-900 hover:bg-gray-800 border border-gray-700 text-gray-200 font-bold text-sm transition flex items-center justify-center gap-2 active:scale-95">
+          <i class="fa-solid fa-chevron-left"></i> Previous Question
+        </button>
+
+        <button onclick="randomizeCurrentQuestion()" class="px-4 py-3.5 rounded-2xl bg-gray-900/60 hover:bg-gray-800 border border-gray-700/50 text-gray-400 hover:text-amber-400 text-xs font-semibold transition flex items-center gap-2" title="Pick Random Question in this Round">
+          <i class="fa-solid fa-dice text-sm"></i> <span class="hidden md:inline">Shuffle Q</span>
+        </button>
+
+        <button onclick="nextQuestion()" id="nextBtn" class="flex-1 sm:flex-none px-8 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-gray-950 font-black text-sm tracking-wide transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 active:scale-95">
+          <span>Next Question</span> <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+    <!-- VIEW B: END-OF-ROUND REVEAL VIEW -->
+    <div id="viewReveal" class="hidden flex flex-col gap-5">
+      <div class="glass-panel p-6 rounded-3xl border border-gray-800">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-gray-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="bg-amber-500 text-gray-950 font-extrabold text-xs px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                Marking Time
+              </span>
+              <h3 id="revealRoundTitle" class="text-xl sm:text-2xl font-black font-display text-white">
+                Round 1: Answers & Score Sheet Check
+              </h3>
+            </div>
+            <p class="text-xs sm:text-sm text-gray-400 mt-1">
+              Swap team papers or mark sheets now! Reveal answers one by one for maximum tension.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="revealAllAnswers()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-gray-950 font-bold text-xs transition flex items-center gap-1.5 shadow active:scale-95">
+              <i class="fa-solid fa-bolt"></i> Reveal All
+            </button>
+            <button onclick="hideAllAnswers()" class="px-4 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold text-xs transition flex items-center gap-1.5">
+              <i class="fa-solid fa-eye-slash"></i> Hide All
+            </button>
+          </div>
+        </div>
+
+        <!-- Answers Grid -->
+        <div id="revealQuestionsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Dynamically populated 10 cards -->
+        </div>
+      </div>
+
+      <!-- Round Transition Action -->
+      <div class="flex items-center justify-between p-4 bg-gray-900/60 rounded-2xl border border-gray-800">
+        <p class="text-xs text-gray-400">
+          <i class="fa-solid fa-beer-mug-empty text-amber-400 mr-1.5"></i> Finished marking? Announce the top scores and step into the next round!
+        </p>
+        <button onclick="advanceToNextRound()" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-gray-950 font-extrabold text-xs transition flex items-center gap-2 shadow">
+          <span>Proceed To Next Round</span> <i class="fa-solid fa-forward"></i>
+        </button>
+      </div>
+    </div>
+
+  </main>
+  <!-- MODAL: TEAM LEADERBOARD & JOKER DOUBLE-DOWN TRACKER -->
+  <div id="scoreboardModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-gray-900 border border-gray-800 w-full max-w-3xl rounded-3xl p-6 sm:p-8 shadow-2xl relative max-h-[90vh] flex flex-col">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+            <i class="fa-solid fa-trophy text-lg"></i>
+          </div>
+          <div>
+            <h3 class="text-xl font-black font-display text-white">Beerbox Midrand Live Leaderboard</h3>
+            <p class="text-xs text-gray-400">Add teams, assign points per round, and flag Joker rounds.</p>
+          </div>
+        </div>
+        <button onclick="toggleScoreboardModal()" class="w-8 h-8 rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Add New Team Form -->
+      <div class="flex gap-2 mb-4">
+        <input type="text" id="newTeamInput" placeholder="Enter Team Name (e.g. The Midrand Hopheads)..." class="flex-1 bg-gray-950 border border-gray-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+        <button onclick="addNewTeam()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-gray-950 font-bold text-sm rounded-xl transition flex items-center gap-1.5 active:scale-95">
+          <i class="fa-solid fa-plus"></i> Add Team
+        </button>
+      </div>
+
+      <!-- Teams Table -->
+      <div class="overflow-y-auto flex-1 pr-1">
+        <table class="w-full text-left text-sm">
+          <thead>
+            <tr class="text-gray-400 border-b border-gray-800 text-[11px] uppercase tracking-wider">
+              <th class="py-2.5 px-3">Rank</th>
+              <th class="py-2.5 px-3">Team Name</th>
+              <th class="py-2.5 px-3 text-center">Joker Round</th>
+              <th class="py-2.5 px-3 text-center">Score Adjustment</th>
+              <th class="py-2.5 px-3 text-right">Total Pts</th>
+              <th class="py-2.5 px-3 text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody id="teamsTableBody" class="divide-y divide-gray-800">
+            <!-- Dynamically injected teams -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="mt-4 pt-4 border-t border-gray-800 flex items-center justify-between text-xs text-gray-400">
+        <span>💡 Tip: Click +1 / -1 or type points directly.</span>
+        <button onclick="resetAllScores()" class="text-rose-400 hover:text-rose-300 font-semibold transition">
+          <i class="fa-solid fa-trash mr-1"></i> Reset All Scores
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- FOOTER -->
+  <footer class="border-t border-gray-800/80 py-4 px-4 text-center text-xs text-gray-500">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-beer-mug-empty text-amber-500"></i>
+        <span>Beerbox Midrand Pub Quiz Engine</span>
+        <span class="text-gray-700">•</span>
+        <span class="text-gray-400 font-semibold">50 Questions • 5 Tiers of Escalating Difficulty</span>
+      </div>
+      <div>
+        Created for <strong class="text-amber-400">DJ JC</strong> — Midrand, South Africa
+      </div>
+    </div>
+  </footer>
+  <script>
+    /* ==========================================================
+       SYNTHESIZED AUDIO SOUNDBOARD (ZERO DEPENDENCY WEB AUDIO)
+       ========================================================== */
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playSFX(type) {
+      try {
+        const ctx = getAudioContext();
+        const now = ctx.currentTime;
+
+        if (type === 'airhorn') {
+          // Classic DJ Airhorn synthesis (layered brass tones with pitch bend)
+          const baseFreqs = [233, 277, 311, 370];
+          baseFreqs.forEach(freq => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, now);
+            osc.frequency.exponentialRampToValueAtTime(freq * 1.05, now + 0.08);
+            osc.frequency.exponentialRampToValueAtTime(freq, now + 0.35);
+
+            gain.gain.setValueAtTime(0.12, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.45);
+          });
+        } 
+        else if (type === 'correct') {
+          // Cheerful chime (two ascending sine tones)
+          const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+          notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.value = freq;
+            const startTime = now + idx * 0.07;
+            gain.gain.setValueAtTime(0.15, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.4);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + 0.45);
+          });
+        } 
+        else if (type === 'wrong') {
+          // Low buzzer dissonance
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc1.type = 'sawtooth';
+          osc2.type = 'sawtooth';
+          osc1.frequency.setValueAtTime(130, now);
+          osc2.frequency.setValueAtTime(138, now); // Dischordant beat
+          osc1.frequency.linearRampToValueAtTime(110, now + 0.4);
+          osc2.frequency.linearRampToValueAtTime(115, now + 0.4);
+
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.45);
+
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(ctx.destination);
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 0.45);
+          osc2.stop(now + 0.45);
+        }
+        else if (type === 'drumroll') {
+          // Suspense rapid synth pulses
+          for (let i = 0; i < 18; i++) {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.value = 90 + Math.random() * 30;
+            const hitTime = now + (i * 0.05);
+            gain.gain.setValueAtTime(0.08 + (i * 0.008), hitTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, hitTime + 0.06);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(hitTime);
+            osc.stop(hitTime + 0.06);
+          }
+        }
+        else if (type === 'fanfare') {
+          // Grand fanfare chord
+          const chords = [523.25, 659.25, 783.99, 1046.50];
+          chords.forEach((freq) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, now);
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 1.2);
+          });
+        }
+      } catch (e) {
+        console.warn('Audio context init error:', e);
+      }
+    }
+    /* ==========================================================
+       PUB QUIZ MASTER DATA: 5 ESCALATING ROUNDS + TIE-BREAKERS
+       ========================================================== */
+    const quizData = [
+      {
+        roundId: 1,
+        title: "Round 1: The Icebreaker",
+        badge: "Round 1 • Easy",
+        theme: "General Knowledge, Pop Culture & Fun Facts",
+        difficultyText: "Level 1: Warm-up & Crowd Pleasers",
+        hostVibe: "Get the room energized! Welcome teams, tease craft beers on tap, spin groovy tunes.",
+        questions: [
+          {
+            q: "In football (soccer), how many players per team are allowed on the pitch at kick-off?",
+            a: "11 players",
+            notes: "Quick check: Must be on the pitch, not substitutes."
+          },
+          {
+            q: "What fictional city is under the nightly protection of the superhero Batman?",
+            a: "Gotham City",
+            notes: "Superman has Metropolis; Batman has Gotham."
+          },
+          {
+            q: "Here in South Africa, what colloquial Afrikaans word is universally used for a barbecue?",
+            a: "Braai",
+            notes: "Easy point for every table in Midrand!"
+          },
+          {
+            q: "Which popular morning beverage is brewed from the roasted seeds of the Coffea plant?",
+            a: "Coffee",
+            notes: "A morning staple before evening beers."
+          },
+          {
+            q: "What is the capital city of France?",
+            a: "Paris",
+            notes: "Home of the Eiffel Tower."
+          },
+          {
+            q: "In music and nightlife, what two words does the abbreviation 'DJ' stand for?",
+            a: "Disc Jockey",
+            notes: "DJ JC's favorite question of the night!"
+          },
+          {
+            q: "Which classic animated Disney film features the famous Swahili phrase and song 'Hakuna Matata'?",
+            a: "The Lion King",
+            notes: "Released in 1994, remade in 2019."
+          },
+          {
+            q: "What colour is the inner bullseye on a standard regulation pub dartboard?",
+            a: "Red",
+            notes: "Outer ring is green (25 pts); inner bull is red (50 pts)."
+          },
+          {
+            q: "What is the largest living mammal currently inhabiting planet Earth?",
+            a: "The Blue Whale",
+            notes: "Can weigh up to 200 metric tonnes."
+          },
+          {
+            q: "Which social media platform, previously symbolized by a blue bird, was rebranded by Elon Musk to a single letter?",
+            a: "X (formerly Twitter)",
+            notes: "Rebranded in July 2023."
+          }
+        ]
+      },
+      {
+        roundId: 2,
+        title: "Round 2: The Beat & The Screen",
+        badge: "Round 2 • Moderate",
+        theme: "Music, Movies, TV & Pop Entertainment",
+        difficultyText: "Level 2: Moderate Pop Culture & Audio Trivia",
+        hostVibe: "DJ JC's home turf! Drop a 30-second audio riff or instrumental backing track between questions.",
+        questions: [
+          {
+            q: "Which legendary British rock band released the landmark 1973 album 'The Dark Side of the Moon'?",
+            a: "Pink Floyd",
+            notes: "Featuring the iconic prism cover art."
+          },
+          {
+            q: "Master KG and Nomcebo Zikode took the globe by storm in 2020 with which viral South African dance anthem?",
+            a: "Jerusalema",
+            notes: "Surpassed hundreds of millions of streams worldwide."
+          },
+          {
+            q: "Who directed the Hollywood blockbusters Inception, The Dark Knight, and the 2023 Oscar-winner Oppenheimer?",
+            a: "Christopher Nolan",
+            notes: "Accept Nolan."
+          },
+          {
+            q: "Michael Jackson's 1983 horror-themed music video featured dancing zombies and narration by Vincent Price. What was the song?",
+            a: "Thriller",
+            notes: "Directed by John Landis."
+          },
+          {
+            q: "Which South African DJ and producer won the 2022 Grammy Award for Best Dance/Electronic Album for 'Subconsciously'?",
+            a: "Black Coffee (Nkosinathi Maphumulo)",
+            notes: "Accept Black Coffee."
+          },
+          {
+            q: "In 'The Lord of the Rings', what was the original name of the creature who later became Gollum, obsessed with the 'Precious'?",
+            a: "Sméagol",
+            notes: "Accept Sméagol / Trahald."
+          },
+          {
+            q: "What musical Italian term instructs performers to gradually increase the tempo or speed of the music?",
+            a: "Accelerando",
+            notes: "Host note: Accept 'accelerate' or 'speeding up' if generous."
+          },
+          {
+            q: "What was the name of the Manhattan coffee shop where the six main characters hung out on the sitcom 'Friends'?",
+            a: "Central Perk",
+            notes: "Featuring Gunther as barista."
+          },
+          {
+            q: "Freddie Mercury was the charismatic, operatic frontman of which legendary British rock band?",
+            a: "Queen",
+            notes: "Brian May on lead guitar."
+          },
+          {
+            q: "In Quentin Tarantino's 'Pulp Fiction', what do they call a McDonald's Quarter Pounder with Cheese in Paris?",
+            a: "A 'Royale with Cheese'",
+            notes: "Due to the metric system!"
+          }
+        ]
+      },
+      {
+        roundId: 3,
+        title: "Round 3: Globetrotters & Arenas",
+        badge: "Round 3 • Medium-Hard",
+        theme: "Geography, World Landmarks & Global Sports",
+        difficultyText: "Level 3: Global Knowledge & Athletic Feats",
+        hostVibe: "Competitive juices are flowing! Remind teams that points start mattering heavily here.",
+        questions: [
+          {
+            q: "South Africa has three official capital cities: Pretoria (Executive) and Cape Town (Legislative). Which city is the Judicial capital?",
+            a: "Bloemfontein",
+            notes: "Located in the Free State."
+          },
+          {
+            q: "Flowing through northeastern Africa into the Mediterranean Sea, what is widely considered the longest river in the world?",
+            a: "The Nile River",
+            notes: "Accept the Nile."
+          },
+          {
+            q: "In international rugby union, how many points is awarded for scoring an unconverted try?",
+            a: "5 points",
+            notes: "Conversions add 2; penalties and drop goals give 3."
+          },
+          {
+            q: "Located right here in Gauteng, Midrand lies geographically directly between which two major metropolitan cities?",
+            a: "Johannesburg (Joburg) and Pretoria (Tshwane)",
+            notes: "Must name both Joburg and Pretoria."
+          },
+          {
+            q: "Which country holds the record for winning the most FIFA Men's World Cup titles, with 5 tournament victories?",
+            a: "Brazil",
+            notes: "1958, 1962, 1970, 1994, 2002."
+          },
+          {
+            q: "What body of water separates southern England from northern France?",
+            a: "The English Channel (La Manche)",
+            notes: "Accept English Channel or La Manche."
+          },
+          {
+            q: "Which Formula 1 driver holds the all-time record for the most Grand Prix race victories in motorsport history?",
+            a: "Lewis Hamilton",
+            notes: "Over 100 Grand Prix wins."
+          },
+          {
+            q: "What is the smallest independent sovereign state in the world by both land area and population?",
+            a: "Vatican City (Holy See)",
+            notes: "Enclaved within Rome, Italy."
+          },
+          {
+            q: "Alongside head coach Jacques Nienaber, who served as Director of Rugby masterminding the Springboks' 2019 and 2023 World Cup victories?",
+            a: "Rassie Erasmus (Johan Erasmus)",
+            notes: "Accept Rassie."
+          },
+          {
+            q: "Which immense Asian mountain range contains Mount Everest and 9 of the world's 10 highest peaks?",
+            a: "The Himalayas",
+            notes: "Spans 5 countries."
+          }
+        ]
+      },
+      {
+        roundId: 4,
+        title: "Round 4: Hops, Science & Nature",
+        badge: "Round 4 • Hard",
+        theme: "Brewing Science, Periodic Elements & The Natural World",
+        difficultyText: "Level 4: Craft Beer Mastery & Scientific Curiosity",
+        hostVibe: "Tailored specifically for Beerbox Midrand! Craft beer lovers will shine in this round.",
+        questions: [
+          {
+            q: "Under the traditional 1516 German Beer Purity Law (Reinheitsgebot), what are the four original primary ingredients allowed in beer?",
+            a: "Water, Barley (malt), Hops, and Yeast",
+            notes: "Must name all four (yeast was formally added once discovered)."
+          },
+          {
+            q: "In the craft beer brewing world, what does the popular acronym 'IPA' stand for?",
+            a: "India Pale Ale",
+            notes: "Brewed heavily with hops to survive long ocean journeys."
+          },
+          {
+            q: "On the scientific periodic table of elements, which precious chemical element is represented by the symbol Au?",
+            a: "Gold",
+            notes: "From the Latin word Aurum."
+          },
+          {
+            q: "In brewing and beer tasting, what 3-letter scale abbreviation is universally used to measure a beer's bitterness?",
+            a: "IBU (International Bitterness Units)",
+            notes: "Accept IBU."
+          },
+          {
+            q: "What is the hardest naturally occurring mineral substance on Earth, scoring a perfect 10 on the Mohs scale?",
+            a: "Diamond",
+            notes: "Formed of crystalline carbon."
+          },
+          {
+            q: "Surpassing Jupiter with over 140 confirmed satellites, which ringed planet has the most moons in our solar system?",
+            a: "Saturn (146 confirmed moons)",
+            notes: "Accept Saturn."
+          },
+          {
+            q: "What is the biological genus and species name of the brewer's yeast responsible for standard ales and baking bread?",
+            a: "Saccharomyces cerevisiae",
+            notes: "Accept Saccharomyces or phonetic pronunciation."
+          },
+          {
+            q: "Which single letter of the English alphabet does NOT appear anywhere on the modern periodic table of chemical elements?",
+            a: "The letter J",
+            notes: "Letter J never appears."
+          },
+          {
+            q: "Which vital internal human organ is unique in its capacity to naturally regenerate lost tissue back to full mass?",
+            a: "The Liver",
+            notes: "Can regrow even if 60%+ is resected."
+          },
+          {
+            q: "Which European country holds the undisputed world record for highest annual beer consumption per capita for over 30 years?",
+            a: "The Czech Republic (Czechia)",
+            notes: "Over 130 liters per person per year!"
+          }
+        ]
+      },
+      {
+        roundId: 5,
+        title: "Round 5: The Mastermind Decider",
+        badge: "Round 5 • Extreme",
+        theme: "Lateral Riddles, Deep Trivia & High-Stake Deciders",
+        difficultyText: "Level 5: Maximum Difficulty Brainbusters",
+        hostVibe: "Tension is at its peak! Announce the top 3 teams on the mic before firing these off.",
+        questions: [
+          {
+            q: "Which Asian country has the only national flag in the modern world that is non-quadrilateral (not 4-sided)?",
+            a: "Nepal",
+            notes: "Made of two stacked triangular pennants."
+          },
+          {
+            q: "Full-length 12-inch vinyl records spin at 33⅓ RPM. At what rotational speed do standard 7-inch vinyl singles spin?",
+            a: "45 RPM",
+            notes: "Crucial DJ hardware knowledge."
+          },
+          {
+            q: "Built on the island of Pharos in Ptolemaic Egypt, which of the Seven Ancient Wonders guided mariners with fires and mirrors?",
+            a: "The Lighthouse of Alexandria (Pharos)",
+            notes: "Accept Lighthouse of Alexandria."
+          },
+          {
+            q: "In modern computer hardware and mobile device cables, what does the abbreviation 'USB' stand for?",
+            a: "Universal Serial Bus",
+            notes: "Must get all three words correct."
+          },
+          {
+            q: "David Bowie adopted his stage surname to avoid confusion with Davy Jones of The Monkees. What was Bowie's actual birth surname?",
+            a: "Jones (David Robert Jones)",
+            notes: "Born David Robert Jones."
+          },
+          {
+            q: "In what exact calendar year did the Berlin Wall fall, initiating the reunification of Germany and end of the Cold War?",
+            a: "1989 (November 9, 1989)",
+            notes: "Accept 1989."
+          },
+          {
+            q: "What is the distinctive and flamboyant collective English noun for a group or flock of flamingos?",
+            a: "A 'Flamboyance' of flamingos",
+            notes: "Accept Flamboyance."
+          },
+          {
+            q: "Which celebrated South African anti-apartheid author won the Nobel Prize in Literature in 1991 for works like 'July's People'?",
+            a: "Nadine Gordimer",
+            notes: "Accept Nadine Gordimer."
+          },
+          {
+            q: "What is the name of the deepest known oceanic trench on planet Earth, located in the western Pacific Ocean?",
+            a: "The Mariana Trench (Challenger Deep)",
+            notes: "Roughly 11,000 meters deep."
+          },
+          {
+            q: "In a standard game of pub darts, what is the maximum mathematical score a player can achieve in a single turn of three darts?",
+            a: "180 (Three treble 20s)",
+            notes: "DJ JC: Give this a big 'ONE HUNDRED AND EIGHTY!' voice!"
+          }
+        ]
+      },
+      {
+        roundId: 6,
+        title: "Sudden-Death Tie-Breakers",
+        badge: "Overtime • Closest Number",
+        theme: "Closest to the Pin Estimations",
+        difficultyText: "Overtime: Closest Estimate Wins!",
+        hostVibe: "Have tied team captains write down a single numeric estimate on paper. Closest number takes 1st place!",
+        questions: [
+          {
+            q: "In what exact calendar year was Gauteng's high-speed railway system, the Gautrain, officially opened to the public?",
+            a: "2010 (June 8, 2010, days before the 2010 FIFA World Cup)",
+            notes: "Exact year: 2010. Closest number wins."
+          },
+          {
+            q: "How many physical stairs are there from the ground to the top platform of the Eiffel Tower in Paris?",
+            a: "1,665 stairs",
+            notes: "Exact answer is 1,665. Closest table takes the prize!"
+          },
+          {
+            q: "Driving via the N3 highway from Midrand directly to the Durban Beachfront promenade, roughly how many kilometers is the journey?",
+            a: "~595 km to 605 km (Exact ~600 km)",
+            notes: "Closest answer to 600 km takes the glory."
+          }
+        ]
+      }
+    ];
+    /* ==========================================================
+       APPLICATION STATE
+       ========================================================== */
+    let currentRoundIndex = 0;
+    let currentQuestionIndex = 0;
+    let currentMode = 'ask'; // 'ask' or 'reveal'
+    let timerInterval = null;
+    let timerSeconds = 45;
+    let timerRunning = false;
+    let hostAnswerRevealed = false;
+
+    // Default Teams for Beerbox Midrand
+    let teams = [
+      { id: 1, name: "The Hopheads", jokerRound: 2, scores: [8, 9, 7, 10, 8], total: 42 },
+      { id: 2, name: "Midrand Mavericks", jokerRound: 4, scores: [9, 7, 8, 9, 7], total: 40 },
+      { id: 3, name: "Quizzy Rascals", jokerRound: 1, scores: [9, 8, 7, 7, 6], total: 37 },
+      { id: 4, name: "Springbok Geniuses", jokerRound: 3, scores: [7, 8, 9, 8, 8], total: 40 }
+    ];
+    /* ==========================================================
+       UI RENDERING FUNCTIONS
+       ========================================================== */
+    function initApp() {
+      renderCurrentQuestion();
+      renderTeamsTable();
+      updateRoundTabsUI();
+    }
+
+    function switchRound(index) {
+      currentRoundIndex = index;
+      currentQuestionIndex = 0;
+      hostAnswerRevealed = false;
+      updateRoundTabsUI();
+      if (currentMode === 'ask') {
+        renderCurrentQuestion();
+      } else {
+        renderRevealGrid();
+      }
+      resetTimer();
+    }
+
+    function updateRoundTabsUI() {
+      for (let i = 0; i <= 5; i++) {
+        const tab = document.getElementById(`roundTab-${i}`);
+        if (!tab) continue;
+        if (i === currentRoundIndex) {
+          tab.classList.remove('bg-gray-900/60', 'border-gray-800', 'text-gray-400');
+          tab.classList.add('bg-amber-500/20', 'border-amber-500/60', 'text-amber-300', 'glow-gold');
+        } else {
+          tab.classList.remove('bg-amber-500/20', 'border-amber-500/60', 'text-amber-300', 'glow-gold');
+          tab.classList.add('bg-gray-900/60', 'border-gray-800', 'text-gray-400');
+        }
+      }
+    }
+
+    function renderCurrentQuestion() {
+      const round = quizData[currentRoundIndex];
+      const q = round.questions[currentQuestionIndex];
+      const totalQ = round.questions.length;
+
+      document.getElementById('cardRoundBadge').textContent = round.badge;
+      document.getElementById('cardQuestionNumber').textContent = `Question ${currentQuestionIndex + 1} of ${totalQ}`;
+      
+      const qTextElem = document.getElementById('liveQuestionText');
+      // Gentle animation trigger
+      qTextElem.classList.remove('opacity-100');
+      qTextElem.classList.add('opacity-0');
+      
+      setTimeout(() => {
+        qTextElem.textContent = q.q;
+        qTextElem.classList.remove('opacity-0');
+        qTextElem.classList.add('opacity-100');
+      }, 100);
+
+      // Secret Host Answer
+      const secretAnswer = document.getElementById('hostSecretAnswer');
+      secretAnswer.textContent = q.a;
+      if (!hostAnswerRevealed) {
+        secretAnswer.classList.add('hidden');
+        document.getElementById('secretIcon').className = "fa-solid fa-eye-slash";
+        document.getElementById('secretText').textContent = "Peek Official Answer (Host Only)";
+      } else {
+        secretAnswer.classList.remove('hidden');
+        document.getElementById('secretIcon').className = "fa-solid fa-eye text-amber-400";
+        document.getElementById('secretText').textContent = "Hide Answer";
+      }
+
+      // Render Dots
+      const dotsContainer = document.getElementById('dotsContainer');
+      dotsContainer.innerHTML = '';
+      round.questions.forEach((_, idx) => {
+        const dot = document.createElement('button');
+        dot.title = `Jump to Q${idx + 1}`;
+        dot.onclick = () => {
+          currentQuestionIndex = idx;
+          hostAnswerRevealed = false;
+          renderCurrentQuestion();
+        };
+        dot.className = `w-2.5 h-2.5 rounded-full transition-all ${
+          idx === currentQuestionIndex 
+            ? 'w-7 bg-amber-400 shadow-sm shadow-amber-400' 
+            : idx < currentQuestionIndex 
+              ? 'bg-amber-600/60' 
+              : 'bg-gray-700'
+        }`;
+        dotsContainer.appendChild(dot);
+      });
+
+      // Prev / Next button state
+      document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+      document.getElementById('prevBtn').classList.toggle('opacity-40', currentQuestionIndex === 0);
+      
+      const isLast = currentQuestionIndex === totalQ - 1;
+      const nextBtn = document.getElementById('nextBtn');
+      if (isLast) {
+        nextBtn.innerHTML = `<span>End Round & Reveal</span> <i class="fa-solid fa-key"></i>`;
+        nextBtn.className = "flex-1 sm:flex-none px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-gray-950 font-black text-sm tracking-wide transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 active:scale-95";
+      } else {
+        nextBtn.innerHTML = `<span>Next Question</span> <i class="fa-solid fa-chevron-right"></i>`;
+        nextBtn.className = "flex-1 sm:flex-none px-8 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-gray-950 font-black text-sm tracking-wide transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 active:scale-95";
+      }
+    }
+
+    function toggleHostAnswerSecret() {
+      hostAnswerRevealed = !hostAnswerRevealed;
+      const secretAnswer = document.getElementById('hostSecretAnswer');
+      if (hostAnswerRevealed) {
+        secretAnswer.classList.remove('hidden');
+        document.getElementById('secretIcon').className = "fa-solid fa-eye text-amber-400";
+        document.getElementById('secretText').textContent = "Hide Answer";
+      } else {
+        secretAnswer.classList.add('hidden');
+        document.getElementById('secretIcon').className = "fa-solid fa-eye-slash";
+        document.getElementById('secretText').textContent = "Peek Official Answer (Host Only)";
+      }
+    }
+
+    function nextQuestion() {
+      const round = quizData[currentRoundIndex];
+      if (currentQuestionIndex < round.questions.length - 1) {
+        currentQuestionIndex++;
+        hostAnswerRevealed = false;
+        renderCurrentQuestion();
+        resetTimer();
+        playSFX('airhorn');
+      } else {
+        // Transition to reveal mode
+        setMode('reveal');
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        hostAnswerRevealed = false;
+        renderCurrentQuestion();
+        resetTimer();
+      }
+    }
+
+    function randomizeCurrentQuestion() {
+      const round = quizData[currentRoundIndex];
+      const randomIndex = Math.floor(Math.random() * round.questions.length);
+      currentQuestionIndex = randomIndex;
+      hostAnswerRevealed = false;
+      renderCurrentQuestion();
+      resetTimer();
+      playSFX('drumroll');
+    }
+    /* ==========================================================
+       MODE SWITCHING & REVEAL SYSTEM
+       ========================================================== */
+    function setMode(mode) {
+      currentMode = mode;
+      const askBtn = document.getElementById('modeAskBtn');
+      const revealBtn = document.getElementById('modeRevealBtn');
+      const viewAsk = document.getElementById('viewAsk');
+      const viewReveal = document.getElementById('viewReveal');
+
+      if (mode === 'ask') {
+        askBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold transition bg-amber-500 text-gray-950 shadow";
+        revealBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition";
+        viewAsk.classList.remove('hidden');
+        viewReveal.classList.add('hidden');
+        renderCurrentQuestion();
+      } else {
+        revealBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold transition bg-amber-500 text-gray-950 shadow";
+        askBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition";
+        viewAsk.classList.add('hidden');
+        viewReveal.classList.remove('hidden');
+        renderRevealGrid();
+        playSFX('drumroll');
+      }
+    }
+
+    function renderRevealGrid() {
+      const round = quizData[currentRoundIndex];
+      document.getElementById('revealRoundTitle').textContent = `${round.title} — Official Answer Key`;
+      const grid = document.getElementById('revealQuestionsGrid');
+      grid.innerHTML = '';
+
+      round.questions.forEach((q, idx) => {
+        const card = document.createElement('div');
+        card.id = `reveal-card-${idx}`;
+        card.className = "p-4 rounded-2xl bg-gray-950/80 border border-gray-800 flex flex-col justify-between transition-all hover:border-gray-700";
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-black uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
+                Question ${idx + 1}
+              </span>
+              <button onclick="toggleCardAnswer(${idx})" id="reveal-btn-${idx}" class="text-[11px] px-2.5 py-1 rounded-lg bg-gray-800 hover:bg-amber-500 hover:text-gray-950 text-gray-300 font-bold transition flex items-center gap-1 active:scale-95">
+                <i class="fa-solid fa-eye"></i> <span>Reveal</span>
+              </button>
+            </div>
+            <p class="text-sm font-semibold text-gray-200 mb-3">${q.q}</p>
+          </div>
+          
+          <div id="reveal-answer-box-${idx}" class="hidden mt-2 pt-3 border-t border-gray-800/80">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black uppercase tracking-wider text-emerald-400">Answer:</span>
+              <span class="text-sm font-black text-amber-300">${q.a}</span>
+            </div>
+            <p class="text-[11px] text-gray-400 mt-1 italic">${q.notes}</p>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function toggleCardAnswer(idx) {
+      const ansBox = document.getElementById(`reveal-answer-box-${idx}`);
+      const btn = document.getElementById(`reveal-btn-${idx}`);
+      const card = document.getElementById(`reveal-card-${idx}`);
+      
+      if (ansBox.classList.contains('hidden')) {
+        ansBox.classList.remove('hidden');
+        btn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> <span>Hide</span>`;
+        btn.classList.add('bg-amber-500', 'text-gray-950');
+        card.classList.add('border-amber-500/40', 'bg-amber-950/10');
+        playSFX('correct');
+      } else {
+        ansBox.classList.add('hidden');
+        btn.innerHTML = `<i class="fa-solid fa-eye"></i> <span>Reveal</span>`;
+        btn.classList.remove('bg-amber-500', 'text-gray-950');
+        card.classList.remove('border-amber-500/40', 'bg-amber-950/10');
+      }
+    }
+
+    function revealAllAnswers() {
+      const round = quizData[currentRoundIndex];
+      round.questions.forEach((_, idx) => {
+        const ansBox = document.getElementById(`reveal-answer-box-${idx}`);
+        const btn = document.getElementById(`reveal-btn-${idx}`);
+        const card = document.getElementById(`reveal-card-${idx}`);
+        if (ansBox) ansBox.classList.remove('hidden');
+        if (btn) {
+          btn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> <span>Hide</span>`;
+          btn.classList.add('bg-amber-500', 'text-gray-950');
+        }
+        if (card) card.classList.add('border-amber-500/40', 'bg-amber-950/10');
+      });
+      playSFX('fanfare');
+    }
+
+    function hideAllAnswers() {
+      const round = quizData[currentRoundIndex];
+      round.questions.forEach((_, idx) => {
+        const ansBox = document.getElementById(`reveal-answer-box-${idx}`);
+        const btn = document.getElementById(`reveal-btn-${idx}`);
+        const card = document.getElementById(`reveal-card-${idx}`);
+        if (ansBox) ansBox.classList.add('hidden');
+        if (btn) {
+          btn.innerHTML = `<i class="fa-solid fa-eye"></i> <span>Reveal</span>`;
+          btn.classList.remove('bg-amber-500', 'text-gray-950');
+        }
+        if (card) card.classList.remove('border-amber-500/40', 'bg-amber-950/10');
+      });
+    }
+
+    function advanceToNextRound() {
+      if (currentRoundIndex < quizData.length - 1) {
+        switchRound(currentRoundIndex + 1);
+        setMode('ask');
+        playSFX('fanfare');
+      } else {
+        // Last round reached, open scoreboard for grand finale
+        toggleScoreboardModal();
+      }
+    }
+    /* ==========================================================
+       PACING TIMER CONTROLS
+       ========================================================== */
+    function toggleTimer() {
+      const btn = document.getElementById('timerControlBtn');
+      if (timerRunning) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        btn.textContent = 'Resume';
+        btn.className = "text-xs bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 font-bold px-2 py-0.5 rounded transition";
+      } else {
+        timerRunning = true;
+        btn.textContent = 'Pause';
+        btn.className = "text-xs bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white font-bold px-2 py-0.5 rounded transition";
+        timerInterval = setInterval(() => {
+          if (timerSeconds > 0) {
+            timerSeconds--;
+            updateTimerDisplay();
+            if (timerSeconds === 10 || timerSeconds === 5) {
+              playSFX('drumroll');
+            }
+          } else {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            btn.textContent = 'Start';
+            btn.className = "text-xs bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 font-bold px-2 py-0.5 rounded transition";
+            playSFX('wrong');
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      timerSeconds = 45;
+      updateTimerDisplay();
+      const btn = document.getElementById('timerControlBtn');
+      if (btn) {
+        btn.textContent = 'Start';
+        btn.className = "text-xs bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 font-bold px-2 py-0.5 rounded transition";
+      }
+    }
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(timerSeconds / 60);
+      const secs = timerSeconds % 60;
+      const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      const elem = document.getElementById('timerDisplay');
+      if (elem) {
+        elem.textContent = formatted;
+        if (timerSeconds <= 10) {
+          elem.classList.add('text-rose-400');
+          elem.classList.remove('text-amber-300');
+        } else {
+          elem.classList.remove('text-rose-400');
+          elem.classList.add('text-amber-300');
+        }
+      }
+    }
+
+    /* ==========================================================
+       TEAM SCOREBOARD & LEADERBOARD MANAGEMENT
+       ========================================================== */
+    function toggleScoreboardModal() {
+      const modal = document.getElementById('scoreboardModal');
+      modal.classList.toggle('hidden');
+      if (!modal.classList.contains('hidden')) {
+        renderTeamsTable();
+      }
+    }
+
+    function recalculateScores() {
+      teams.forEach(t => {
+        // Total sum of scores, applying x2 if Joker round
+        let total = 0;
+        t.scores.forEach((sc, rIdx) => {
+          const roundNum = rIdx + 1;
+          const isJoker = (t.jokerRound === roundNum);
+          total += isJoker ? (sc * 2) : sc;
+        });
+        t.total = total;
+      });
+      // Sort teams descending by total points
+      teams.sort((a, b) => b.total - a.total);
+    }
+
+    function renderTeamsTable() {
+      recalculateScores();
+      const tbody = document.getElementById('teamsTableBody');
+      tbody.innerHTML = '';
+      document.getElementById('teamBadgeCount').textContent = teams.length;
+
+      teams.forEach((team, index) => {
+        const tr = document.createElement('tr');
+        tr.className = index === 0 ? "bg-amber-500/10 font-bold" : "hover:bg-gray-800/50";
+        
+        let rankBadge = `${index + 1}`;
+        if (index === 0) rankBadge = `<span class="text-amber-400"><i class="fa-solid fa-crown mr-1"></i>1st</span>`;
+        else if (index === 1) rankBadge = `<span class="text-slate-300">2nd</span>`;
+        else if (index === 2) rankBadge = `<span class="text-amber-600">3rd</span>`;
+
+        tr.innerHTML = `
+          <td class="py-3 px-3 text-xs">${rankBadge}</td>
+          <td class="py-3 px-3 font-semibold text-white">${team.name}</td>
+          <td class="py-3 px-3 text-center">
+            <select onchange="updateTeamJoker(${team.id}, this.value)" class="bg-gray-950 border border-gray-800 text-[11px] rounded px-2 py-1 text-amber-300 focus:outline-none">
+              <option value="0" ${team.jokerRound === 0 ? 'selected' : ''}>None</option>
+              <option value="1" ${team.jokerRound === 1 ? 'selected' : ''}>R1 (x2)</option>
+              <option value="2" ${team.jokerRound === 2 ? 'selected' : ''}>R2 (x2)</option>
+              <option value="3" ${team.jokerRound === 3 ? 'selected' : ''}>R3 (x2)</option>
+              <option value="4" ${team.jokerRound === 4 ? 'selected' : ''}>R4 (x2)</option>
+              <option value="5" ${team.jokerRound === 5 ? 'selected' : ''}>R5 (x2)</option>
+            </select>
+          </td>
+          <td class="py-3 px-3 text-center">
+            <div class="inline-flex items-center gap-1.5">
+              <button onclick="modifyScore(${team.id}, -1)" class="w-6 h-6 rounded bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-bold">-</button>
+              <button onclick="modifyScore(${team.id}, 1)" class="w-6 h-6 rounded bg-amber-500 hover:bg-amber-400 text-gray-950 text-xs font-bold">+</button>
+            </div>
+          </td>
+          <td class="py-3 px-3 text-right font-display text-base font-black text-amber-400">${team.total} pts</td>
+          <td class="py-3 px-3 text-center">
+            <button onclick="removeTeam(${team.id})" class="text-gray-500 hover:text-rose-400 text-xs transition">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function addNewTeam() {
+      const input = document.getElementById('newTeamInput');
+      const name = input.value.trim();
+      if (!name) return;
+      const newId = Date.now();
+      teams.push({
+        id: newId,
+        name: name,
+        jokerRound: 0,
+        scores: [0, 0, 0, 0, 0],
+        total: 0
+      });
+      input.value = '';
+      renderTeamsTable();
+      playSFX('correct');
+    }
+
+    function modifyScore(teamId, delta) {
+      const team = teams.find(t => t.id === teamId);
+      if (team) {
+        // Adjust score for active round or general score
+        const rIndex = Math.min(currentRoundIndex, 4);
+        team.scores[rIndex] = Math.max(0, (team.scores[rIndex] || 0) + delta);
+        renderTeamsTable();
+      }
+    }
+
+    function updateTeamJoker(teamId, val) {
+      const team = teams.find(t => t.id === teamId);
+      if (team) {
+        team.jokerRound = parseInt(val, 10);
+        renderTeamsTable();
+      }
+    }
+
+    function removeTeam(teamId) {
+      teams = teams.filter(t => t.id !== teamId);
+      renderTeamsTable();
+    }
+
+    function resetAllScores() {
+      teams.forEach(t => {
+        t.scores = [0, 0, 0, 0, 0];
+        t.total = 0;
+      });
+      renderTeamsTable();
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.warn(`Error enabling fullscreen: ${err.message}`);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+    /* ==========================================================
+       KEYBOARD HOTKEYS FOR DJ JC LIVE HOSTING
+       ========================================================== */
+    window.addEventListener('keydown', (e) => {
+      // Avoid hotkeys when typing in team input
+      if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'SELECT') {
+        return;
+      }
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        nextQuestion();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevQuestion();
+      } else if (e.key === '1') {
+        playSFX('airhorn');
+      } else if (e.key === '2') {
+        playSFX('correct');
+      } else if (e.key === '3') {
+        playSFX('wrong');
+      } else if (e.key === 't' || e.key === 'T') {
+        toggleTimer();
+      }
+    });
+
+    // Initialize once DOM is ready
+    window.addEventListener('DOMContentLoaded', () => {
+      initApp();
+    });
+  </script>
+</body>
+</html>
