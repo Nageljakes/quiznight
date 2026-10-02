@@ -303,11 +303,11 @@
             <span class="hidden sm:inline">TV</span>
           </button>
 
-          <!-- Leaderboard Modal Trigger -->
-          <button id="toggleScoreboardBtn" onclick="toggleScoreboardModal()" class="hidden md:inline-flex px-2.5 py-1 bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold rounded-lg text-xs transition items-center gap-1 border border-gray-700 active:scale-95">
-            <i class="fa-solid fa-list-ol text-amber-400 text-xs"></i>
-            <span>Scores</span>
-            <span id="teamBadgeCount" class="bg-gray-950 text-amber-300 text-[9px] px-1 rounded-full">4</span>
+          <!-- Scoreboard Modal Trigger -->
+          <button id="toggleScoreboardBtn" onclick="toggleScoreboardModal()" class="hidden md:inline-flex px-2.5 py-1 bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold rounded-lg text-xs transition items-center gap-1.5 border border-gray-700 active:scale-95" title="View Personal Scoreboard & Answer Key">
+            <i class="fa-solid fa-trophy text-amber-400 text-xs"></i>
+            <span>Scoreboard</span>
+            <span id="scoreboardTotalBadge" class="bg-amber-500 text-gray-950 font-black text-[10px] px-1.5 py-0.2 rounded-full">0 pts</span>
           </button>
 
           <!-- Fullscreen button -->
@@ -433,8 +433,8 @@
           <button id="modeAskBtn" onclick="setMode('ask')" class="flex-1 sm:flex-none px-3 sm:px-4 py-1.5 rounded-md text-xs font-bold transition bg-amber-500 text-gray-950 shadow text-center">
             <i class="fa-solid fa-microphone-lines mr-1 sm:mr-1.5"></i> Live Questions
           </button>
-          <button id="modeRevealBtn" onclick="setMode('reveal')" class="flex-1 sm:flex-none px-3 sm:px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition text-center">
-            <i class="fa-solid fa-key mr-1 sm:mr-1.5"></i> End-of-Round Key
+          <button id="modeRevealBtn" onclick="openScoreboardModalWithRound(currentRoundIndex)" class="flex-1 sm:flex-none px-3 sm:px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition text-center" title="Open Scoreboard and Round Answer Key">
+            <i class="fa-solid fa-key mr-1 sm:mr-1.5"></i> Round Key & Scores
           </button>
         </div>
       </div>
@@ -592,53 +592,7 @@
         <kbd class="px-1.5 py-0.5 rounded bg-gray-900 border border-gray-800 text-gray-300 font-mono text-[10px]">F</kbd> Fullscreen
       </div>
     </div>
-    <!-- VIEW B: END-OF-ROUND REVEAL VIEW -->
-    <div id="viewReveal" class="hidden flex flex-col gap-5">
-      <div class="glass-panel p-6 rounded-3xl border border-gray-800">
-        <div class="flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-gray-800 pb-4">
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="bg-amber-500 text-gray-950 font-extrabold text-xs px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                Marking Time
-              </span>
-              <h3 id="revealRoundTitle" class="text-xl sm:text-2xl font-black font-display text-white">
-                Round 1: Answers & Score Sheet Check
-              </h3>
-            </div>
-            <p class="text-xs sm:text-sm text-gray-400 mt-1">
-              Swap team papers or mark sheets now! Reveal answers one by one for maximum tension.
-            </p>
-          </div>
-
-          <div class="flex items-center gap-2 flex-wrap">
-            <button onclick="revealAllAnswers()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-gray-950 font-bold text-xs transition flex items-center gap-1.5 shadow active:scale-95">
-              <i class="fa-solid fa-bolt"></i> Reveal All
-            </button>
-            <button onclick="hideAllAnswers()" class="px-4 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold text-xs transition flex items-center gap-1.5">
-              <i class="fa-solid fa-eye-slash"></i> Hide All
-            </button>
-            <button onclick="resetCurrentRound()" class="px-3.5 py-2 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/60 font-bold text-xs transition flex items-center gap-1.5 active:scale-95" title="Clear answers for this round and restart">
-              <i class="fa-solid fa-arrow-rotate-left"></i> Reset Round
-            </button>
-          </div>
-        </div>
-
-        <!-- Answers Grid -->
-        <div id="revealQuestionsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- Dynamically populated 10 cards -->
-        </div>
-      </div>
-
-      <!-- Round Transition Action -->
-      <div class="flex items-center justify-between p-4 bg-gray-900/60 rounded-2xl border border-gray-800">
-        <p class="text-xs text-gray-400">
-          <i class="fa-solid fa-beer-mug-empty text-amber-400 mr-1.5"></i> Finished marking? Announce the top scores and step into the next round!
-        </p>
-        <button onclick="advanceToNextRound()" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-gray-950 font-extrabold text-xs transition flex items-center gap-2 shadow">
-          <span>Proceed To Next Round</span> <i class="fa-solid fa-forward"></i>
-        </button>
-      </div>
-    </div>
+    <div id="viewReveal" class="hidden"></div>
 
   </main>
     <!-- MODAL: USERNAME ONBOARDING & TEAM SELECTOR -->
@@ -667,66 +621,125 @@
     </div>
   </div>
 
-  <!-- MODAL: TEAM LEADERBOARD & JOKER DOUBLE-DOWN TRACKER -->
-  <div id="scoreboardModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="bg-gray-900 border border-gray-800 w-full max-w-3xl rounded-3xl p-6 sm:p-8 shadow-2xl relative max-h-[90vh] flex flex-col">
+  <!-- MODAL: PERSONAL SCOREBOARD & ROUND ANSWER KEY REVIEW -->
+  <div id="scoreboardModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+    <div class="bg-gray-900 border border-amber-500/30 w-full max-w-4xl rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col my-auto max-h-[92vh] overflow-hidden">
       
       <!-- Modal Header -->
-      <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-4">
+      <div class="flex items-center justify-between border-b border-gray-800 p-4 sm:p-5 bg-gray-950/90 shrink-0">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 shadow-md">
             <i class="fa-solid fa-trophy text-lg"></i>
           </div>
           <div>
-            <h3 class="text-xl font-black font-display text-white">Beerbox Midrand Live Leaderboard</h3>
-            <p class="text-xs text-gray-400">Add teams, assign points per round, and flag Joker rounds.</p>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h3 class="text-base sm:text-xl font-black font-display text-white">Scoreboard & Answer Key</h3>
+              <span id="scoreModalSetBadge" class="text-[10px] bg-blue-500/20 text-blue-300 border border-blue-500/40 font-bold px-2 py-0.5 rounded-full uppercase">Set 1</span>
+            </div>
+            <div class="flex items-center gap-1.5 text-xs text-gray-400">
+              <span>Player:</span>
+              <strong id="scoreModalUsername" class="text-amber-300">Player</strong>
+              <button onclick="openUsernameModal(true)" class="text-[10px] text-gray-500 hover:text-amber-400 underline ml-1">Change</button>
+            </div>
           </div>
         </div>
-        <button onclick="toggleScoreboardModal()" class="w-8 h-8 rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300 flex items-center justify-center transition">
+        <button onclick="toggleScoreboardModal()" class="w-8 h-8 rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300 flex items-center justify-center transition active:scale-95" title="Close Scoreboard">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <!-- Add New Team Form -->
-      <div class="flex gap-2 mb-4">
-        <input type="text" id="newTeamInput" placeholder="Enter Team Name (e.g. The Midrand Hopheads)..." class="flex-1 bg-gray-950 border border-gray-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition">
-        <button onclick="addNewTeam()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-gray-950 font-bold text-sm rounded-xl transition flex items-center gap-1.5 active:scale-95">
-          <i class="fa-solid fa-plus"></i> Add Team
-        </button>
-      </div>
+      <!-- Scrollable Content Body -->
+      <div class="overflow-y-auto flex-1 p-3 sm:p-6 flex flex-col gap-5">
+        
+        <!-- SECTION 1: GRAND TOTAL & ACCURACY HERO CARD -->
+        <div class="glass-panel p-4 sm:p-5 rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-900/90 to-gray-950 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-amber-500/15 border border-amber-500/40 flex flex-col items-center justify-center text-amber-400 shrink-0 shadow-inner">
+              <span id="heroGrandTotal" class="text-2xl sm:text-3xl font-black font-display text-white leading-none">0</span>
+              <span class="text-[10px] uppercase font-bold text-amber-400/80 mt-1">Points</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs uppercase font-extrabold tracking-wider text-amber-400">Grand Total</span>
+                <span id="heroAccuracyBadge" class="text-[11px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-black px-2 py-0.5 rounded-full">0% Accuracy</span>
+              </div>
+              <p id="heroScoreSummary" class="text-sm font-semibold text-gray-200 mt-1">0 of 50 questions answered correctly</p>
+              <!-- Accuracy Bar -->
+              <div class="w-full bg-gray-800 rounded-full h-2 mt-2 overflow-hidden max-w-xs">
+                <div id="heroProgressBar" class="bg-gradient-to-r from-amber-500 to-emerald-400 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
 
-      <!-- Teams Table -->
-      <div class="overflow-y-auto overflow-x-auto flex-1 pr-1 -mx-2 px-2">
-        <table class="w-full min-w-[520px] sm:min-w-full text-left text-xs sm:text-sm">
-          <thead>
-            <tr class="text-gray-400 border-b border-gray-800 text-[11px] uppercase tracking-wider">
-              <th class="py-2.5 px-3">Rank</th>
-              <th class="py-2.5 px-3">Team Name</th>
-              <th class="py-2.5 px-3 text-center">Joker Round</th>
-              <th class="py-2.5 px-3 text-center">Score Adjustment</th>
-              <th class="py-2.5 px-3 text-right">Total Pts</th>
-              <th class="py-2.5 px-3 text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody id="teamsTableBody" class="divide-y divide-gray-800">
-            <!-- Dynamically injected teams -->
-          </tbody>
-        </table>
+          <!-- Quick Action Buttons inside Hero Card -->
+          <div class="flex items-center sm:flex-col justify-end gap-2 border-t sm:border-t-0 border-gray-800 pt-3 sm:pt-0">
+            <button onclick="toggleScoreboardModal()" class="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-gray-950 font-black text-xs transition flex items-center justify-center gap-1.5 shadow active:scale-95">
+              <i class="fa-solid fa-play"></i> Continue Quiz
+            </button>
+            <button onclick="resetAllScores()" class="flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl bg-gray-900 hover:bg-rose-950/40 text-gray-400 hover:text-rose-300 border border-gray-800 hover:border-rose-500/40 text-xs font-bold transition flex items-center justify-center gap-1.5 active:scale-95" title="Clear all answers for this set">
+              <i class="fa-solid fa-trash-can text-rose-400 text-[10px]"></i> Reset All
+            </button>
+          </div>
+        </div>
+
+        <!-- SECTION 2: SCORES PER ROUND GRID -->
+        <div>
+          <div class="flex items-center justify-between mb-2.5">
+            <span class="text-xs font-black uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-layer-group text-amber-400"></i> Score Breakdown Per Round
+            </span>
+            <span class="text-[11px] text-gray-500">Click a round to filter review below</span>
+          </div>
+
+          <div id="roundScoreCardsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
+            <!-- Dynamically populated per-round score cards -->
+          </div>
+        </div>
+
+        <!-- SECTION 3: END-OF-ROUND KEY & USER ANSWERS REVIEW -->
+        <div class="pt-2 border-t border-gray-800/80">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-black uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-md border border-amber-500/20">
+                  Answer Key & Question Review
+                </span>
+                <span id="reviewFilterCountBadge" class="text-xs text-gray-400 font-semibold">(10 Questions)</span>
+              </div>
+              <p class="text-xs text-gray-400 mt-1">Review official answers and check what you selected for each question.</p>
+            </div>
+
+            <!-- Round Filter Tabs inside Answer Key -->
+            <div class="flex items-center gap-1 overflow-x-auto scrollbar-none pb-1" id="reviewRoundTabs">
+              <!-- Dynamically populated round filter pills -->
+            </div>
+          </div>
+
+          <!-- Questions Review Cards Container -->
+          <div id="scoreboardQuestionsList" class="flex flex-col gap-3">
+            <!-- Dynamically populated question cards with user's selected answer vs correct answer -->
+          </div>
+        </div>
+
       </div>
 
       <!-- Modal Footer -->
-      <div class="mt-4 pt-4 border-t border-gray-800 flex items-center justify-between text-xs text-gray-400 flex-wrap gap-2">
-        <span>💡 Tip: Click +1 / -1 or type points directly.</span>
-        <div class="flex items-center gap-3">
-          <button onclick="resetCurrentRound()" class="text-amber-400 hover:text-amber-300 font-semibold transition flex items-center gap-1" title="Clear answers for current round">
-            <i class="fa-solid fa-arrow-rotate-left"></i> Reset Current Round
+      <div class="p-3 sm:p-4 border-t border-gray-800 bg-gray-950/80 flex items-center justify-between text-xs text-gray-400 shrink-0 flex-wrap gap-2">
+        <div class="flex items-center gap-2">
+          <button onclick="resetCurrentRoundFromModal()" class="text-rose-400 hover:text-rose-300 font-bold transition flex items-center gap-1">
+            <i class="fa-solid fa-arrow-rotate-left"></i> Reset This Round
           </button>
-          <span class="text-gray-700">•</span>
-          <button onclick="resetAllScores()" class="text-rose-400 hover:text-rose-300 font-semibold transition flex items-center gap-1">
-            <i class="fa-solid fa-trash"></i> Reset All Scores
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="advanceToNextRound()" id="modalAdvanceRoundBtn" class="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-gray-950 font-black text-xs transition flex items-center gap-1.5 shadow">
+            <span>Next Round</span> <i class="fa-solid fa-forward"></i>
+          </button>
+          <button onclick="toggleScoreboardModal()" class="px-3.5 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold text-xs transition">
+            Close
           </button>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -1034,8 +1047,17 @@
       const nameEl = document.getElementById('headerUsernameDisplay');
       const scoreEl = document.getElementById('headerUserScoreBadge');
       const scoreElMobile = document.getElementById('headerUserScoreBadgeMobile');
-      const userTeam = ensureUserTeam();
-      const pts = userTeam ? userTeam.total : 0;
+      const scoreBadgeTotal = document.getElementById('scoreboardTotalBadge');
+      
+      let pts = 0;
+      if (typeof getUserScoresSummary === 'function') {
+        const summary = getUserScoresSummary();
+        pts = summary.grandTotal;
+      } else {
+        const userTeam = ensureUserTeam();
+        pts = userTeam ? userTeam.total : 0;
+      }
+
       if (nameEl) {
         nameEl.textContent = currentUsername || 'Player';
       }
@@ -1044,6 +1066,9 @@
       }
       if (scoreElMobile) {
         scoreElMobile.textContent = `${pts} pts`;
+      }
+      if (scoreBadgeTotal) {
+        scoreBadgeTotal.textContent = `${pts} pts`;
       }
     }
 
@@ -1650,7 +1675,7 @@
         hostAnswerRevealed = false;
         renderCurrentQuestion();
       } else {
-        setMode('reveal');
+        openScoreboardModalWithRound(currentRoundIndex);
       }
     }
 
@@ -1675,126 +1700,22 @@
        MODE SWITCHING & REVEAL SYSTEM
        ========================================================== */
     function setMode(mode) {
-      currentMode = mode;
+      if (mode === 'reveal') {
+        openScoreboardModalWithRound(currentRoundIndex);
+        return;
+      }
+      currentMode = 'ask';
       const askBtn = document.getElementById('modeAskBtn');
       const revealBtn = document.getElementById('modeRevealBtn');
       const viewAsk = document.getElementById('viewAsk');
-      const viewReveal = document.getElementById('viewReveal');
-
-      if (mode === 'ask') {
-        askBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold transition bg-amber-500 text-gray-950 shadow";
-        revealBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition";
-        viewAsk.classList.remove('hidden');
-        viewReveal.classList.add('hidden');
-        renderCurrentQuestion();
-      } else {
-        // Stop timer when in round reveal / review mode
-        clearInterval(timerInterval);
-        timerRunning = false;
-        revealBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold transition bg-amber-500 text-gray-950 shadow";
-        askBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition";
-        viewAsk.classList.add('hidden');
-        viewReveal.classList.remove('hidden');
-        renderRevealGrid();
-        playSFX('drumroll');
-      }
+      if (askBtn) askBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold transition bg-amber-500 text-gray-950 shadow";
+      if (revealBtn) revealBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition";
+      if (viewAsk) viewAsk.classList.remove('hidden');
+      renderCurrentQuestion();
     }
 
     function renderRevealGrid() {
-      const round = quizData[currentRoundIndex];
-      document.getElementById('revealRoundTitle').textContent = `${round.title} - Official Answer Key`;
-      const grid = document.getElementById('revealQuestionsGrid');
-      grid.innerHTML = '';
-
-      round.questions.forEach((q, idx) => {
-        const card = document.createElement('div');
-        card.id = `reveal-card-${idx}`;
-        card.className = "p-4 rounded-2xl bg-gray-950/80 border border-gray-800 flex flex-col justify-between transition-all hover:border-gray-700";
-        card.innerHTML = `
-          <div>
-            <div class="flex items-center justify-between gap-2 mb-2">
-              <span class="text-xs font-black uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
-                Question ${idx + 1}
-              </span>
-              <button onclick="toggleCardAnswer(${idx})" id="reveal-btn-${idx}" class="text-[11px] px-2.5 py-1 rounded-lg bg-gray-800 hover:bg-amber-500 hover:text-gray-950 text-gray-300 font-bold transition flex items-center gap-1 active:scale-95">
-                <i class="fa-solid fa-eye"></i> <span>Reveal</span>
-              </button>
-            </div>
-            <p class="text-sm font-semibold text-gray-200 mb-3">${q.q}</p>
-          </div>
-          
-          <div id="reveal-answer-box-${idx}" class="hidden mt-2 pt-3 border-t border-gray-800/80">
-            <div class="flex items-center gap-2 mb-2">
-              <span class="text-xs font-black uppercase tracking-wider text-emerald-400">Answer:</span>
-              <span class="text-sm font-black text-amber-300">${q.a}</span>
-            </div>
-            ${q.options ? `
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 my-2">
-              ${q.options.map((opt, oIdx) => {
-                const ltr = ['A', 'B', 'C', 'D'][oIdx];
-                const isCorr = q.a.trim().startsWith(ltr);
-                const optTextClean = opt.replace(/^[A-D]\)\s*/, '');
-                return `<div class="text-xs px-2.5 py-1.5 rounded-lg border ${isCorr ? 'bg-emerald-950/60 border-emerald-500 text-emerald-200 font-bold' : 'bg-gray-900 border-gray-800 text-gray-400'} flex items-center gap-1.5">
-                  <span class="font-black text-[10px] ${isCorr ? 'text-emerald-400' : 'text-amber-400'}">${ltr}</span>
-                  <span>${optTextClean}</span>
-                </div>`;
-              }).join('')}
-            </div>` : ''}
-            <p class="text-[11px] text-gray-400 mt-1 italic">${q.notes}</p>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    function toggleCardAnswer(idx) {
-      const ansBox = document.getElementById(`reveal-answer-box-${idx}`);
-      const btn = document.getElementById(`reveal-btn-${idx}`);
-      const card = document.getElementById(`reveal-card-${idx}`);
-      
-      if (ansBox.classList.contains('hidden')) {
-        ansBox.classList.remove('hidden');
-        btn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> <span>Hide</span>`;
-        btn.classList.add('bg-amber-500', 'text-gray-950');
-        card.classList.add('border-amber-500/40', 'bg-amber-950/10');
-        playSFX('correct');
-      } else {
-        ansBox.classList.add('hidden');
-        btn.innerHTML = `<i class="fa-solid fa-eye"></i> <span>Reveal</span>`;
-        btn.classList.remove('bg-amber-500', 'text-gray-950');
-        card.classList.remove('border-amber-500/40', 'bg-amber-950/10');
-      }
-    }
-
-    function revealAllAnswers() {
-      const round = quizData[currentRoundIndex];
-      round.questions.forEach((_, idx) => {
-        const ansBox = document.getElementById(`reveal-answer-box-${idx}`);
-        const btn = document.getElementById(`reveal-btn-${idx}`);
-        const card = document.getElementById(`reveal-card-${idx}`);
-        if (ansBox) ansBox.classList.remove('hidden');
-        if (btn) {
-          btn.innerHTML = `<i class="fa-solid fa-eye-slash"></i> <span>Hide</span>`;
-          btn.classList.add('bg-amber-500', 'text-gray-950');
-        }
-        if (card) card.classList.add('border-amber-500/40', 'bg-amber-950/10');
-      });
-      playSFX('fanfare');
-    }
-
-    function hideAllAnswers() {
-      const round = quizData[currentRoundIndex];
-      round.questions.forEach((_, idx) => {
-        const ansBox = document.getElementById(`reveal-answer-box-${idx}`);
-        const btn = document.getElementById(`reveal-btn-${idx}`);
-        const card = document.getElementById(`reveal-card-${idx}`);
-        if (ansBox) ansBox.classList.add('hidden');
-        if (btn) {
-          btn.innerHTML = `<i class="fa-solid fa-eye"></i> <span>Reveal</span>`;
-          btn.classList.remove('bg-amber-500', 'text-gray-950');
-        }
-        if (card) card.classList.remove('border-amber-500/40', 'bg-amber-950/10');
-      });
+      renderScoreboard();
     }
 
     function advanceToNextRound() {
@@ -1802,6 +1723,7 @@
         switchRound(currentRoundIndex + 1);
         setMode('ask');
         playSFX('fanfare');
+        showToast(`Stepped into Round ${currentRoundIndex + 1}!`, 'fa-forward');
       } else {
         toggleScoreboardModal();
       }
@@ -2039,129 +1961,320 @@
     });
 
     /* ==========================================================
-       TEAM SCOREBOARD & PERSISTENT LEADERBOARD MANAGEMENT
+       PERSONAL SCOREBOARD & ANSWER KEY REVIEW ENGINE
+       Shows logged-in user score per round, grand total,
+       and question review with user selection vs correct answer.
        ========================================================== */
+    let scoreboardFilterRound = 'all'; // 'all' or roundIndex (0..5)
+
+    function getUserScoresSummary() {
+      if (!quizData || !Array.isArray(quizData)) {
+        return { roundScores: [], grandTotal: 0, totalPossible: 0, accuracy: 0 };
+      }
+      const roundScores = [];
+      let grandTotal = 0;
+      let totalPossible = 0;
+
+      quizData.forEach((round, rIdx) => {
+        let rScore = 0;
+        let rAnswered = 0;
+        const qCount = round.questions ? round.questions.length : 0;
+        totalPossible += qCount;
+
+        if (round.questions) {
+          round.questions.forEach((_, qIdx) => {
+            const key = `r${rIdx}_q${qIdx}`;
+            const rec = userAnswers[key];
+            if (rec && typeof rec.selectedIndex === 'number' && rec.selectedIndex >= 0) {
+              rAnswered++;
+              if (rec.isCorrect) {
+                rScore++;
+              }
+            }
+          });
+        }
+        grandTotal += rScore;
+        roundScores.push({
+          roundIndex: rIdx,
+          title: round.title,
+          score: rScore,
+          answered: rAnswered,
+          total: qCount
+        });
+      });
+
+      const accuracy = totalPossible > 0 ? Math.round((grandTotal / totalPossible) * 100) : 0;
+      return { roundScores, grandTotal, totalPossible, accuracy };
+    }
+
     function toggleScoreboardModal() {
       const modal = document.getElementById('scoreboardModal');
+      if (!modal) return;
+      const isOpening = modal.classList.contains('hidden');
       modal.classList.toggle('hidden');
-      if (!modal.classList.contains('hidden')) {
-        renderTeamsTable();
+      if (isOpening) {
+        scoreboardFilterRound = currentRoundIndex;
+        renderScoreboard();
       }
+    }
+
+    function openScoreboardModalWithRound(roundIdx) {
+      if (typeof roundIdx === 'number' && roundIdx >= 0) {
+        scoreboardFilterRound = roundIdx;
+      } else {
+        scoreboardFilterRound = currentRoundIndex;
+      }
+      const modal = document.getElementById('scoreboardModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        renderScoreboard();
+      }
+    }
+
+    function setScoreboardReviewRound(roundIdx) {
+      scoreboardFilterRound = roundIdx;
+      renderScoreboard();
+    }
+
+    function renderScoreboard() {
+      const summary = getUserScoresSummary();
+
+      // Update header score badges
+      updateUserHeaderDisplay();
+
+      // Update modal player name and set badge
+      const userEl = document.getElementById('scoreModalUsername');
+      if (userEl) userEl.textContent = currentUsername || 'Player (Guest)';
+
+      const setBadge = document.getElementById('scoreModalSetBadge');
+      if (setBadge) setBadge.textContent = activeQuizSet ? activeQuizSet.setName : `Set ${currentSetIndex + 1}`;
+
+      // Update Grand Total Hero Card
+      const heroGrand = document.getElementById('heroGrandTotal');
+      if (heroGrand) heroGrand.textContent = summary.grandTotal;
+
+      const heroAccuracy = document.getElementById('heroAccuracyBadge');
+      if (heroAccuracy) heroAccuracy.textContent = `${summary.accuracy}% Accuracy`;
+
+      const heroSummary = document.getElementById('heroScoreSummary');
+      if (heroSummary) heroSummary.textContent = `${summary.grandTotal} of ${summary.totalPossible} questions answered correctly`;
+
+      const heroProgress = document.getElementById('heroProgressBar');
+      if (heroProgress) heroProgress.style.width = `${summary.accuracy}%`;
+
+      // Update Advance button in modal footer
+      const advanceBtn = document.getElementById('modalAdvanceRoundBtn');
+      if (advanceBtn) {
+        if (currentRoundIndex < quizData.length - 1) {
+          advanceBtn.classList.remove('hidden');
+          const nextR = currentRoundIndex + 2;
+          advanceBtn.innerHTML = `<span>Round ${nextR}</span> <i class="fa-solid fa-forward"></i>`;
+          advanceBtn.onclick = () => {
+            advanceToNextRound();
+            toggleScoreboardModal();
+          };
+        } else {
+          advanceBtn.classList.add('hidden');
+        }
+      }
+
+      // Populate Per-Round Score Cards
+      const roundCardsGrid = document.getElementById('roundScoreCardsGrid');
+      if (roundCardsGrid) {
+        roundCardsGrid.innerHTML = '';
+        summary.roundScores.forEach((rInfo, rIdx) => {
+          const isSelected = (scoreboardFilterRound === rIdx);
+          const card = document.createElement('button');
+          card.className = `p-3 rounded-xl border transition-all text-left flex flex-col justify-between ${
+            isSelected 
+              ? 'bg-amber-500/20 border-amber-400 text-amber-300 ring-2 ring-amber-400/40 shadow-lg' 
+              : 'bg-gray-950/80 border-gray-800 text-gray-300 hover:border-gray-700 hover:bg-gray-900/60'
+          }`;
+          card.onclick = () => setScoreboardReviewRound(rIdx);
+          const cleanTitle = rInfo.title.replace(/^Round \d+:\s*/, '');
+          const pct = rInfo.total > 0 ? Math.round((rInfo.score / rInfo.total) * 100) : 0;
+          card.innerHTML = `
+            <div class="flex items-center justify-between text-[11px] font-bold">
+              <span class="text-amber-400">Round ${rIdx + 1}</span>
+              <span class="${rInfo.score === rInfo.total && rInfo.total > 0 ? 'text-emerald-400' : 'text-gray-400'} font-mono">${rInfo.score}/${rInfo.total} pts</span>
+            </div>
+            <div class="text-xs font-black truncate text-white mt-1 mb-2">${cleanTitle}</div>
+            <div class="w-full bg-gray-800 rounded-full h-1.5 overflow-hidden">
+              <div class="bg-amber-400 h-1.5 rounded-full transition-all" style="width: ${pct}%"></div>
+            </div>
+          `;
+          roundCardsGrid.appendChild(card);
+        });
+      }
+
+      // Populate Round Filter Pills inside Answer Key
+      const reviewRoundTabs = document.getElementById('reviewRoundTabs');
+      if (reviewRoundTabs) {
+        reviewRoundTabs.innerHTML = '';
+
+        const allBtn = document.createElement('button');
+        const isAllSelected = (scoreboardFilterRound === 'all');
+        allBtn.className = `px-3 py-1 rounded-lg text-xs font-bold transition shrink-0 ${
+          isAllSelected ? 'bg-amber-500 text-gray-950 shadow' : 'bg-gray-800 text-gray-300 hover:text-white hover:bg-gray-700'
+        }`;
+        allBtn.textContent = `All Rounds (${summary.totalPossible} Qs)`;
+        allBtn.onclick = () => setScoreboardReviewRound('all');
+        reviewRoundTabs.appendChild(allBtn);
+
+        summary.roundScores.forEach((rInfo, rIdx) => {
+          const isSelected = (scoreboardFilterRound === rIdx);
+          const rBtn = document.createElement('button');
+          rBtn.className = `px-2.5 py-1 rounded-lg text-xs font-bold transition shrink-0 ${
+            isSelected ? 'bg-amber-500 text-gray-950 shadow' : 'bg-gray-800 text-gray-300 hover:text-white hover:bg-gray-700'
+          }`;
+          rBtn.textContent = `R${rIdx + 1} (${rInfo.score}/${rInfo.total})`;
+          rBtn.onclick = () => setScoreboardReviewRound(rIdx);
+          reviewRoundTabs.appendChild(rBtn);
+        });
+      }
+
+      // Populate Questions Review List
+      const questionsList = document.getElementById('scoreboardQuestionsList');
+      if (questionsList) {
+        questionsList.innerHTML = '';
+
+        const roundsToShow = (scoreboardFilterRound === 'all')
+          ? quizData.map((_, idx) => idx)
+          : [scoreboardFilterRound];
+
+        let displayedCount = 0;
+
+        roundsToShow.forEach(rIdx => {
+          const round = quizData[rIdx];
+          if (!round || !round.questions) return;
+
+          if (scoreboardFilterRound === 'all') {
+            const header = document.createElement('div');
+            header.className = "flex items-center justify-between pt-3 pb-1 text-xs font-black uppercase tracking-wider text-amber-400 border-b border-gray-800";
+            header.innerHTML = `
+              <span>Round ${rIdx + 1}: ${round.title.replace(/^Round \d+:\s*/, '')}</span>
+              <span class="text-gray-400 font-mono">${summary.roundScores[rIdx]?.score || 0}/${round.questions.length} pts</span>
+            `;
+            questionsList.appendChild(header);
+          }
+
+          round.questions.forEach((q, qIdx) => {
+            displayedCount++;
+            const qKey = `r${rIdx}_q${qIdx}`;
+            const answerRecord = userAnswers[qKey];
+            const hasAnswered = !!answerRecord && typeof answerRecord.selectedIndex === 'number' && answerRecord.selectedIndex >= 0;
+
+            let userLetter = '';
+            let userText = 'No answer selected (Skipped)';
+            let isUserCorrect = false;
+
+            if (hasAnswered) {
+              const optIdx = answerRecord.selectedIndex;
+              userLetter = ['A', 'B', 'C', 'D'][optIdx] || '';
+              userText = (q.options && q.options[optIdx]) ? q.options[optIdx].replace(/^[A-D]\)\s*/, '') : '';
+              isUserCorrect = !!answerRecord.isCorrect;
+            }
+
+            const correctClean = q.a.replace(/^[A-D]\)\s*/, '');
+            const correctLetter = q.a.trim().slice(0, 1);
+
+            const card = document.createElement('div');
+            card.className = `p-3.5 sm:p-4 rounded-xl border transition-all ${
+              hasAnswered
+                ? (isUserCorrect ? 'bg-emerald-950/20 border-emerald-500/40' : 'bg-rose-950/20 border-rose-500/40')
+                : 'bg-gray-950/60 border-gray-800'
+            }`;
+
+            let badgeHtml = '';
+            if (hasAnswered) {
+              if (isUserCorrect) {
+                badgeHtml = `<span class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[11px] font-black flex items-center gap-1 shrink-0"><i class="fa-solid fa-check"></i> +1 pt Correct</span>`;
+              } else {
+                badgeHtml = `<span class="px-2 py-0.5 rounded-md bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[11px] font-black flex items-center gap-1 shrink-0"><i class="fa-solid fa-xmark"></i> 0 pts Incorrect</span>`;
+              }
+            } else {
+              badgeHtml = `<span class="px-2 py-0.5 rounded-md bg-gray-800 text-gray-400 border border-gray-700 text-[11px] font-bold flex items-center gap-1 shrink-0"><i class="fa-regular fa-circle-question"></i> 0 pts Skipped</span>`;
+            }
+
+            card.innerHTML = `
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="text-[11px] font-black uppercase text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                    Q${qIdx + 1} • Round ${rIdx + 1}
+                  </span>
+                </div>
+                ${badgeHtml}
+              </div>
+
+              <p class="text-xs sm:text-sm font-semibold text-white mb-3">${q.q}</p>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <!-- User Choice -->
+                <div class="p-2.5 rounded-lg border flex flex-col justify-between ${
+                  hasAnswered
+                    ? (isUserCorrect ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-100' : 'bg-rose-950/40 border-rose-500/50 text-rose-100')
+                    : 'bg-gray-900 border-gray-800 text-gray-400'
+                }">
+                  <span class="text-[10px] uppercase font-bold tracking-wider ${
+                    hasAnswered ? (isUserCorrect ? 'text-emerald-400' : 'text-rose-400') : 'text-gray-500'
+                  } mb-1">
+                    Your Selection:
+                  </span>
+                  <div class="flex items-center gap-2">
+                    ${hasAnswered ? `
+                      <span class="w-6 h-6 rounded flex items-center justify-center font-black text-xs shrink-0 ${
+                        isUserCorrect ? 'bg-emerald-500 text-gray-950' : 'bg-rose-500 text-white'
+                      }">${userLetter}</span>
+                      <span class="font-bold leading-snug break-words">${userText}</span>
+                    ` : `
+                      <span class="italic text-gray-500">None selected (Skipped)</span>
+                    `}
+                  </div>
+                </div>
+
+                <!-- Correct Official Answer -->
+                <div class="p-2.5 rounded-lg border bg-emerald-950/30 border-emerald-500/50 text-emerald-100 flex flex-col justify-between">
+                  <span class="text-[10px] uppercase font-bold tracking-wider text-emerald-400 mb-1">
+                    Official Correct Answer:
+                  </span>
+                  <div class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded bg-emerald-500 text-gray-950 flex items-center justify-center font-black text-xs shrink-0">${correctLetter}</span>
+                    <span class="font-bold text-white leading-snug break-words">${correctClean}</span>
+                  </div>
+                </div>
+              </div>
+
+              ${q.notes ? `
+                <p class="text-[11px] text-gray-400 mt-2.5 italic bg-gray-950/50 p-2 rounded-lg border border-gray-800 flex items-start gap-1.5">
+                  <i class="fa-solid fa-circle-info text-amber-400 text-xs mt-0.5 shrink-0"></i>
+                  <span>${q.notes}</span>
+                </p>
+              ` : ''}
+            `;
+            questionsList.appendChild(card);
+          });
+        });
+
+        const filterCount = document.getElementById('reviewFilterCountBadge');
+        if (filterCount) {
+          filterCount.textContent = `(${displayedCount} Questions)`;
+        }
+      }
+    }
+
+    function resetCurrentRoundFromModal() {
+      const targetRound = (scoreboardFilterRound === 'all') ? currentRoundIndex : scoreboardFilterRound;
+      resetRound(targetRound);
+      renderScoreboard();
+    }
+
+    // Aliases for compatibility
+    function renderTeamsTable() {
+      renderScoreboard();
     }
 
     function recalculateScores() {
-      teams.forEach(t => {
-        let total = 0;
-        t.scores.forEach((sc, rIdx) => {
-          const roundNum = rIdx + 1;
-          const isJoker = (t.jokerRound === roundNum);
-          total += isJoker ? (sc * 2) : sc;
-        });
-        t.total = total;
-      });
-      // Sort teams descending by total points
-      teams.sort((a, b) => b.total - a.total);
-    }
-
-    function renderTeamsTable() {
-      recalculateScores();
-      const tbody = document.getElementById('teamsTableBody');
-      tbody.innerHTML = '';
-      document.getElementById('teamBadgeCount').textContent = teams.length;
-
-      teams.forEach((team, index) => {
-        const tr = document.createElement('tr');
-        const isCurrentUser = currentUsername && team.name.toLowerCase() === currentUsername.toLowerCase();
-        tr.className = isCurrentUser 
-          ? "bg-amber-500/15 font-bold border-l-4 border-amber-400" 
-          : (index === 0 ? "bg-amber-500/10 font-bold" : "hover:bg-gray-800/50");
-        
-        let rankBadge = `${index + 1}`;
-        if (index === 0) rankBadge = `<span class="text-amber-400"><i class="fa-solid fa-crown mr-1"></i>1st</span>`;
-        else if (index === 1) rankBadge = `<span class="text-slate-300">2nd</span>`;
-        else if (index === 2) rankBadge = `<span class="text-amber-600">3rd</span>`;
-
-        tr.innerHTML = `
-          <td class="py-3 px-3 text-xs">${rankBadge}</td>
-          <td class="py-3 px-3 font-semibold text-white">
-            <div class="flex items-center gap-1.5 flex-wrap">
-              <span>${team.name}</span>
-              ${isCurrentUser ? '<span class="text-[10px] bg-amber-500 text-gray-950 font-black px-1.5 py-0.5 rounded shadow">YOU</span>' : ''}
-            </div>
-          </td>
-          <td class="py-3 px-3 text-center">
-            <select onchange="updateTeamJoker(${team.id}, this.value)" class="bg-gray-950 border border-gray-800 text-[11px] rounded px-2 py-1 text-amber-300 focus:outline-none">
-              <option value="0" ${team.jokerRound === 0 ? 'selected' : ''}>None</option>
-              <option value="1" ${team.jokerRound === 1 ? 'selected' : ''}>R1 (x2)</option>
-              <option value="2" ${team.jokerRound === 2 ? 'selected' : ''}>R2 (x2)</option>
-              <option value="3" ${team.jokerRound === 3 ? 'selected' : ''}>R3 (x2)</option>
-              <option value="4" ${team.jokerRound === 4 ? 'selected' : ''}>R4 (x2)</option>
-              <option value="5" ${team.jokerRound === 5 ? 'selected' : ''}>R5 (x2)</option>
-            </select>
-          </td>
-          <td class="py-3 px-3 text-center">
-            <div class="inline-flex items-center gap-1.5">
-              <button onclick="modifyScore(${team.id}, -1)" class="w-6 h-6 rounded bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-bold">-</button>
-              <button onclick="modifyScore(${team.id}, 1)" class="w-6 h-6 rounded bg-amber-500 hover:bg-amber-400 text-gray-950 text-xs font-bold">+</button>
-            </div>
-          </td>
-          <td class="py-3 px-3 text-right font-display text-base font-black text-amber-400">${team.total} pts</td>
-          <td class="py-3 px-3 text-center">
-            <button onclick="removeTeam(${team.id})" class="text-gray-500 hover:text-rose-400 text-xs transition" title="Delete Team">
-              <i class="fa-solid fa-trash-can"></i>
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function addNewTeam() {
-      const input = document.getElementById('newTeamInput');
-      const name = input.value.trim();
-      if (!name) return;
-      const newId = Date.now();
-      teams.push({
-        id: newId,
-        name: name,
-        jokerRound: 0,
-        scores: [0, 0, 0, 0, 0],
-        total: 0
-      });
-      input.value = '';
-      saveTeams();
-      renderTeamsTable();
-      playSFX('correct');
-    }
-
-    function modifyScore(teamId, delta) {
-      const team = teams.find(t => t.id === teamId);
-      if (team) {
-        const rIndex = Math.min(currentRoundIndex, 4);
-        team.scores[rIndex] = Math.max(0, (team.scores[rIndex] || 0) + delta);
-        saveTeams();
-        recalculateScores();
-        renderTeamsTable();
-        updateUserHeaderDisplay();
-      }
-    }
-
-    function updateTeamJoker(teamId, val) {
-      const team = teams.find(t => t.id === teamId);
-      if (team) {
-        team.jokerRound = parseInt(val, 10);
-        saveTeams();
-        recalculateScores();
-        renderTeamsTable();
-        updateUserHeaderDisplay();
-      }
-    }
-
-    function removeTeam(teamId) {
-      teams = teams.filter(t => t.id !== teamId);
-      saveTeams();
-      renderTeamsTable();
-      updateUserHeaderDisplay();
+      // Compatibility stub
     }
 
     function resetRound(roundIndex, skipConfirm = false) {
