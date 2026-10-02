@@ -1427,6 +1427,9 @@
     function closeUsernameModal() {
       const modal = document.getElementById('usernameModal');
       if (modal) modal.classList.add('hidden');
+      if (currentMode === 'ask' && !timerRunning) {
+        startAutoTimerForCurrentQuestion();
+      }
     }
 
     function handleUsernameSubmit(e) {
@@ -1969,6 +1972,14 @@
     function startAutoTimerForCurrentQuestion() {
       clearInterval(timerInterval);
       timerRunning = false;
+
+      // If username onboarding modal is open, hold timer until user joins or closes it
+      const usernameModal = document.getElementById('usernameModal');
+      if (usernameModal && !usernameModal.classList.contains('hidden')) {
+        timerSeconds = 10;
+        updateTimerDisplay();
+        return;
+      }
 
       if (currentMode !== 'ask') return;
 
