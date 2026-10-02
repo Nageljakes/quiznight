@@ -2,7 +2,7 @@
    BEERBOX PUB QUIZ - 10 ROTATING QUESTION SETS (10x5x10)
    500 Regulation Questions + 30 Sudden-Death Tie-Breakers
    ========================================================== */
-window.quizSets = [
+var quizSets = [
   {
     "setId": 1,
     "setName": "Set 1: The Grand Kickoff",
@@ -6514,3 +6514,6 @@ window.quizSets = [
     ]
   }
 ];
+
+if (typeof window !== "undefined") { window.quizSets = quizSets; }
+if (typeof global !== "undefined") { global.quizSets = quizSets; }

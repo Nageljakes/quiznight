@@ -11,7 +11,8 @@
   <!-- Google Fonts: Syne & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Rotating Pub Quiz Question Bank (10x5x10) -->
+  <script src="quizSets.js"></script>
   
   <script>
     tailwind.config = {
@@ -578,6 +579,8 @@
       </div>
     </div>
   </footer>
+  <!-- Rotating Pub Quiz Question Sets (10x5x10) -->
+  <script src="quizSets.js"></script>
   <script>
     /* ==========================================================
        SYNTHESIZED AUDIO SOUNDBOARD (ZERO DEPENDENCY WEB AUDIO)
@@ -700,9 +703,13 @@
        10 Sets x 5 Rounds x 10 Questions + Tie Breakers = 530 Questions
        ========================================================== */
     function getQuizSets() {
-      return (typeof window !== 'undefined' && Array.isArray(window.quizSets) && window.quizSets.length > 0)
-        ? window.quizSets
-        : [];
+      if (typeof window !== 'undefined' && Array.isArray(window.quizSets) && window.quizSets.length > 0) {
+        return window.quizSets;
+      }
+      if (typeof quizSets !== 'undefined' && Array.isArray(quizSets) && quizSets.length > 0) {
+        return quizSets;
+      }
+      return [];
     }
 
     function getUserAnswersKey(setIdx) {
@@ -983,11 +990,18 @@
        ========================================================== */
     function initApp() {
       const sets = getQuizSets();
+      if (!sets || sets.length === 0) {
+        window._initAppRetries = (window._initAppRetries || 0) + 1;
+        if (window._initAppRetries < 30) {
+          setTimeout(initApp, 40);
+          return;
+        }
+      }
       currentSetIndex = parseInt(localStorage.getItem('beerbox_quiz_set_index') || '0', 10);
-      if (isNaN(currentSetIndex) || currentSetIndex < 0 || (sets.length > 0 && currentSetIndex >= sets.length)) {
+      if (isNaN(currentSetIndex) || currentSetIndex < 0 || (sets && sets.length > 0 && currentSetIndex >= sets.length)) {
         currentSetIndex = 0;
       }
-      if (sets.length > 0) {
+      if (sets && sets.length > 0) {
         activeQuizSet = sets[currentSetIndex];
         quizData = activeQuizSet.rounds;
       }
@@ -1211,8 +1225,20 @@
     }
 
     function renderCurrentQuestion() {
+      if (!quizData || !quizData[currentRoundIndex] || !quizData[currentRoundIndex].questions) {
+        const sets = getQuizSets();
+        if (sets && sets.length > 0) {
+          activeQuizSet = sets[currentSetIndex] || sets[0];
+          quizData = activeQuizSet.rounds;
+        }
+      }
+      if (!quizData || !quizData[currentRoundIndex] || !quizData[currentRoundIndex].questions) {
+        return;
+      }
+
       const round = quizData[currentRoundIndex];
       const q = round.questions[currentQuestionIndex];
+      if (!q) return;
       const totalQ = round.questions.length;
 
       if (document.getElementById('cardSetBadge') && activeQuizSet) {
