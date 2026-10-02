@@ -202,7 +202,7 @@
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
   <!-- TOP CONTROL DECK & HEADER (DESKTOP & MOBILE RESPONSIVE) -->
   <header class="sticky top-0 z-50 glass-panel border-b border-amber-500/20 px-3 sm:px-4 py-2 sm:py-2.5">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2 sm:gap-3">
+    <div class="relative max-w-7xl mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2 sm:gap-3">
       
       <!-- Top Bar: Brand on Left, Quick Set & Score Badge on Mobile Right -->
       <div class="flex items-center justify-between w-full md:w-auto gap-2">
@@ -231,9 +231,10 @@
 
         <!-- Mobile-Only Quick Icons: Set + A4 + Leaderboard Trigger -->
         <div class="flex md:hidden items-center gap-1.5">
-          <button onclick="toggleSetDropdown()" class="px-2 py-1 bg-gray-900 hover:bg-gray-800 text-amber-300 font-bold rounded-lg text-xs border border-amber-500/40 flex items-center gap-1 shadow-sm active:scale-95" title="Change Set">
+          <button id="setSelectorBtnMobile" onclick="toggleSetDropdown(event)" class="px-2 py-1 bg-gray-900 hover:bg-gray-800 text-amber-300 font-bold rounded-lg text-xs border border-amber-500/40 flex items-center gap-1 shadow-sm active:scale-95 transition" title="Change Question Set">
             <i class="fa-solid fa-layer-group text-amber-400 text-[10px]"></i>
             <span id="headerSetBadgeMobile" class="text-[11px]">Set 1</span>
+            <i class="fa-solid fa-chevron-down text-[8px] text-gray-400 ml-0.5"></i>
           </button>
           <button onclick="openA4PaperModal()" class="px-2 py-1 bg-gray-900 hover:bg-gray-800 text-amber-300 font-bold rounded-lg text-xs border border-gray-700 flex items-center gap-1 shadow-sm active:scale-95" title="A4 Master Paper (with Answers)">
             <i class="fa-solid fa-file-invoice text-amber-400 text-[10px]"></i>
@@ -274,7 +275,7 @@
         <div class="flex items-center gap-1.5 shrink-0">
           <!-- Question Set Selector Dropdown & Rotation -->
           <div class="relative hidden md:flex items-center">
-            <button id="setSelectorBtn" onclick="toggleSetDropdown()" class="px-2.5 py-1 bg-gray-900 hover:bg-gray-800 text-amber-300 font-bold rounded-lg text-xs transition flex items-center gap-1.5 border border-amber-500/40 active:scale-95 shadow-sm" title="Active Question Set (1 to 10)">
+            <button id="setSelectorBtn" onclick="toggleSetDropdown(event)" class="px-2.5 py-1 bg-gray-900 hover:bg-gray-800 text-amber-300 font-bold rounded-lg text-xs transition flex items-center gap-1.5 border border-amber-500/40 active:scale-95 shadow-sm" title="Active Question Set (1 to 10)">
               <i class="fa-solid fa-layer-group text-amber-400 text-xs"></i>
               <span id="headerSetBadge" class="font-bold text-amber-300">Set 1/10</span>
               <i class="fa-solid fa-chevron-down text-[9px] text-gray-400"></i>
@@ -318,12 +319,12 @@
       </div>
 
       <!-- Set Dropdown Menu for Both Desktop and Mobile -->
-      <div id="setDropdownMenu" class="hidden absolute top-full mt-2 left-3 right-3 sm:right-auto sm:left-auto md:right-4 w-auto sm:w-72 max-w-[95vw] bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl py-2 z-50">
-        <div class="px-3.5 py-1.5 text-[10px] font-black uppercase tracking-wider text-gray-400 border-b border-gray-800 flex items-center justify-between">
-          <span>Question Sets (10x5x10)</span>
-          <span class="text-amber-400 font-mono">10 Sets</span>
+      <div id="setDropdownMenu" class="hidden absolute top-full mt-2 left-2 right-2 sm:left-auto sm:right-4 w-auto sm:w-80 max-w-[95vw] bg-gray-900/95 backdrop-blur-xl border border-amber-500/40 rounded-2xl shadow-2xl py-2 z-50 ring-1 ring-black/50">
+        <div class="px-3.5 py-2 text-[10px] font-black uppercase tracking-wider text-gray-400 border-b border-gray-800 flex items-center justify-between">
+          <span class="flex items-center gap-1.5"><i class="fa-solid fa-layer-group text-amber-400"></i> Select Question Set</span>
+          <span class="text-amber-400 font-mono text-[11px] font-bold">10 Sets Available</span>
         </div>
-        <div id="setDropdownList" class="max-h-64 overflow-y-auto divide-y divide-gray-800/60">
+        <div id="setDropdownList" class="max-h-72 overflow-y-auto divide-y divide-gray-800/60">
         </div>
       </div>
 
@@ -453,7 +454,7 @@
 
           <!-- Timer Duration Selector Trigger -->
           <div class="relative ml-0.5">
-            <button id="timerDurationBtn" onclick="toggleTimerDurationMenu()" class="px-2 py-0.5 bg-gray-900 hover:bg-gray-800 text-amber-300 hover:text-white rounded text-xs border border-gray-700 font-mono font-bold flex items-center gap-1 transition" title="Specify Timer Duration">
+            <button id="timerDurationBtn" onclick="toggleTimerDurationMenu(event)" class="px-2 py-0.5 bg-gray-900 hover:bg-gray-800 text-amber-300 hover:text-white rounded text-xs border border-gray-700 font-mono font-bold flex items-center gap-1 transition" title="Specify Timer Duration">
               <i class="fa-solid fa-stopwatch text-[10px] text-amber-400"></i>
               <span id="timerDurationBadge">10s</span>
               <i class="fa-solid fa-chevron-down text-[8px] text-gray-400"></i>
@@ -1113,20 +1114,29 @@
       }
     }
 
-    function toggleSetDropdown() {
+    function toggleSetDropdown(event) {
+      if (event && typeof event.stopPropagation === 'function') {
+        event.stopPropagation();
+      }
       const menu = document.getElementById('setDropdownMenu');
-      if (menu) menu.classList.toggle('hidden');
+      if (!menu) return;
+      const isHidden = menu.classList.contains('hidden');
+      if (isHidden) {
+        updateSetDisplayUI();
+        menu.classList.remove('hidden');
+      } else {
+        menu.classList.add('hidden');
+      }
     }
 
     // Close set dropdown if clicked outside
     document.addEventListener('click', (e) => {
       const menu = document.getElementById('setDropdownMenu');
-      const btn = document.getElementById('setSelectorBtn');
-      if (menu && !menu.classList.contains('hidden')) {
-        if (!menu.contains(e.target) && !btn.contains(e.target)) {
-          menu.classList.add('hidden');
-        }
+      if (!menu || menu.classList.contains('hidden')) return;
+      if (e.target.closest && e.target.closest('#setDropdownMenu, #setSelectorBtn, #setSelectorBtnMobile, [onclick*="toggleSetDropdown"]')) {
+        return;
       }
+      menu.classList.add('hidden');
     });
 
     function updateSetDisplayUI() {
@@ -1148,23 +1158,31 @@
         cardBadge.textContent = `Set ${activeQuizSet.setId}: ${activeQuizSet.setName.replace(/^Set \d+:\s*/, '')}`;
       }
 
+      const modalBadge = document.getElementById('scoreModalSetBadge');
+      if (modalBadge) {
+        modalBadge.textContent = `Set ${activeQuizSet.setId}`;
+      }
+
       const listContainer = document.getElementById('setDropdownList');
       if (listContainer) {
         listContainer.innerHTML = '';
         sets.forEach((s, idx) => {
           const item = document.createElement('button');
           const isActive = idx === currentSetIndex;
-          item.className = `w-full text-left px-3 py-2 text-xs flex items-center justify-between transition ${isActive ? 'bg-amber-500/20 text-amber-300 font-bold border-l-2 border-amber-400' : 'text-gray-300 hover:bg-gray-800 hover:text-white'}`;
-          item.onclick = () => {
+          item.type = 'button';
+          item.className = `w-full text-left px-3.5 py-2.5 text-xs flex items-center justify-between transition ${isActive ? 'bg-amber-500/20 text-amber-300 font-bold border-l-4 border-amber-400' : 'text-gray-300 hover:bg-gray-800 hover:text-white'}`;
+          item.onclick = (e) => {
+            if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
             loadActiveSet(idx, true);
-            toggleSetDropdown();
+            const menu = document.getElementById('setDropdownMenu');
+            if (menu) menu.classList.add('hidden');
           };
           item.innerHTML = `
             <div class="truncate pr-2">
-              <span class="font-bold text-white">${s.setName}</span>
+              <span class="font-bold ${isActive ? 'text-amber-300' : 'text-white'}">${s.setName}</span>
               <p class="text-[10px] text-gray-400 truncate">${s.theme || ''}</p>
             </div>
-            ${isActive ? '<i class="fa-solid fa-check text-amber-400 shrink-0"></i>' : ''}
+            ${isActive ? '<i class="fa-solid fa-check text-amber-400 shrink-0 text-sm"></i>' : '<span class="text-[10px] text-gray-500 shrink-0">Select</span>'}
           `;
           listContainer.appendChild(item);
         });
@@ -1943,7 +1961,10 @@
       });
     }
 
-    function toggleTimerDurationMenu() {
+    function toggleTimerDurationMenu(event) {
+      if (event && typeof event.stopPropagation === 'function') {
+        event.stopPropagation();
+      }
       const menu = document.getElementById('timerDurationMenu');
       if (menu) menu.classList.toggle('hidden');
     }
@@ -1951,11 +1972,20 @@
     // Close timer duration menu if clicked outside
     document.addEventListener('click', (e) => {
       const menu = document.getElementById('timerDurationMenu');
-      const btn = document.getElementById('timerDurationBtn');
-      if (menu && !menu.classList.contains('hidden')) {
-        if (!menu.contains(e.target) && !btn.contains(e.target)) {
-          menu.classList.add('hidden');
-        }
+      if (!menu || menu.classList.contains('hidden')) return;
+      if (e.target.closest && e.target.closest('#timerDurationMenu, #timerDurationBtn, [onclick*="toggleTimerDurationMenu"]')) {
+        return;
+      }
+      menu.classList.add('hidden');
+    });
+
+    // Close open menus on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const setMenu = document.getElementById('setDropdownMenu');
+        if (setMenu && !setMenu.classList.contains('hidden')) setMenu.classList.add('hidden');
+        const timerMenu = document.getElementById('timerDurationMenu');
+        if (timerMenu && !timerMenu.classList.contains('hidden')) timerMenu.classList.add('hidden');
       }
     });
 
