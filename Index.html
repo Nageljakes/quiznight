@@ -1109,7 +1109,7 @@
         let rScore = 0;
         for (let q = 0; q < 10; q++) {
           const key = `r${r}_q${q}`;
-          if (userAnswers[key] && userAnswers[key].isCorrect) {
+          if (userAnswers[key] && typeof userAnswers[key].selectedIndex === 'number' && userAnswers[key].selectedIndex >= 0 && userAnswers[key].isCorrect) {
             rScore++;
           }
         }
@@ -1278,7 +1278,8 @@
 
       const qKey = `r${currentRoundIndex}_q${currentQuestionIndex}`;
       const answerRecord = userAnswers[qKey];
-      const hasAnswered = !!answerRecord;
+      // Only considered answered if user explicitly selected an answer (0, 1, 2, or 3)
+      const hasAnswered = !!answerRecord && typeof answerRecord.selectedIndex === 'number' && answerRecord.selectedIndex >= 0;
 
       q.options.forEach((optText, optIdx) => {
         const letter = ['A', 'B', 'C', 'D'][optIdx] || '';
@@ -1289,7 +1290,7 @@
         const cleanText = optText.replace(/^[A-D]\)\s*/, '');
 
         if (hostAnswerRevealed) {
-          // Host revealed official answer
+          // Host explicitly revealed official answer
           if (isCorrect) {
             card.className = "flex items-center justify-between p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border-2 transition-all text-left bg-emerald-950/90 border-emerald-400 text-emerald-100 shadow-xl shadow-emerald-500/20 scale-[1.01] transform ring-2 ring-emerald-400/60";
             card.innerHTML = `
@@ -1315,10 +1316,41 @@
             `;
           }
         } else if (hasAnswered) {
-          // User already answered or timed out
+          // User explicitly selected an answer!
           const isSelected = answerRecord.selectedIndex === optIdx;
-          if (isCorrect) {
-            card.className = "flex items-center justify-between p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border-2 transition-all text-left bg-emerald-950/90 border-emerald-400 text-emerald-100 shadow-xl shadow-emerald-500/20 ring-2 ring-emerald-400/60";
+          if (isSelected) {
+            if (answerRecord.isCorrect) {
+              // User picked correct answer: green
+              card.className = "flex items-center justify-between p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border-2 transition-all text-left bg-emerald-950/90 border-emerald-400 text-emerald-100 shadow-xl shadow-emerald-500/20 ring-2 ring-emerald-400/60 scale-[1.01]";
+              card.innerHTML = `
+                <div class="flex items-center gap-2.5 sm:gap-4 overflow-hidden">
+                  <span class="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-emerald-500 text-gray-950 font-black text-base sm:text-xl flex items-center justify-center shrink-0 shadow-md">
+                    ${letter}
+                  </span>
+                  <span class="text-sm sm:text-lg md:text-xl font-black text-white leading-snug break-words">${cleanText}</span>
+                </div>
+                <span class="px-2.5 py-1 rounded-lg bg-emerald-500 text-gray-950 text-[11px] sm:text-xs font-black uppercase tracking-wider flex items-center gap-1 shrink-0 shadow-md">
+                  <i class="fa-solid fa-check"></i> Correct +1 pt
+                </span>
+              `;
+            } else {
+              // User picked incorrect answer: red
+              card.className = "flex items-center justify-between p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border-2 transition-all text-left bg-rose-950/80 border-rose-500 text-rose-100 shadow-md shadow-rose-500/20 ring-2 ring-rose-500/60";
+              card.innerHTML = `
+                <div class="flex items-center gap-2.5 sm:gap-4 overflow-hidden">
+                  <span class="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-rose-500 text-white font-black text-base sm:text-xl flex items-center justify-center shrink-0">
+                    ${letter}
+                  </span>
+                  <span class="text-sm sm:text-lg md:text-xl font-semibold text-rose-200 leading-snug break-words">${cleanText}</span>
+                </div>
+                <span class="px-2.5 py-1 rounded-lg bg-rose-500 text-white text-[11px] sm:text-xs font-black uppercase tracking-wider flex items-center gap-1 shrink-0">
+                  <i class="fa-solid fa-xmark"></i> Incorrect 0 pts
+                </span>
+              `;
+            }
+          } else if (isCorrect) {
+            // User was wrong, so also show the correct answer in green
+            card.className = "flex items-center justify-between p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border-2 transition-all text-left bg-emerald-950/90 border-emerald-400 text-emerald-100 shadow-xl shadow-emerald-500/20 ring-2 ring-emerald-400/60 scale-[1.01]";
             card.innerHTML = `
               <div class="flex items-center gap-2.5 sm:gap-4 overflow-hidden">
                 <span class="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-emerald-500 text-gray-950 font-black text-base sm:text-xl flex items-center justify-center shrink-0 shadow-md">
@@ -1327,23 +1359,11 @@
                 <span class="text-sm sm:text-lg md:text-xl font-black text-white leading-snug break-words">${cleanText}</span>
               </div>
               <span class="px-2.5 py-1 rounded-lg bg-emerald-500 text-gray-950 text-[11px] sm:text-xs font-black uppercase tracking-wider flex items-center gap-1 shrink-0 shadow-md">
-                <i class="fa-solid fa-check"></i> ${isSelected ? '+1 pt' : (answerRecord.timedOut ? "Late" : 'Correct')}
-              </span>
-            `;
-          } else if (isSelected) {
-            card.className = "flex items-center justify-between p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border-2 transition-all text-left bg-rose-950/80 border-rose-500 text-rose-100 shadow-md shadow-rose-500/20";
-            card.innerHTML = `
-              <div class="flex items-center gap-2.5 sm:gap-4 overflow-hidden">
-                <span class="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-rose-500 text-white font-black text-base sm:text-xl flex items-center justify-center shrink-0">
-                  ${letter}
-                </span>
-                <span class="text-sm sm:text-lg md:text-xl font-semibold text-rose-200 leading-snug break-words">${cleanText}</span>
-              </div>
-              <span class="px-2.5 py-1 rounded-lg bg-rose-500 text-white text-[11px] sm:text-xs font-black uppercase tracking-wider flex items-center gap-1 shrink-0">
-                <i class="fa-solid fa-xmark"></i> 0 pts
+                <i class="fa-solid fa-check"></i> Correct Answer
               </span>
             `;
           } else {
+            // Non-selected options are dimmed
             card.className = "flex items-center justify-between p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border transition-all text-left bg-gray-950/40 border-gray-900 text-gray-500 opacity-30";
             card.innerHTML = `
               <div class="flex items-center gap-2.5 sm:gap-4 overflow-hidden">
@@ -1355,7 +1375,7 @@
             `;
           }
         } else {
-          // Interactive live question: player can pick!
+          // NO ANSWER SELECTED YET: Do NOT display the correct answer!
           card.className = "flex items-center justify-between p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border-2 transition-all text-left bg-gray-900/90 border-gray-800 text-gray-100 hover:border-amber-400 hover:bg-gray-800/90 hover:scale-[1.01] shadow-md cursor-pointer active:scale-[0.98] group select-none";
           card.onclick = () => handleSelectOption(optIdx);
           card.innerHTML = `
@@ -1380,7 +1400,7 @@
       const round = quizData[currentRoundIndex];
       const q = round.questions[currentQuestionIndex];
       const qKey = `r${currentRoundIndex}_q${currentQuestionIndex}`;
-      if (userAnswers[qKey]) return; // Already answered
+      if (userAnswers[qKey] && typeof userAnswers[qKey].selectedIndex === 'number' && userAnswers[qKey].selectedIndex >= 0) return; // Already answered
 
       if (!currentUsername) {
         openUsernameModal(false);
@@ -1420,23 +1440,42 @@
 
       // Update options display immediately
       renderOptionsGrid(q);
+      renderQuestionDots();
     }
 
     function onTimerExpired() {
       if (currentMode !== 'ask') return;
-      const qKey = `r${currentRoundIndex}_q${currentQuestionIndex}`;
-      if (userAnswers[qKey]) return;
+      // Do NOT record answer and do NOT reveal correct answer when timer expires without user selection.
+      // Sound the buzzer and let user make a choice or move on.
+      playSFX('wrong');
+    }
 
-      userAnswers[qKey] = {
-        selectedIndex: -1,
-        isCorrect: false,
-        timedOut: true
-      };
-      localStorage.setItem(getUserAnswersKey(currentSetIndex), JSON.stringify(userAnswers));
-
+    function renderQuestionDots() {
+      const dotsContainer = document.getElementById('dotsContainer');
+      if (!dotsContainer) return;
+      if (!quizData || !quizData[currentRoundIndex] || !quizData[currentRoundIndex].questions) return;
       const round = quizData[currentRoundIndex];
-      const q = round.questions[currentQuestionIndex];
-      renderOptionsGrid(q);
+
+      dotsContainer.innerHTML = '';
+      round.questions.forEach((_, idx) => {
+        const dot = document.createElement('button');
+        dot.title = `Jump to Q${idx + 1}`;
+        dot.onclick = () => {
+          currentQuestionIndex = idx;
+          hostAnswerRevealed = false;
+          renderCurrentQuestion();
+        };
+        const dotKey = `r${currentRoundIndex}_q${idx}`;
+        const answeredState = userAnswers[dotKey];
+        let dotColor = 'bg-gray-700';
+        if (idx === currentQuestionIndex) {
+          dotColor = 'w-7 bg-amber-400 shadow-sm shadow-amber-400';
+        } else if (answeredState && typeof answeredState.selectedIndex === 'number' && answeredState.selectedIndex >= 0) {
+          dotColor = answeredState.isCorrect ? 'bg-emerald-500' : 'bg-rose-500';
+        }
+        dot.className = `w-2.5 h-2.5 rounded-full transition-all ${dotColor}`;
+        dotsContainer.appendChild(dot);
+      });
     }
 
     function renderCurrentQuestion() {
@@ -1503,29 +1542,7 @@
       }
 
       // Render Dots
-      const dotsContainer = document.getElementById('dotsContainer');
-      dotsContainer.innerHTML = '';
-      round.questions.forEach((_, idx) => {
-        const dot = document.createElement('button');
-        dot.title = `Jump to Q${idx + 1}`;
-        dot.onclick = () => {
-          currentQuestionIndex = idx;
-          hostAnswerRevealed = false;
-          renderCurrentQuestion();
-        };
-        const dotKey = `r${currentRoundIndex}_q${idx}`;
-        const answeredState = userAnswers[dotKey];
-        let dotColor = 'bg-gray-700';
-        if (idx === currentQuestionIndex) {
-          dotColor = 'w-7 bg-amber-400 shadow-sm shadow-amber-400';
-        } else if (answeredState) {
-          dotColor = answeredState.isCorrect ? 'bg-emerald-500' : 'bg-rose-500';
-        } else if (idx < currentQuestionIndex) {
-          dotColor = 'bg-amber-600/60';
-        }
-        dot.className = `w-2.5 h-2.5 rounded-full transition-all ${dotColor}`;
-        dotsContainer.appendChild(dot);
-      });
+      renderQuestionDots();
 
       // Prev / Next button state
       document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
@@ -1760,7 +1777,7 @@
       if (currentMode !== 'ask') return;
 
       const qKey = `r${currentRoundIndex}_q${currentQuestionIndex}`;
-      const isAnswered = !!userAnswers[qKey];
+      const isAnswered = !!userAnswers[qKey] && typeof userAnswers[qKey].selectedIndex === 'number' && userAnswers[qKey].selectedIndex >= 0;
 
       if (isAnswered) {
         timerSeconds = 0;
