@@ -60,7 +60,7 @@ def make_answer_sheet(output_file):
     sub_p.paragraph_format.space_before = Pt(0)
     sub_p.paragraph_format.space_after = Pt(4)
     sub_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r_sub = sub_p.add_run("Hosted by DJ JC • Mark answers clearly in the A B C D boxes • Swapped for marking after each round")
+    r_sub = sub_p.add_run("Hosted by TJ Entertainment • Mark answers clearly in the A B C D boxes • Swapped for marking after each round")
     r_sub.font.size = Pt(8)
     r_sub.font.color.rgb = RGBColor(100, 116, 139)
 
@@ -448,7 +448,7 @@ def make_answer_sheet(output_file):
     p_so.paragraph_format.space_before = Pt(3)
     p_so.paragraph_format.space_after = Pt(0)
     p_so.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r_so = p_so.add_run("Marker: __________________   DJ JC Verified: [  ✓  ]")
+    r_so = p_so.add_run("Marker: __________________   TJ Entertainment Verified: [  ✓  ]")
     r_so.font.size = Pt(7.5)
     r_so.font.italic = True
     r_so.font.color.rgb = RGBColor(100, 116, 139)

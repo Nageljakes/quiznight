@@ -1,4 +1,4 @@
-# DJ JC @ Beerbox Midrand - Live Pub Quiz Night
+# TJ Entertainment @ Beerbox Midrand - Live Pub Quiz Night
 
 Interactive live pub quiz night web app hosted on GitHub Pages.
 

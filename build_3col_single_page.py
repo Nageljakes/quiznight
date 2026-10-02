@@ -59,7 +59,7 @@ def make_3column_single_page(output_file):
     sub_p.paragraph_format.space_before = Pt(0)
     sub_p.paragraph_format.space_after = Pt(3)
     sub_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r_sub = sub_p.add_run("Hosted by DJ JC • Circle or tick your answers • Strictly No Shazam or Google!")
+    r_sub = sub_p.add_run("Hosted by TJ Entertainment • Circle or tick your answers • Strictly No Shazam or Google!")
     r_sub.font.size = Pt(7.5)
     r_sub.font.color.rgb = RGBColor(100, 116, 139)
 

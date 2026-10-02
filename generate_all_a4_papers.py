@@ -62,7 +62,7 @@ def build_a4_question_and_answer_paper(set_dict, output_path):
     sub_p.paragraph_format.space_before = Pt(0)
     sub_p.paragraph_format.space_after = Pt(2)
     sub_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run_sub = sub_p.add_run("Official Master Question & Answer Paper • Hosted by DJ JC")
+    run_sub = sub_p.add_run("Official Master Question & Answer Paper • Hosted by TJ Entertainment")
     run_sub.font.size = Pt(9.5)
     run_sub.font.bold = True
     run_sub.font.color.rgb = RGBColor(71, 85, 105)
@@ -435,7 +435,7 @@ def build_a4_question_and_answer_paper(set_dict, output_path):
     so_p.paragraph_format.space_before = Pt(6)
     so_p.paragraph_format.space_after = Pt(0)
     so_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r_so = so_p.add_run("Official Marker Signature: _______________________      DJ JC Verified: [  ✓  ]")
+    r_so = so_p.add_run("Official Marker Signature: _______________________      TJ Entertainment Verified: [  ✓  ]")
     r_so.font.size = Pt(8)
     r_so.font.italic = True
     r_so.font.color.rgb = RGBColor(100, 116, 139)

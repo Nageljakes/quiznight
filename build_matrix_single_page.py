@@ -59,7 +59,7 @@ def make_matrix_single_page(output_file):
     p_sub.paragraph_format.space_before = Pt(0)
     p_sub.paragraph_format.space_after = Pt(4)
     p_sub.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    r_s = p_sub.add_run("Hosted by DJ JC • Circle your chosen answer (A, B, C, or D) for each question • Swapped for marking after each round")
+    r_s = p_sub.add_run("Hosted by TJ Entertainment • Circle your chosen answer (A, B, C, or D) for each question • Swapped for marking after each round")
     r_s.font.size = Pt(8.5)
     r_s.font.color.rgb = RGBColor(100, 116, 139)
 

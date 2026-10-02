@@ -135,7 +135,7 @@ var quizSets = [
         "badge": "Round 2 • Moderate",
         "theme": "Rock, Pop, Movies & TV Anthems",
         "difficultyText": "Level 2: Pop Culture, Big Screen & Bar Anthems",
-        "hostVibe": "DJ JC's home turf! Drop an audio riff or instrumental backing track between questions.",
+        "hostVibe": "TJ Entertainment's home turf! Drop an audio riff or instrumental backing track between questions.",
         "questions": [
           {
             "q": "Which Australian hard rock band gave us legendary pub singalongs like Thunderstruck, Highway to Hell, and Back in Black?",
@@ -517,7 +517,7 @@ var quizSets = [
               "D) 200"
             ],
             "a": "C) 180",
-            "notes": "Three treble 20s. DJ JC: Hit them with a big 'ONE HUNDRED AND EIGHTY!'"
+            "notes": "Three treble 20s. TJ: Hit them with a big 'ONE HUNDRED AND EIGHTY!'"
           },
           {
             "q": "In what calendar year did the Berlin Wall fall, initiating the reunification of Germany and end of the Cold War?",
