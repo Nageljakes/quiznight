@@ -262,10 +262,16 @@
         </div>
 
         <!-- Big Stage Question Text -->
-        <div class="min-h-[180px] flex items-center justify-center py-6 text-center">
-          <h2 id="liveQuestionText" class="text-2xl sm:text-4xl md:text-5xl font-black font-display tracking-tight text-white leading-tight drop-shadow-md">
+        <!-- Big Stage Question Text -->
+        <div class="min-h-[120px] flex items-center justify-center py-4 text-center">
+          <h2 id="liveQuestionText" class="text-2xl sm:text-3xl md:text-4xl font-black font-display tracking-tight text-white leading-tight drop-shadow-md">
             Loading Question...
           </h2>
+        </div>
+
+        <!-- Multiple Choice Options Grid (A, B, C, D) -->
+        <div id="optionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 my-4">
+          <!-- Dynamically populated via JS -->
         </div>
 
         <!-- Subtle Answer Peek for Host behind DJ deck -->
@@ -543,53 +549,113 @@
             "questions": [
                   {
                         "q": "In rugby union, how many total points is a converted try worth?",
-                        "a": "7 points (5 for the try, 2 for the conversion)",
-                        "notes": "Easy point for every table to kick things off!"
+                        "options": [
+                              "A) 5 points",
+                              "B) 7 points",
+                              "C) 6 points",
+                              "D) 8 points"
+                        ],
+                        "a": "B) 7 points",
+                        "notes": "5 points for the grounding try, plus 2 points for the conversion kick."
                   },
                   {
                         "q": "What popular shooter, famous across South African bars, is made by layering peppermint liqueur with Amarula or Cape Velvet?",
-                        "a": "Springbokkie",
-                        "notes": "Green and gold in a shot glass."
+                        "options": [
+                              "A) Blowjob",
+                              "B) Suitcase",
+                              "C) Springbokkie",
+                              "D) Soweto Toilet"
+                        ],
+                        "a": "C) Springbokkie",
+                        "notes": "Layers green and gold in a shooter glass."
                   },
                   {
                         "q": "In the iconic 1986 action film Top Gun, what was Tom Cruise's fighter pilot callsign?",
-                        "a": "Maverick (Pete Mitchell)",
-                        "notes": "Goose was his wingman, Iceman was his rival."
+                        "options": [
+                              "A) Goose",
+                              "B) Maverick",
+                              "C) Iceman",
+                              "D) Viper"
+                        ],
+                        "a": "B) Maverick",
+                        "notes": "Pete 'Maverick' Mitchell. Goose was his RIO wingman."
                   },
                   {
                         "q": "In cricket, how many legal balls are bowled in a standard over?",
-                        "a": "6 balls",
+                        "options": [
+                              "A) 6 balls",
+                              "B) 5 balls",
+                              "C) 8 balls",
+                              "D) 4 balls"
+                        ],
+                        "a": "A) 6 balls",
                         "notes": "Wides and no-balls do not count towards the 6."
                   },
                   {
                         "q": "What is the only mammal on Earth capable of true, sustained flight?",
-                        "a": "The Bat",
-                        "notes": "Flying squirrels and sugar gliders only glide!"
+                        "options": [
+                              "A) Flying Squirrel",
+                              "B) Sugar Glider",
+                              "C) Bat",
+                              "D) Flying Lemur"
+                        ],
+                        "a": "C) Bat",
+                        "notes": "Flying squirrels and sugar gliders only glide; bats have true powered flight."
                   },
                   {
                         "q": "What fictional city does Batman protect from villains like the Joker and the Penguin?",
-                        "a": "Gotham City",
-                        "notes": "Superman has Metropolis; Batman has Gotham."
+                        "options": [
+                              "A) Metropolis",
+                              "B) Star City",
+                              "C) Gotham City",
+                              "D) Central City"
+                        ],
+                        "a": "C) Gotham City",
+                        "notes": "Superman guards Metropolis; Batman rules Gotham."
                   },
                   {
                         "q": "In website addresses, what do the three letters 'WWW' stand for?",
-                        "a": "World Wide Web",
-                        "notes": "Invented by Tim Berners-Lee."
+                        "options": [
+                              "A) World Wide Web",
+                              "B) Wide World Web",
+                              "C) Web World Wide",
+                              "D) Wireless World Web"
+                        ],
+                        "a": "A) World Wide Web",
+                        "notes": "Invented by British computer scientist Tim Berners-Lee in 1989."
                   },
                   {
                         "q": "In the classic board game Monopoly, what colour are the two most expensive properties, Mayfair and Park Lane?",
-                        "a": "Dark Blue",
-                        "notes": "The most expensive property set on the board."
+                        "options": [
+                              "A) Green",
+                              "B) Red",
+                              "C) Dark Blue",
+                              "D) Yellow"
+                        ],
+                        "a": "C) Dark Blue",
+                        "notes": "The ultimate high-rent set on the board."
                   },
                   {
                         "q": "What is the primary chemical element that makes up roughly 78% of the air we breathe?",
-                        "a": "Nitrogen",
-                        "notes": "Oxygen makes up only about 21%."
+                        "options": [
+                              "A) Oxygen",
+                              "B) Nitrogen",
+                              "C) Carbon Dioxide",
+                              "D) Hydrogen"
+                        ],
+                        "a": "B) Nitrogen",
+                        "notes": "Oxygen accounts for about 21%, Nitrogen makes up 78%."
                   },
                   {
                         "q": "What colour is the inner bullseye on a standard regulation pub dartboard?",
-                        "a": "Red",
-                        "notes": "Outer ring is green (25 pts); inner bull is red (50 pts)."
+                        "options": [
+                              "A) Green",
+                              "B) Black",
+                              "C) Red",
+                              "D) Yellow"
+                        ],
+                        "a": "C) Red",
+                        "notes": "Outer ring is green (25 points); inner bull is red (50 points)."
                   }
             ]
       },
@@ -603,52 +669,112 @@
             "questions": [
                   {
                         "q": "Which Australian hard rock band gave us legendary pub singalongs like Thunderstruck, Highway to Hell, and Back in Black?",
-                        "a": "AC/DC",
-                        "notes": "Fronted by Brian Johnson and lead guitarist Angus Young."
+                        "options": [
+                              "A) Iron Maiden",
+                              "B) AC/DC",
+                              "C) Def Leppard",
+                              "D) Black Sabbath"
+                        ],
+                        "a": "B) AC/DC",
+                        "notes": "Fronted by Brian Johnson with Angus Young on lead guitar."
                   },
                   {
                         "q": "In the 1984 sci-fi action classic The Terminator, what famous three-word line does Arnold Schwarzenegger deliver at the police station desk?",
-                        "a": "\"I'll be back\"",
+                        "options": [
+                              "A) Hasta la vista",
+                              "B) I'll be back",
+                              "C) Come with me",
+                              "D) Get to chopper"
+                        ],
+                        "a": "B) I'll be back",
                         "notes": "Delivered right before crashing a car through the front door."
                   },
                   {
                         "q": "Freddie Mercury was the legendary, operatic lead singer of which British rock band?",
-                        "a": "Queen",
-                        "notes": "Brian May on lead guitar."
+                        "options": [
+                              "A) Queen",
+                              "B) The Who",
+                              "C) Led Zeppelin",
+                              "D) The Rolling Stones"
+                        ],
+                        "a": "A) Queen",
+                        "notes": "Brian May on guitar, Roger Taylor on drums, John Deacon on bass."
                   },
                   {
                         "q": "In the smash-hit 90s sitcom Friends, what is the name of the coffee shop where the six friends hang out on the orange couch?",
-                        "a": "Central Perk",
-                        "notes": "Featuring Gunther behind the counter."
+                        "options": [
+                              "A) Monk's Diner",
+                              "B) Central Perk",
+                              "C) MacLaren's Pub",
+                              "D) The Beanery"
+                        ],
+                        "a": "B) Central Perk",
+                        "notes": "Featuring Gunther behind the espresso counter."
                   },
                   {
                         "q": "Which American rock band had a massive global hit in 1987 with Sweet Child O' Mine, featuring Slash's iconic opening guitar riff?",
-                        "a": "Guns N' Roses",
-                        "notes": "From the Appetite for Destruction album."
+                        "options": [
+                              "A) Aerosmith",
+                              "B) Bon Jovi",
+                              "C) Guns N' Roses",
+                              "D) M\u00f6tley Cr\u00fce"
+                        ],
+                        "a": "C) Guns N' Roses",
+                        "notes": "From their diamond-selling debut album Appetite for Destruction."
                   },
                   {
                         "q": "In The Lord of the Rings, what was the original name of the creature who was corrupted by the One Ring and became Gollum?",
-                        "a": "Sm\u00e9agol",
-                        "notes": "Obsessed with his 'Precious'."
+                        "options": [
+                              "A) Bilbo",
+                              "B) D\u00e9agol",
+                              "C) Sm\u00e9agol",
+                              "D) Peregrin"
+                        ],
+                        "a": "C) Sm\u00e9agol",
+                        "notes": "He killed his cousin D\u00e9agol to claim the ring."
                   },
                   {
                         "q": "Michael Jackson's iconic 1983 horror-themed music video featured dancing zombies and narration by Vincent Price. What was the song?",
-                        "a": "Thriller",
+                        "options": [
+                              "A) Beat It",
+                              "B) Billie Jean",
+                              "C) Bad",
+                              "D) Thriller"
+                        ],
+                        "a": "D) Thriller",
                         "notes": "Directed by John Landis."
                   },
                   {
                         "q": "Who played the Roman general Maximus Decimus Meridius in Ridley Scott's 2000 epic blockbuster Gladiator?",
-                        "a": "Russell Crowe",
-                        "notes": "\"Are you not entertained?!\""
+                        "options": [
+                              "A) Gerard Butler",
+                              "B) Mel Gibson",
+                              "C) Russell Crowe",
+                              "D) Christian Bale"
+                        ],
+                        "a": "C) Russell Crowe",
+                        "notes": "Won the Academy Award for Best Actor for the role."
                   },
                   {
                         "q": "Which Norwegian band sang the 1985 synth-pop smash hit Take On Me, famous for its groundbreaking pencil-sketch animation video?",
-                        "a": "a-ha",
-                        "notes": "Lead singer Morten Harket."
+                        "options": [
+                              "A) a-ha",
+                              "B) Duran Duran",
+                              "C) Tears for Fears",
+                              "D) Depeche Mode"
+                        ],
+                        "a": "A) a-ha",
+                        "notes": "Fronted by Morten Harket hitting the famous high F-sharp note."
                   },
                   {
                         "q": "In Quentin Tarantino's Pulp Fiction, what do they call a McDonald's Quarter Pounder with Cheese in Paris?",
-                        "a": "A \"Royale with Cheese\"",
+                        "options": [
+                              "A) Le Big Mac",
+                              "B) A Royale with Cheese",
+                              "C) Fromage Deluxe",
+                              "D) Parisian Burger"
+                        ],
+                        "a": "B) A Royale with Cheese",
                         "notes": "Vincent Vega explains it is because of the metric system!"
                   }
             ]
@@ -663,53 +789,113 @@
             "questions": [
                   {
                         "q": "How many Rugby World Cup tournament titles have the Springboks won?",
-                        "a": "4 titles (1995, 2007, 2019, 2023)",
-                        "notes": "The only team in world rugby history to win four Webb Ellis cups!"
+                        "options": [
+                              "A) 2 titles",
+                              "B) 3 titles",
+                              "C) 4 titles",
+                              "D) 5 titles"
+                        ],
+                        "a": "C) 4 titles",
+                        "notes": "1995, 2007, 2019, and 2023. The only nation with four titles!"
                   },
                   {
                         "q": "In cricket, what specific term is used when a batsman is dismissed for zero on the very first ball they face?",
-                        "a": "A Golden Duck",
-                        "notes": "A regular duck is getting out for zero after facing multiple balls."
+                        "options": [
+                              "A) Diamond Duck",
+                              "B) Golden Duck",
+                              "C) Silver Duck",
+                              "D) Royal Pair"
+                        ],
+                        "a": "B) Golden Duck",
+                        "notes": "A diamond duck is out without facing a ball (e.g. run-out at non-striker's end)."
                   },
                   {
                         "q": "In a rugby union starting lineup, which position wears the number 15 jersey on the pitch?",
-                        "a": "Fullback",
+                        "options": [
+                              "A) Flyhalf",
+                              "B) Scrumhalf",
+                              "C) Outside Centre",
+                              "D) Fullback"
+                        ],
+                        "a": "D) Fullback",
                         "notes": "The last line of defense (e.g. Percy Montgomery, Damian Willemse)."
                   },
                   {
                         "q": "Who holds the all-time world record for the highest individual score in a single Test match innings with 400 runs not out?",
-                        "a": "Brian Lara (West Indies)",
-                        "notes": "Scored against England in Antigua in 2004."
+                        "options": [
+                              "A) Sachin Tendulkar",
+                              "B) Brian Lara",
+                              "C) Don Bradman",
+                              "D) Jacques Kallis"
+                        ],
+                        "a": "B) Brian Lara",
+                        "notes": "Scored against England in Antigua in April 2004."
                   },
                   {
                         "q": "Which German racing legend won five consecutive Formula 1 World Championships with Ferrari between 2000 and 2004?",
-                        "a": "Michael Schumacher",
-                        "notes": "Won seven world drivers championships in total."
+                        "options": [
+                              "A) Sebastian Vettel",
+                              "B) Nico Rosberg",
+                              "C) Michael Schumacher",
+                              "D) Ayrton Senna"
+                        ],
+                        "a": "C) Michael Schumacher",
+                        "notes": "Won 7 world drivers championships in total."
                   },
                   {
                         "q": "In the 1995 Rugby World Cup final at Ellis Park, which Springbok flyhalf kicked the winning drop goal in extra time against the All Blacks?",
-                        "a": "Joel Stransky",
-                        "notes": "Final score was 15-12."
+                        "options": [
+                              "A) Jannie de Beer",
+                              "B) Joel Stransky",
+                              "C) Henry Honiball",
+                              "D) Naas Botha"
+                        ],
+                        "a": "B) Joel Stransky",
+                        "notes": "Final score was 15-12 in historic extra time."
                   },
                   {
                         "q": "In the 1992 Cricket World Cup, which South African fielder produced the most famous run-out in history by diving horizontal through the air to shatter the stumps against Pakistan?",
-                        "a": "Jonty Rhodes",
-                        "notes": "Dismissing Inzamam-ul-Haq."
+                        "options": [
+                              "A) Herschelle Gibbs",
+                              "B) Gary Kirsten",
+                              "C) Jonty Rhodes",
+                              "D) Hansie Cronje"
+                        ],
+                        "a": "C) Jonty Rhodes",
+                        "notes": "Dismissing Inzamam-ul-Haq in Brisbane."
                   },
                   {
-                        "q": "Known as \"The Greatest\", which legendary heavyweight boxing champion famously coined the phrase \"Float like a butterfly, sting like a bee\"?",
-                        "a": "Muhammad Ali (Cassius Clay)",
+                        "q": "Known as 'The Greatest', which legendary heavyweight boxing champion famously coined the phrase 'Float like a butterfly, sting like a bee'?",
+                        "options": [
+                              "A) Mike Tyson",
+                              "B) Joe Frazier",
+                              "C) Muhammad Ali",
+                              "D) George Foreman"
+                        ],
+                        "a": "C) Muhammad Ali",
                         "notes": "Defeated George Foreman in the Rumble in the Jungle."
                   },
                   {
                         "q": "How many major golf championships has Tiger Woods won in his career so far?",
-                        "a": "15 Majors",
+                        "options": [
+                              "A) 12 Majors",
+                              "B) 15 Majors",
+                              "C) 18 Majors",
+                              "D) 20 Majors"
+                        ],
+                        "a": "B) 15 Majors",
                         "notes": "Second only to Jack Nicklaus with 18."
                   },
                   {
                         "q": "Alongside captain Siya Kolisi, who served as head coach when the Springboks won the 2019 Rugby World Cup in Japan?",
-                        "a": "Rassie Erasmus (Johan Erasmus)",
-                        "notes": "Accept Rassie."
+                        "options": [
+                              "A) Heyneke Meyer",
+                              "B) Jacques Nienaber",
+                              "C) Rassie Erasmus",
+                              "D) Allister Coetzee"
+                        ],
+                        "a": "C) Rassie Erasmus",
+                        "notes": "Johan 'Rassie' Erasmus led the Boks to a 32-12 triumph over England."
                   }
             ]
       },
@@ -723,53 +909,113 @@
             "questions": [
                   {
                         "q": "What is the largest and deepest ocean on Earth, covering more than 30% of the planet's surface?",
-                        "a": "The Pacific Ocean",
-                        "notes": "Bigger than all of the Earth's landmass combined!"
+                        "options": [
+                              "A) Atlantic Ocean",
+                              "B) Indian Ocean",
+                              "C) Arctic Ocean",
+                              "D) Pacific Ocean"
+                        ],
+                        "a": "D) Pacific Ocean",
+                        "notes": "Larger than all Earth's landmass combined."
                   },
                   {
                         "q": "What natural flower cone provides beer with its characteristic bitterness, aroma, and head retention during brewing?",
-                        "a": "Hops",
+                        "options": [
+                              "A) Barley",
+                              "B) Hops",
+                              "C) Malt",
+                              "D) Rye"
+                        ],
+                        "a": "B) Hops",
                         "notes": "The four main beer ingredients: Water, Malt, Hops, Yeast."
                   },
                   {
                         "q": "In which European capital city would you find the ancient Roman Colosseum?",
-                        "a": "Rome (Italy)",
+                        "options": [
+                              "A) Athens",
+                              "B) Madrid",
+                              "C) Rome",
+                              "D) Florence"
+                        ],
+                        "a": "C) Rome",
                         "notes": "Completed in 80 AD under Emperor Titus."
                   },
                   {
                         "q": "How many total bones are in a typical adult human skeleton?",
-                        "a": "206 bones",
-                        "notes": "Babies are born with around 270 bones which fuse over time."
+                        "options": [
+                              "A) 184 bones",
+                              "B) 206 bones",
+                              "C) 224 bones",
+                              "D) 250 bones"
+                        ],
+                        "a": "B) 206 bones",
+                        "notes": "Babies start with ~270 bones which fuse into 206 as adults."
                   },
                   {
                         "q": "What is the fastest land animal on Earth, capable of sprinting over 100 km/h in short bursts?",
-                        "a": "The Cheetah",
+                        "options": [
+                              "A) Lion",
+                              "B) Cheetah",
+                              "C) Springbok",
+                              "D) Leopard"
+                        ],
+                        "a": "B) Cheetah",
                         "notes": "Can accelerate from 0 to 100 km/h in roughly 3 seconds."
                   },
                   {
                         "q": "What is the cardinal, golden rule of cooking a traditional potjiekos once the heavy cast-iron lid is closed over the coals?",
-                        "a": "You never stir the pot!",
+                        "options": [
+                              "A) Stir every 15 minutes",
+                              "B) Add extra beer constantly",
+                              "C) You never stir the pot",
+                              "D) Remove the lid often"
+                        ],
+                        "a": "C) You never stir the pot",
                         "notes": "The layered ingredients must cook undisturbed."
                   },
                   {
-                        "q": "Which planet in our solar system is nicknamed the \"Red Planet\" due to iron oxide rust covering its surface?",
-                        "a": "Mars",
+                        "q": "Which planet in our solar system is nicknamed the 'Red Planet' due to iron oxide rust covering its surface?",
+                        "options": [
+                              "A) Venus",
+                              "B) Mars",
+                              "C) Jupiter",
+                              "D) Mercury"
+                        ],
+                        "a": "B) Mars",
                         "notes": "Fourth planet from the sun."
                   },
                   {
                         "q": "What botanical berry gives Gin its signature required flavor profile?",
-                        "a": "Juniper berries",
+                        "options": [
+                              "A) Elderberry",
+                              "B) Cranberry",
+                              "C) Juniper berry",
+                              "D) Blackberry"
+                        ],
+                        "a": "C) Juniper berry",
                         "notes": "Without juniper, it legally cannot be called gin."
                   },
                   {
                         "q": "What is the official federal capital city of Australia?",
-                        "a": "Canberra",
-                        "notes": "Often confused with Sydney or Melbourne!"
+                        "options": [
+                              "A) Sydney",
+                              "B) Melbourne",
+                              "C) Brisbane",
+                              "D) Canberra"
+                        ],
+                        "a": "D) Canberra",
+                        "notes": "Purpose-built capital chosen as a compromise between Sydney and Melbourne."
                   },
                   {
                         "q": "What three classic fillings make up the holy trinity inside an authentic braaibroodjie alongside cheddar cheese?",
-                        "a": "Onion, tomato, and chutney (Mrs. Ball's)",
-                        "notes": "With butter on the outside for the perfect braai crust."
+                        "options": [
+                              "A) Ham, cheese, mustard",
+                              "B) Onion, tomato, chutney",
+                              "C) Bacon, egg, mayo",
+                              "D) Mushroom, pepper, garlic"
+                        ],
+                        "a": "B) Onion, tomato, chutney",
+                        "notes": "With butter on the outside of the bread for that perfect braai crust."
                   }
             ]
       },
@@ -783,53 +1029,113 @@
             "questions": [
                   {
                         "q": "In The Lord of the Rings trilogy, what is the name of the fiery volcano in Mordor where Frodo must cast the One Ring to destroy it?",
-                        "a": "Mount Doom (or Orodruin)",
-                        "notes": "\"Cast it into the fire!\""
+                        "options": [
+                              "A) Erebor",
+                              "B) Mount Doom",
+                              "C) Orthanc",
+                              "D) Caradhras"
+                        ],
+                        "a": "B) Mount Doom",
+                        "notes": "Also called Orodruin in Elvish."
                   },
                   {
                         "q": "In a standard game of English pub darts, what is the maximum mathematical score a player can achieve in a single turn of three darts?",
-                        "a": "180 (Three treble 20s)",
-                        "notes": "DJ JC: Give this a big \"ONE HUNDRED AND EIGHTY!\""
+                        "options": [
+                              "A) 150",
+                              "B) 160",
+                              "C) 180",
+                              "D) 200"
+                        ],
+                        "a": "C) 180",
+                        "notes": "Three treble 20s. DJ JC: Hit them with a big 'ONE HUNDRED AND EIGHTY!'"
                   },
                   {
                         "q": "In what calendar year did the Berlin Wall fall, initiating the reunification of Germany and end of the Cold War?",
-                        "a": "1989 (November 9, 1989)",
-                        "notes": "Accept 1989."
+                        "options": [
+                              "A) 1987",
+                              "B) 1989",
+                              "C) 1991",
+                              "D) 1993"
+                        ],
+                        "a": "B) 1989",
+                        "notes": "November 9, 1989."
                   },
                   {
                         "q": "In modern computer hardware and mobile device cables, what does the abbreviation 'USB' stand for?",
-                        "a": "Universal Serial Bus",
-                        "notes": "Must name all three words correctly."
+                        "options": [
+                              "A) Universal System Bridge",
+                              "B) Unified Serial Port",
+                              "C) Universal Serial Bus",
+                              "D) Uniform Standard Bus"
+                        ],
+                        "a": "C) Universal Serial Bus",
+                        "notes": "Introduced in 1996."
                   },
                   {
-                        "q": "Which legendary English rock guitarist was nicknamed \"Slowhand\" and played with The Yardbirds, Cream, and recorded solo hits like Layla and Wonderful Tonight?",
-                        "a": "Eric Clapton",
-                        "notes": "Accept Eric Clapton."
+                        "q": "Which legendary English rock guitarist was nicknamed 'Slowhand' and played with The Yardbirds, Cream, and recorded solo hits like Layla and Wonderful Tonight?",
+                        "options": [
+                              "A) Jeff Beck",
+                              "B) Jimmy Page",
+                              "C) Eric Clapton",
+                              "D) Mark Knopfler"
+                        ],
+                        "a": "C) Eric Clapton",
+                        "notes": "Inducted three times into the Rock and Roll Hall of Fame."
                   },
                   {
                         "q": "What is the distinctive and flamboyant collective English noun for a group or flock of flamingos?",
-                        "a": "A \"Flamboyance\" of flamingos",
-                        "notes": "Accept Flamboyance."
+                        "options": [
+                              "A) A Gaggle",
+                              "B) A Flamboyance",
+                              "C) A Murder",
+                              "D) A Colony"
+                        ],
+                        "a": "B) A Flamboyance",
+                        "notes": "A flamboyance of flamingos."
                   },
                   {
                         "q": "What is the name of the deepest surveyed oceanic trench on planet Earth, located in the western Pacific Ocean?",
-                        "a": "The Mariana Trench (Challenger Deep)",
-                        "notes": "Plunges down nearly 11,000 meters."
+                        "options": [
+                              "A) Mariana Trench",
+                              "B) Puerto Rico Trench",
+                              "C) Java Trench",
+                              "D) Tonga Trench"
+                        ],
+                        "a": "A) Mariana Trench",
+                        "notes": "Plunges down nearly 11,000 meters in Challenger Deep."
                   },
                   {
                         "q": "Who directed the iconic Hollywood blockbusters Jaws, Jurassic Park, Raiders of the Lost Ark, and Saving Private Ryan?",
-                        "a": "Steven Spielberg",
-                        "notes": "The master of the Hollywood blockbuster."
+                        "options": [
+                              "A) James Cameron",
+                              "B) Ridley Scott",
+                              "C) Steven Spielberg",
+                              "D) Martin Scorsese"
+                        ],
+                        "a": "C) Steven Spielberg",
+                        "notes": "The most commercially successful director in film history."
                   },
                   {
                         "q": "What three alcoholic ingredients are mixed in equal parts to create a classic Italian Negroni cocktail?",
-                        "a": "Gin, Campari, and Sweet (Red) Vermouth",
-                        "notes": "1:1:1 ratio, traditionally garnished with an orange slice."
+                        "options": [
+                              "A) Vodka, Kahl\u00faa, Cream",
+                              "B) Gin, Campari, Sweet Vermouth",
+                              "C) Tequila, Triple Sec, Lime",
+                              "D) Rum, Mint, Soda"
+                        ],
+                        "a": "B) Gin, Campari, Sweet Vermouth",
+                        "notes": "1:1:1 ratio, traditionally garnished with an orange peel."
                   },
                   {
                         "q": "South Africa has three official capital cities: Pretoria (Executive) and Cape Town (Legislative). Which city is the Judicial capital?",
-                        "a": "Bloemfontein",
-                        "notes": "Located in the Free State; home to the Supreme Court of Appeal."
+                        "options": [
+                              "A) Durban",
+                              "B) Johannesburg",
+                              "C) Bloemfontein",
+                              "D) Gqeberha"
+                        ],
+                        "a": "C) Bloemfontein",
+                        "notes": "Located in the Free State; seat of the Supreme Court of Appeal."
                   }
             ]
       },
@@ -843,18 +1149,36 @@
             "questions": [
                   {
                         "q": "How many meters high is Table Mountain above sea level at its highest point (Maclear's Beacon)?",
-                        "a": "1,086 meters",
-                        "notes": "Closest number takes the win!"
+                        "options": [
+                              "A) 980 meters",
+                              "B) 1,086 meters",
+                              "C) 1,220 meters",
+                              "D) 1,450 meters"
+                        ],
+                        "a": "B) 1,086 meters",
+                        "notes": "Maclear's Beacon is 1,086 meters above sea level."
                   },
                   {
                         "q": "In what calendar year did the original Sony PlayStation console first release in South Africa and Europe?",
-                        "a": "1995 (September 1995)",
-                        "notes": "Closest year takes the prize."
+                        "options": [
+                              "A) 1993",
+                              "B) 1994",
+                              "C) 1995",
+                              "D) 1997"
+                        ],
+                        "a": "C) 1995",
+                        "notes": "September 1995 in Europe/SA."
                   },
                   {
                         "q": "How many total matches were played across the entire 2023 Rugby World Cup tournament in France?",
-                        "a": "48 matches (40 pool matches + 8 knockout games)",
-                        "notes": "Closest number takes the glory."
+                        "options": [
+                              "A) 40 matches",
+                              "B) 48 matches",
+                              "C) 52 matches",
+                              "D) 64 matches"
+                        ],
+                        "a": "B) 48 matches",
+                        "notes": "40 pool matches + 8 knockout games."
                   }
             ]
       }
@@ -913,6 +1237,39 @@
       }
     }
 
+    function renderOptionsGrid(q) {
+      const optionsGrid = document.getElementById('optionsGrid');
+      if (!optionsGrid) return;
+      optionsGrid.innerHTML = '';
+      if (!q.options || q.options.length === 0) {
+        optionsGrid.classList.add('hidden');
+        return;
+      }
+      optionsGrid.classList.remove('hidden');
+      q.options.forEach((optText, optIdx) => {
+        const letter = ['A', 'B', 'C', 'D'][optIdx] || '';
+        const isCorrect = q.a.trim().startsWith(letter);
+        const card = document.createElement('div');
+        card.id = `option-card-${optIdx}`;
+        
+        const showCorrect = hostAnswerRevealed && isCorrect;
+        const baseClass = "flex items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl border transition-all text-left";
+        const normalClass = "bg-gray-900/80 border-gray-800 text-gray-200 hover:border-gray-700";
+        const correctClass = "bg-emerald-950/60 border-emerald-500 text-emerald-100 shadow-lg shadow-emerald-950/60";
+        
+        card.className = `${baseClass} ${showCorrect ? correctClass : normalClass}`;
+        
+        const cleanText = optText.replace(/^[A-D]\)\s*/, '');
+        card.innerHTML = `
+          <span class="w-9 h-9 rounded-xl ${showCorrect ? 'bg-emerald-500 text-gray-950 font-black' : 'bg-amber-500/15 text-amber-400 border border-amber-500/30 font-black'} flex items-center justify-center text-sm shrink-0">
+            ${letter}
+          </span>
+          <span class="text-base sm:text-lg font-bold ${showCorrect ? 'text-emerald-100 font-black' : 'text-gray-100'}">${cleanText}</span>
+        `;
+        optionsGrid.appendChild(card);
+      });
+    }
+
     function renderCurrentQuestion() {
       const round = quizData[currentRoundIndex];
       const q = round.questions[currentQuestionIndex];
@@ -931,6 +1288,9 @@
         qTextElem.classList.remove('opacity-0');
         qTextElem.classList.add('opacity-100');
       }, 100);
+
+      // Render Multiple Choice Options Grid (A, B, C, D)
+      renderOptionsGrid(q);
 
       // Secret Host Answer
       const secretAnswer = document.getElementById('hostSecretAnswer');
@@ -983,6 +1343,9 @@
 
     function toggleHostAnswerSecret() {
       hostAnswerRevealed = !hostAnswerRevealed;
+      const round = quizData[currentRoundIndex];
+      const q = round.questions[currentQuestionIndex];
+      renderOptionsGrid(q);
       const secretAnswer = document.getElementById('hostSecretAnswer');
       if (hostAnswerRevealed) {
         secretAnswer.classList.remove('hidden');
@@ -1077,10 +1440,22 @@
           </div>
           
           <div id="reveal-answer-box-${idx}" class="hidden mt-2 pt-3 border-t border-gray-800/80">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 mb-2">
               <span class="text-xs font-black uppercase tracking-wider text-emerald-400">Answer:</span>
               <span class="text-sm font-black text-amber-300">${q.a}</span>
             </div>
+            ${q.options ? `
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 my-2">
+              ${q.options.map((opt, oIdx) => {
+                const ltr = ['A', 'B', 'C', 'D'][oIdx];
+                const isCorr = q.a.trim().startsWith(ltr);
+                const optTextClean = opt.replace(/^[A-D]\)\s*/, '');
+                return `<div class="text-xs px-2.5 py-1.5 rounded-lg border ${isCorr ? 'bg-emerald-950/60 border-emerald-500 text-emerald-200 font-bold' : 'bg-gray-900 border-gray-800 text-gray-400'} flex items-center gap-1.5">
+                  <span class="font-black text-[10px] ${isCorr ? 'text-emerald-400' : 'text-amber-400'}">${ltr}</span>
+                  <span>${optTextClean}</span>
+                </div>`;
+              }).join('')}
+            </div>` : ''}
             <p class="text-[11px] text-gray-400 mt-1 italic">${q.notes}</p>
           </div>
         `;
