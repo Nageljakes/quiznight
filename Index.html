@@ -214,11 +214,11 @@
             </div>
           </div>
           <div>
-            <div class="flex items-center gap-1.5 sm:gap-2">
-              <h1 class="text-base sm:text-xl font-extrabold tracking-tight font-display bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent leading-none">
+            <div class="flex items-center gap-1.5 sm:gap-2 cursor-pointer group" onclick="openUsernameModal(true)" title="Click to change venue or player name">
+              <h1 id="headerVenueTitle" class="text-base sm:text-xl font-extrabold tracking-tight font-display bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent leading-none group-hover:from-amber-300 group-hover:to-yellow-100 transition">
                 BEERBOX PUB QUIZ
               </h1>
-              <span class="bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+              <span id="headerVenueBadge" class="bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider group-hover:border-amber-400 transition">
                 Midrand
               </span>
             </div>
@@ -286,7 +286,7 @@
           </div>
 
           <!-- User Profile & Score Display -->
-          <button id="userProfileBtn" onclick="openUsernameModal(true)" class="px-2.5 py-1 bg-gray-900 hover:bg-gray-800 text-gray-200 font-bold rounded-lg text-xs transition flex items-center gap-1.5 border border-amber-500/30 active:scale-95 shadow-sm" title="Click to change your username / team">
+          <button id="userProfileBtn" onclick="openUsernameModal(true)" class="px-2.5 py-1 bg-gray-900 hover:bg-gray-800 text-gray-200 font-bold rounded-lg text-xs transition flex items-center gap-1.5 border border-amber-500/30 active:scale-95 shadow-sm" title="Click to change your player name or venue">
             <i class="fa-solid fa-user-astronaut text-amber-400 text-xs"></i>
             <span id="headerUsernameDisplay" class="font-semibold text-white max-w-[80px] sm:max-w-[120px] truncate">Player</span>
             <span id="headerUserScoreBadge" class="bg-amber-500 text-gray-950 font-black text-[10px] px-1.5 py-0.2 rounded-full">0 pts</span>
@@ -605,15 +605,32 @@
         <i class="fa-solid fa-beer-mug-empty"></i>
       </div>
       <h3 class="text-2xl font-black font-display text-white mb-1">Welcome to Quiz Night!</h3>
-      <p class="text-xs text-gray-400 mb-5">Enter your player or team name to record your live score on the scoreboard:</p>
-      <form onsubmit="handleUsernameSubmit(event)" class="space-y-4">
-        <input type="text" id="usernameModalInput" placeholder="Enter your name / team name..." required class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-base text-white text-center font-bold focus:outline-none focus:border-amber-400 transition placeholder:text-gray-600">
-        <div class="flex flex-col gap-2">
+      <p class="text-xs text-gray-400 mb-5">Enter your player name and venue to record your live score on the scoreboard:</p>
+      <form onsubmit="handleUsernameSubmit(event)" class="space-y-3.5 text-left">
+        <div>
+          <label for="usernameModalInput" class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+            <i class="fa-solid fa-user-astronaut text-amber-400 text-xs"></i>
+            <span>Player / Team Name</span>
+            <span class="text-amber-400">*</span>
+          </label>
+          <input type="text" id="usernameModalInput" placeholder="Enter your name or team name..." required class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-2.5 text-sm sm:text-base text-white font-bold focus:outline-none focus:border-amber-400 transition placeholder:text-gray-600">
+        </div>
+        <div>
+          <label for="venueModalInput" class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i class="fa-solid fa-location-dot text-amber-400 text-xs"></i>
+              <span>Venue Name</span>
+            </span>
+            <span class="text-[10px] text-gray-500 font-normal lowercase">(e.g. Beerbox Midrand)</span>
+          </label>
+          <input type="text" id="venueModalInput" placeholder="Enter venue name..." class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-2.5 text-sm sm:text-base text-white font-bold focus:outline-none focus:border-amber-400 transition placeholder:text-gray-600">
+        </div>
+        <div class="flex flex-col gap-2 pt-1">
           <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-gray-950 font-black rounded-xl text-sm transition shadow-lg shadow-amber-500/25 active:scale-95 flex items-center justify-center gap-2">
             <i class="fa-solid fa-play"></i>
             <span>Join & Start Quiz</span>
           </button>
-          <button type="button" onclick="continueAsHost()" class="text-xs text-gray-400 hover:text-amber-300 font-medium py-1 transition">
+          <button type="button" onclick="continueAsHost()" class="text-xs text-center text-gray-400 hover:text-amber-300 font-medium py-1 transition">
             Or continue as Host / Spectator
           </button>
         </div>
@@ -636,9 +653,12 @@
               <h3 class="text-base sm:text-xl font-black font-display text-white">Scoreboard & Answer Key</h3>
               <span id="scoreModalSetBadge" class="text-[10px] bg-blue-500/20 text-blue-300 border border-blue-500/40 font-bold px-2 py-0.5 rounded-full uppercase">Set 1</span>
             </div>
-            <div class="flex items-center gap-1.5 text-xs text-gray-400">
+            <div class="flex items-center gap-1.5 text-xs text-gray-400 flex-wrap">
               <span>Player:</span>
               <strong id="scoreModalUsername" class="text-amber-300">Player</strong>
+              <span class="text-gray-600">•</span>
+              <span>Venue:</span>
+              <strong id="scoreModalVenue" class="text-amber-300">Beerbox Midrand</strong>
               <button onclick="openUsernameModal(true)" class="text-[10px] text-gray-500 hover:text-amber-400 underline ml-1">Change</button>
             </div>
           </div>
@@ -804,7 +824,7 @@
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
       <div class="flex items-center gap-2">
         <i class="fa-solid fa-beer-mug-empty text-amber-500"></i>
-        <span>Beerbox Midrand Pub Quiz Engine</span>
+        <span id="footerVenueDisplay">Beerbox Midrand Pub Quiz Engine</span>
         <span class="text-gray-700">•</span>
         <span class="text-gray-400 font-semibold">50 Questions • 5 Tiers of Escalating Difficulty</span>
         <span class="text-gray-700 hidden sm:inline">•</span>
@@ -996,6 +1016,7 @@
     let timerRunning = false;
     let hostAnswerRevealed = false;
     let currentUsername = localStorage.getItem('beerbox_quiz_username') || '';
+    let currentVenue = localStorage.getItem('beerbox_quiz_venue') || 'Beerbox Midrand';
     let userAnswers = JSON.parse(localStorage.getItem(getUserAnswersKey(currentSetIndex)) || '{}');
 
     // Default Teams for Beerbox Midrand
@@ -1211,9 +1232,50 @@
     }
 
     /* ==========================================================
-       USERNAME ONBOARDING & MODAL
+       VENUE & USERNAME ONBOARDING & MODAL
        ========================================================== */
+    function updateVenueDisplay() {
+      const venue = currentVenue || 'Beerbox Midrand';
+      
+      // Update page title
+      document.title = `TJ Entertainment @ ${venue} - Live Pub Quiz Night`;
+      
+      // Update header branding
+      const titleEl = document.getElementById('headerVenueTitle');
+      const badgeEl = document.getElementById('headerVenueBadge');
+      if (titleEl && badgeEl) {
+        const vClean = venue.trim();
+        const vLower = vClean.toLowerCase();
+        if (vLower === 'beerbox midrand') {
+          titleEl.textContent = 'BEERBOX PUB QUIZ';
+          badgeEl.textContent = 'Midrand';
+        } else if (vLower === 'beerbox') {
+          titleEl.textContent = 'BEERBOX PUB QUIZ';
+          badgeEl.textContent = 'Live';
+        } else if (vLower.includes('quiz')) {
+          titleEl.textContent = vClean.toUpperCase();
+          badgeEl.textContent = 'Live';
+        } else {
+          titleEl.textContent = vClean.toUpperCase();
+          badgeEl.textContent = 'Pub Quiz';
+        }
+      }
+      
+      // Scoreboard modal venue
+      const scoreModalVenueEl = document.getElementById('scoreModalVenue');
+      if (scoreModalVenueEl) {
+        scoreModalVenueEl.textContent = venue;
+      }
+
+      // Footer venue
+      const footerVenueEl = document.getElementById('footerVenueDisplay');
+      if (footerVenueEl) {
+        footerVenueEl.textContent = `${venue} Pub Quiz Engine`;
+      }
+    }
+
     function checkUsernameOnLoad() {
+      updateVenueDisplay();
       if (!currentUsername) {
         openUsernameModal(false);
       } else {
@@ -1228,6 +1290,7 @@
       const modal = document.getElementById('usernameModal');
       const closeBtn = document.getElementById('closeUsernameModalBtn');
       const input = document.getElementById('usernameModalInput');
+      const venueInput = document.getElementById('venueModalInput');
       if (!modal) return;
       if (closeBtn) {
         if (canClose && currentUsername) {
@@ -1239,6 +1302,9 @@
       if (input) {
         input.value = currentUsername || '';
         setTimeout(() => input.focus(), 150);
+      }
+      if (venueInput) {
+        venueInput.value = currentVenue || 'Beerbox Midrand';
       }
       modal.classList.remove('hidden');
     }
@@ -1254,16 +1320,27 @@
     function handleUsernameSubmit(e) {
       if (e) e.preventDefault();
       const input = document.getElementById('usernameModalInput');
+      const venueInput = document.getElementById('venueModalInput');
       const name = input ? input.value.trim() : '';
       if (!name) return;
       currentUsername = name;
       localStorage.setItem('beerbox_quiz_username', currentUsername);
+
+      const venueName = venueInput ? venueInput.value.trim() : '';
+      if (venueName) {
+        currentVenue = venueName;
+        localStorage.setItem('beerbox_quiz_venue', currentVenue);
+      } else if (!currentVenue) {
+        currentVenue = 'Beerbox Midrand';
+        localStorage.setItem('beerbox_quiz_venue', currentVenue);
+      }
       
       // Rotate to next question set on each login
       rotateToNextSet(false);
 
       ensureUserTeam();
       updateUserHeaderDisplay();
+      updateVenueDisplay();
       recalculateScoresForCurrentSet();
       renderTeamsTable();
       closeUsernameModal();
@@ -1277,9 +1354,19 @@
     function continueAsHost() {
       currentUsername = 'Host';
       localStorage.setItem('beerbox_quiz_username', currentUsername);
+      const venueInput = document.getElementById('venueModalInput');
+      const venueName = venueInput ? venueInput.value.trim() : '';
+      if (venueName) {
+        currentVenue = venueName;
+        localStorage.setItem('beerbox_quiz_venue', currentVenue);
+      } else if (!currentVenue) {
+        currentVenue = 'Beerbox Midrand';
+        localStorage.setItem('beerbox_quiz_venue', currentVenue);
+      }
       rotateToNextSet(false);
       ensureUserTeam();
       updateUserHeaderDisplay();
+      updateVenueDisplay();
       recalculateScoresForCurrentSet();
       renderTeamsTable();
       closeUsernameModal();
@@ -2075,6 +2162,9 @@
       const userEl = document.getElementById('scoreModalUsername');
       if (userEl) userEl.textContent = currentUsername || 'Player (Guest)';
 
+      const venueEl = document.getElementById('scoreModalVenue');
+      if (venueEl) venueEl.textContent = currentVenue || 'Beerbox Midrand';
+
       const setBadge = document.getElementById('scoreModalSetBadge');
       if (setBadge) setBadge.textContent = activeQuizSet ? activeQuizSet.setName : `Set ${currentSetIndex + 1}`;
 
@@ -2619,7 +2709,7 @@
         <!-- Printable Paper Header -->
         <div class="text-center border-b-2 border-amber-600 pb-3 mb-4">
           <div class="text-amber-800 text-xl sm:text-2xl font-black font-display tracking-tight leading-none uppercase">
-            Beerbox Midrand • Live Pub Quiz Night
+            ${(currentVenue || 'Beerbox Midrand').toUpperCase()} • LIVE PUB QUIZ NIGHT
           </div>
           <div class="text-slate-600 text-xs font-bold mt-1">
             Official Master Question & Answer Paper • Hosted by TJ Entertainment
