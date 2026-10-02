@@ -357,6 +357,9 @@
         <button onclick="toggleTimer()" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-gray-950 font-black text-xs transition flex items-center gap-1 active:scale-95 shadow">
           <i class="fa-solid fa-play" id="tvTimerPlayIcon"></i> <span>Timer</span>
         </button>
+        <button onclick="resetCurrentRound()" title="Reset Round - Clear Answers" class="px-3 py-2 rounded-xl bg-gray-900 hover:bg-rose-950/60 text-gray-300 hover:text-rose-300 border border-gray-700 hover:border-rose-500/40 text-xs font-bold transition flex items-center gap-1.5 active:scale-95">
+          <i class="fa-solid fa-arrow-rotate-left text-rose-400"></i> <span class="hidden md:inline">Reset Round</span>
+        </button>
         <button onclick="toggleBigScreenMode()" title="Exit Big Screen Mode (Esc or B)" class="px-3.5 py-2 rounded-xl bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white border border-gray-700 text-xs font-bold transition flex items-center gap-1.5 active:scale-95">
           <i class="fa-solid fa-compress"></i> <span>Exit TV</span>
         </button>
@@ -488,8 +491,8 @@
       <div class="glass-panel p-6 sm:p-10 rounded-3xl border border-gray-800 shadow-2xl relative overflow-hidden transition-all duration-300" id="mainQuestionCard">
         
         <!-- Top Card Subheader & Progress -->
-        <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-6">
-          <div class="flex items-center gap-2.5 flex-wrap">
+        <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-6 gap-2 flex-wrap">
+          <div class="flex items-center gap-2 sm:gap-2.5 flex-wrap">
             <span id="cardSetBadge" class="bg-blue-500/20 text-blue-300 border border-blue-500/40 text-xs font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
               Set 1
             </span>
@@ -500,8 +503,15 @@
               Question 1 of 10
             </span>
           </div>
-          <div class="flex items-center gap-1.5" id="dotsContainer">
-            <!-- Question dots rendered via JS -->
+          <div class="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
+            <button onclick="resetCurrentRound()" class="text-xs px-2.5 py-1 rounded-lg bg-gray-900/90 hover:bg-rose-950/60 text-gray-400 hover:text-rose-300 border border-gray-800 hover:border-rose-500/40 font-bold transition flex items-center gap-1.5 active:scale-95 shadow-sm" title="Clear answers for this round and start fresh">
+              <i class="fa-solid fa-arrow-rotate-left text-rose-400 text-[11px]"></i>
+              <span class="hidden xs:inline sm:inline">Reset Round</span>
+              <span class="xs:hidden sm:hidden">Reset</span>
+            </button>
+            <div class="flex items-center gap-1.5" id="dotsContainer">
+              <!-- Question dots rendered via JS -->
+            </div>
           </div>
         </div>
 
@@ -544,6 +554,13 @@
           <span class="text-[10px] px-1.5 py-0.5 rounded bg-black/40 text-amber-300 border border-amber-500/30 hidden md:inline font-mono">Key: R</span>
         </button>
 
+        <!-- Reset Round Button -->
+        <button onclick="resetCurrentRound()" id="mainResetRoundBtn" class="px-3 sm:px-4 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-gray-900 hover:bg-rose-950/60 text-gray-400 hover:text-rose-300 border border-gray-700 hover:border-rose-500/40 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-1.5 active:scale-95 shrink-0" title="Reset this round to clear all answers and start fresh">
+          <i class="fa-solid fa-arrow-rotate-left text-rose-400 text-xs"></i>
+          <span class="hidden sm:inline">Reset Round</span>
+          <span class="sm:hidden">Reset</span>
+        </button>
+
         <!-- Big Screen TV Mode Toggle -->
         <button onclick="toggleBigScreenMode()" id="tvModeBtn" class="hidden sm:flex px-4 sm:px-5 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-gray-900 hover:bg-amber-500/20 text-gray-200 hover:text-amber-300 border border-gray-700 font-bold text-xs sm:text-sm transition items-center gap-2 active:scale-95">
           <i class="fa-solid fa-tv text-amber-400 text-xs"></i>
@@ -568,6 +585,8 @@
         <span class="mx-1 text-gray-600">•</span>
         <kbd class="px-1.5 py-0.5 rounded bg-gray-900 border border-gray-800 text-gray-300 font-mono text-[10px]">T</kbd> Timer
         <span class="mx-1 text-gray-600">•</span>
+        <kbd class="px-1.5 py-0.5 rounded bg-gray-900 border border-gray-800 text-gray-300 font-mono text-[10px]">X</kbd> Reset Round
+        <span class="mx-1 text-gray-600">•</span>
         <kbd class="px-1.5 py-0.5 rounded bg-gray-900 border border-gray-800 text-gray-300 font-mono text-[10px]">B</kbd> TV Mode
         <span class="mx-1 text-gray-600">•</span>
         <kbd class="px-1.5 py-0.5 rounded bg-gray-900 border border-gray-800 text-gray-300 font-mono text-[10px]">F</kbd> Fullscreen
@@ -591,12 +610,15 @@
             </p>
           </div>
 
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-wrap">
             <button onclick="revealAllAnswers()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-gray-950 font-bold text-xs transition flex items-center gap-1.5 shadow active:scale-95">
               <i class="fa-solid fa-bolt"></i> Reveal All
             </button>
             <button onclick="hideAllAnswers()" class="px-4 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold text-xs transition flex items-center gap-1.5">
               <i class="fa-solid fa-eye-slash"></i> Hide All
+            </button>
+            <button onclick="resetCurrentRound()" class="px-3.5 py-2 rounded-xl bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/60 font-bold text-xs transition flex items-center gap-1.5 active:scale-95" title="Clear answers for this round and restart">
+              <i class="fa-solid fa-arrow-rotate-left"></i> Reset Round
             </button>
           </div>
         </div>
@@ -693,11 +715,17 @@
       </div>
 
       <!-- Modal Footer -->
-      <div class="mt-4 pt-4 border-t border-gray-800 flex items-center justify-between text-xs text-gray-400">
+      <div class="mt-4 pt-4 border-t border-gray-800 flex items-center justify-between text-xs text-gray-400 flex-wrap gap-2">
         <span>💡 Tip: Click +1 / -1 or type points directly.</span>
-        <button onclick="resetAllScores()" class="text-rose-400 hover:text-rose-300 font-semibold transition">
-          <i class="fa-solid fa-trash mr-1"></i> Reset All Scores
-        </button>
+        <div class="flex items-center gap-3">
+          <button onclick="resetCurrentRound()" class="text-amber-400 hover:text-amber-300 font-semibold transition flex items-center gap-1" title="Clear answers for current round">
+            <i class="fa-solid fa-arrow-rotate-left"></i> Reset Current Round
+          </button>
+          <span class="text-gray-700">•</span>
+          <button onclick="resetAllScores()" class="text-rose-400 hover:text-rose-300 font-semibold transition flex items-center gap-1">
+            <i class="fa-solid fa-trash"></i> Reset All Scores
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -774,6 +802,10 @@
       </div>
     </div>
   </footer>
+
+  <!-- Lightweight Toast Feedback Container -->
+  <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
   <!-- Rotating Pub Quiz Question Sets (10x5x10) -->
   <script src="quizSets.js"></script>
   <script>
@@ -892,6 +924,22 @@
       } catch (e) {
         console.warn('Audio context init error:', e);
       }
+    }
+
+    function showToast(message, icon = 'fa-check') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = "bg-gray-900/95 border border-amber-500/40 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2.5 backdrop-blur-md transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto";
+      toast.innerHTML = `<i class="fa-solid ${icon} text-amber-400"></i> <span>${message}</span>`;
+      container.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 350);
+      }, 2500);
     }
     /* ==========================================================
        ROTATING PUB QUIZ MASTER SETS (10x5x10)
@@ -2116,6 +2164,57 @@
       updateUserHeaderDisplay();
     }
 
+    function resetRound(roundIndex, skipConfirm = false) {
+      if (typeof roundIndex !== 'number' || roundIndex < 0) {
+        roundIndex = currentRoundIndex;
+      }
+      const round = quizData && quizData[roundIndex];
+      const roundTitle = round ? round.title : `Round ${roundIndex + 1}`;
+
+      if (!skipConfirm) {
+        const ok = confirm(`Reset ${roundTitle}?\n\nThis will clear all recorded answers and score points for this round so you can start fresh.`);
+        if (!ok) return;
+      }
+
+      // Clear answers for the target round
+      const prefix = `r${roundIndex}_`;
+      Object.keys(userAnswers).forEach(key => {
+        if (key.startsWith(prefix)) {
+          delete userAnswers[key];
+        }
+      });
+
+      // Persist to localStorage for the active set
+      localStorage.setItem(getUserAnswersKey(currentSetIndex), JSON.stringify(userAnswers));
+
+      // Reset question progress and timer for the active round
+      if (roundIndex === currentRoundIndex) {
+        currentQuestionIndex = 0;
+        hostAnswerRevealed = false;
+        resetTimer();
+        if (currentMode === 'ask') {
+          renderCurrentQuestion();
+          startAutoTimerForCurrentQuestion();
+        } else {
+          renderRevealGrid();
+        }
+      }
+
+      // Recalculate score table & header badges
+      recalculateScoresForCurrentSet();
+      saveTeams();
+      recalculateScores();
+      renderTeamsTable();
+      updateUserHeaderDisplay();
+
+      showToast(`${roundTitle} reset! Answers cleared.`, 'fa-arrow-rotate-left');
+      playSFX('correct');
+    }
+
+    function resetCurrentRound(skipConfirm = false) {
+      resetRound(currentRoundIndex, skipConfirm);
+    }
+
     function resetAllScores() {
       if (confirm("Reset all team scores and clear recorded quiz answers for a fresh game?")) {
         teams.forEach(t => {
@@ -2125,12 +2224,20 @@
         });
         userAnswers = {};
         localStorage.removeItem('beerbox_user_answers');
+        localStorage.removeItem(getUserAnswersKey(currentSetIndex));
         saveTeams();
         recalculateScores();
         renderTeamsTable();
         updateUserHeaderDisplay();
+        currentQuestionIndex = 0;
+        hostAnswerRevealed = false;
+        resetTimer();
         renderCurrentQuestion();
+        if (currentMode === 'ask') {
+          startAutoTimerForCurrentQuestion();
+        }
         playSFX('fanfare');
+        showToast('All scores and answers reset!', 'fa-trash');
       }
     }
 
@@ -2209,6 +2316,9 @@
         playSFX('wrong');
       } else if (e.key === 't' || e.key === 'T') {
         toggleTimer();
+      } else if (e.key === 'x' || e.key === 'X') {
+        e.preventDefault();
+        resetCurrentRound();
       }
     });
 
