@@ -87,6 +87,48 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #F59E0B;
     }
+    /* ==========================================================
+       BIG SCREEN / TV PRESENTATION MODE STYLES
+       ========================================================== */
+    body.big-screen-active {
+      overflow-y: auto !important;
+      min-height: 100vh !important;
+      background: radial-gradient(circle at 50% 15%, #241603 0%, #080C14 75%) !important;
+    }
+    body.big-screen-active header,
+    body.big-screen-active .round-tabs-bar,
+    body.big-screen-active .stage-mode-switch-bar,
+    body.big-screen-active footer,
+    body.big-screen-active .normal-only-element {
+      display: none !important;
+    }
+    body.big-screen-active .tv-only-element {
+      display: flex !important;
+    }
+    body.big-screen-active main {
+      max-width: 96vw !important;
+      width: 96vw !important;
+      padding: 1.5rem 1rem !important;
+      gap: 1.25rem !important;
+    }
+    body.big-screen-active #mainQuestionCard {
+      padding: 2.5rem 3rem !important;
+      background: rgba(13, 18, 30, 0.94) !important;
+      border: 2px solid rgba(245, 158, 11, 0.4) !important;
+      box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.95), 0 0 50px rgba(245, 158, 11, 0.15) !important;
+    }
+    body.big-screen-active #liveQuestionText {
+      font-size: clamp(2rem, 3.8vw, 3.8rem) !important;
+      line-height: 1.2 !important;
+    }
+    body.big-screen-active #optionsGrid {
+      gap: 1.25rem !important;
+      margin-top: 2rem !important;
+      margin-bottom: 1.5rem !important;
+    }
+    body.big-screen-active #optionsGrid > div {
+      padding: 1.5rem 1.75rem !important;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
@@ -141,12 +183,16 @@
 
       <!-- Quick Nav Action Buttons -->
       <div class="flex items-center gap-2">
-        <button id="toggleScoreboardBtn" onclick="toggleScoreboardModal()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-gray-950 font-bold rounded-lg text-xs transition flex items-center gap-1.5 shadow-md shadow-amber-500/20 active:scale-95">
-          <i class="fa-solid fa-list-ol"></i>
-          <span>Leaderboard</span>
+        <button onclick="toggleBigScreenMode()" id="tvModeBtnTop" title="Toggle Big Screen TV Mode (Key: B)" class="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-gray-950 font-black rounded-lg text-xs transition flex items-center gap-1.5 shadow-md shadow-amber-500/25 active:scale-95">
+          <i class="fa-solid fa-tv"></i>
+          <span>TV Mode</span>
+        </button>
+        <button id="toggleScoreboardBtn" onclick="toggleScoreboardModal()" class="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold rounded-lg text-xs transition flex items-center gap-1.5 border border-gray-700 active:scale-95">
+          <i class="fa-solid fa-list-ol text-amber-400"></i>
+          <span>Scores</span>
           <span id="teamBadgeCount" class="bg-gray-950 text-amber-300 text-[10px] px-1.5 py-0.2 rounded-full">4</span>
         </button>
-        <button onclick="toggleFullscreen()" title="Toggle Fullscreen" class="p-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg text-xs border border-gray-700 transition">
+        <button onclick="toggleFullscreen()" title="Toggle Fullscreen (Key: F)" class="p-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg text-xs border border-gray-700 transition">
           <i class="fa-solid fa-expand"></i>
         </button>
       </div>
@@ -155,8 +201,35 @@
   <!-- MAIN QUIZ ARENA -->
   <main class="max-w-6xl w-full mx-auto px-4 py-5 flex-1 flex flex-col gap-6">
 
+    <!-- DEDICATED TV / BIG SCREEN HEADER BAR (Visible in TV Mode) -->
+    <div class="tv-only-element tv-header-bar hidden items-center justify-between gap-4 pb-3 border-b border-amber-500/30">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center font-black text-lg shadow-md">
+          <i class="fa-solid fa-beer-mug-empty"></i>
+        </div>
+        <div>
+          <span class="text-xs uppercase font-extrabold tracking-widest text-amber-400" id="tvRoundBadge">ROUND 1 • BAR WARM-UP</span>
+          <h2 class="text-xl sm:text-2xl font-black text-white" id="tvQuestionProgress">Question 1 of 10</h2>
+        </div>
+      </div>
+
+      <!-- Big Glowing TV Timer & Exit Button -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2.5 bg-gray-950/90 px-4 py-2 rounded-2xl border border-amber-500/30 shadow-lg">
+          <i class="fa-regular fa-clock text-amber-400 text-lg animate-pulse"></i>
+          <span id="tvTimerDisplay" class="font-mono text-2xl sm:text-3xl font-black text-amber-300">00:45</span>
+        </div>
+        <button onclick="toggleTimer()" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-gray-950 font-black text-xs transition flex items-center gap-1 active:scale-95 shadow">
+          <i class="fa-solid fa-play" id="tvTimerPlayIcon"></i> <span>Timer</span>
+        </button>
+        <button onclick="toggleBigScreenMode()" title="Exit Big Screen Mode (Esc or B)" class="px-3.5 py-2 rounded-xl bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white border border-gray-700 text-xs font-bold transition flex items-center gap-1.5 active:scale-95">
+          <i class="fa-solid fa-compress"></i> <span>Exit TV</span>
+        </button>
+      </div>
+    </div>
+
     <!-- ROUND TABS BAR -->
-    <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+    <div class="round-tabs-bar flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
       <button onclick="switchRound(0)" id="roundTab-0" class="round-tab flex-1 min-w-[130px] p-3 rounded-xl border border-amber-500/50 bg-amber-500/20 text-amber-300 font-bold text-xs transition flex flex-col items-center gap-1">
         <div class="flex items-center gap-1 text-[11px] uppercase tracking-wider text-amber-400">
           <i class="fa-solid fa-beer-mug-empty"></i> Round 1
@@ -216,7 +289,7 @@
       </button>
     </div>
     <!-- STAGE MODE SWITCH (QUESTION PRESENTATION vs ROUND ANSWERS REVEAL) -->
-    <div class="flex items-center justify-between flex-wrap gap-3 bg-gray-900/80 p-2.5 rounded-xl border border-gray-800">
+    <div class="stage-mode-switch-bar flex items-center justify-between flex-wrap gap-3 bg-gray-900/80 p-2.5 rounded-xl border border-gray-800">
       <div class="flex items-center gap-2">
         <div class="inline-flex p-1 bg-gray-950 rounded-lg border border-gray-800">
           <button id="modeAskBtn" onclick="setMode('ask')" class="px-4 py-1.5 rounded-md text-xs font-bold transition bg-amber-500 text-gray-950 shadow">
@@ -287,19 +360,46 @@
         </div>
       </div>
 
-      <!-- Question Stepper Buttons -->
-      <div class="flex items-center justify-between gap-4 mt-2">
-        <button onclick="prevQuestion()" id="prevBtn" class="flex-1 sm:flex-none px-6 py-3.5 rounded-2xl bg-gray-900 hover:bg-gray-800 border border-gray-700 text-gray-200 font-bold text-sm transition flex items-center justify-center gap-2 active:scale-95">
-          <i class="fa-solid fa-chevron-left"></i> Previous Question
+      <!-- Big Screen Friendly Controls -->
+      <div class="flex items-center justify-between gap-3 mt-3 flex-wrap">
+        <button onclick="prevQuestion()" id="prevBtn" class="px-6 py-3.5 rounded-2xl bg-gray-900 hover:bg-gray-800 border border-gray-700 text-gray-200 font-bold text-sm transition flex items-center justify-center gap-2 active:scale-95">
+          <i class="fa-solid fa-chevron-left"></i> <span>Previous</span>
         </button>
 
-        <button onclick="randomizeCurrentQuestion()" class="px-4 py-3.5 rounded-2xl bg-gray-900/60 hover:bg-gray-800 border border-gray-700/50 text-gray-400 hover:text-amber-400 text-xs font-semibold transition flex items-center gap-2" title="Pick Random Question in this Round">
-          <i class="fa-solid fa-dice text-sm"></i> <span class="hidden md:inline">Shuffle Q</span>
+        <!-- Big Stage Reveal Answer Button -->
+        <button onclick="toggleHostAnswerSecret()" id="mainRevealBtn" class="flex-1 sm:flex-none px-7 py-3.5 rounded-2xl bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 border border-amber-500/50 font-black text-sm tracking-wide transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/15 active:scale-95">
+          <i class="fa-solid fa-eye" id="mainRevealIcon"></i>
+          <span id="mainRevealBtnText">Reveal Answer</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-black/40 text-amber-300 border border-amber-500/30 hidden md:inline font-mono">Key: R</span>
+        </button>
+
+        <!-- Big Screen TV Mode Toggle -->
+        <button onclick="toggleBigScreenMode()" id="tvModeBtn" class="px-5 py-3.5 rounded-2xl bg-gray-900 hover:bg-amber-500/20 text-gray-200 hover:text-amber-300 border border-gray-700 font-bold text-sm transition flex items-center gap-2 active:scale-95">
+          <i class="fa-solid fa-tv text-amber-400"></i>
+          <span id="tvModeBtnText">TV Mode</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-black/40 text-gray-400 border border-gray-700 hidden md:inline font-mono">B</span>
         </button>
 
         <button onclick="nextQuestion()" id="nextBtn" class="flex-1 sm:flex-none px-8 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-gray-950 font-black text-sm tracking-wide transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 active:scale-95">
           <span>Next Question</span> <i class="fa-solid fa-chevron-right"></i>
         </button>
+      </div>
+
+      <!-- Keyboard Shortcuts Quick Bar for Host -->
+      <div class="text-center pt-1 text-[11px] text-gray-500 font-medium">
+        <span class="text-gray-400 font-semibold">Presenter Hotkeys:</span>
+        <span class="mx-1 text-gray-600">•</span>
+        <kbd class="px-1.5 py-0.5 rounded bg-gray-900 border border-gray-800 text-gray-300 font-mono text-[10px]">Space / →</kbd> Next
+        <span class="mx-1 text-gray-600">•</span>
+        <kbd class="px-1.5 py-0.5 rounded bg-gray-900 border border-gray-800 text-gray-300 font-mono text-[10px]">←</kbd> Prev
+        <span class="mx-1 text-gray-600">•</span>
+        <kbd class="px-1.5 py-0.5 rounded bg-gray-900 border border-gray-800 text-gray-300 font-mono text-[10px]">R</kbd> Reveal Answer
+        <span class="mx-1 text-gray-600">•</span>
+        <kbd class="px-1.5 py-0.5 rounded bg-gray-900 border border-gray-800 text-gray-300 font-mono text-[10px]">T</kbd> Timer
+        <span class="mx-1 text-gray-600">•</span>
+        <kbd class="px-1.5 py-0.5 rounded bg-gray-900 border border-gray-800 text-gray-300 font-mono text-[10px]">B</kbd> TV Mode
+        <span class="mx-1 text-gray-600">•</span>
+        <kbd class="px-1.5 py-0.5 rounded bg-gray-900 border border-gray-800 text-gray-300 font-mono text-[10px]">F</kbd> Fullscreen
       </div>
     </div>
     <!-- VIEW B: END-OF-ROUND REVEAL VIEW -->
@@ -1253,19 +1353,44 @@
         card.id = `option-card-${optIdx}`;
         
         const showCorrect = hostAnswerRevealed && isCorrect;
-        const baseClass = "flex items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl border transition-all text-left";
-        const normalClass = "bg-gray-900/80 border-gray-800 text-gray-200 hover:border-gray-700";
-        const correctClass = "bg-emerald-950/60 border-emerald-500 text-emerald-100 shadow-lg shadow-emerald-950/60";
-        
-        card.className = `${baseClass} ${showCorrect ? correctClass : normalClass}`;
-        
+        const isIncorrectDim = hostAnswerRevealed && !isCorrect;
         const cleanText = optText.replace(/^[A-D]\)\s*/, '');
-        card.innerHTML = `
-          <span class="w-9 h-9 rounded-xl ${showCorrect ? 'bg-emerald-500 text-gray-950 font-black' : 'bg-amber-500/15 text-amber-400 border border-amber-500/30 font-black'} flex items-center justify-center text-sm shrink-0">
-            ${letter}
-          </span>
-          <span class="text-base sm:text-lg font-bold ${showCorrect ? 'text-emerald-100 font-black' : 'text-gray-100'}">${cleanText}</span>
-        `;
+        
+        if (showCorrect) {
+          card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 transition-all text-left bg-emerald-950/90 border-emerald-400 text-emerald-100 shadow-2xl shadow-emerald-500/30 scale-[1.02] transform ring-2 ring-emerald-400/60";
+          card.innerHTML = `
+            <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
+              <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-500 text-gray-950 font-black text-lg sm:text-xl flex items-center justify-center shrink-0 shadow-md">
+                ${letter}
+              </span>
+              <span class="text-lg sm:text-2xl font-black text-white leading-snug">${cleanText}</span>
+            </div>
+            <span class="px-3 py-1.5 rounded-xl bg-emerald-500 text-gray-950 text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-1.5 shrink-0 shadow-md">
+              <i class="fa-solid fa-check"></i> Correct
+            </span>
+          `;
+        } else if (isIncorrectDim) {
+          card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border transition-all text-left bg-gray-950/40 border-gray-900 text-gray-500 opacity-30";
+          card.innerHTML = `
+            <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
+              <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-900 text-gray-600 font-bold text-lg sm:text-xl flex items-center justify-center shrink-0">
+                ${letter}
+              </span>
+              <span class="text-lg sm:text-2xl font-semibold text-gray-500 leading-snug">${cleanText}</span>
+            </div>
+          `;
+        } else {
+          card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 transition-all text-left bg-gray-900/90 border-gray-800 text-gray-100 hover:border-amber-500/50 hover:bg-gray-800/90 shadow-md cursor-pointer active:scale-[0.99]";
+          card.onclick = () => toggleHostAnswerSecret();
+          card.innerHTML = `
+            <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
+              <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/40 font-black text-lg sm:text-xl flex items-center justify-center shrink-0">
+                ${letter}
+              </span>
+              <span class="text-lg sm:text-2xl font-bold text-white leading-snug">${cleanText}</span>
+            </div>
+          `;
+        }
         optionsGrid.appendChild(card);
       });
     }
@@ -1291,6 +1416,17 @@
 
       // Render Multiple Choice Options Grid (A, B, C, D)
       renderOptionsGrid(q);
+
+      // Sync TV Presentation Header
+      const tvBadge = document.getElementById('tvRoundBadge');
+      if (tvBadge) tvBadge.textContent = `${round.badge} • ${round.title.toUpperCase()}`;
+      const tvProg = document.getElementById('tvQuestionProgress');
+      if (tvProg) tvProg.textContent = `Question ${currentQuestionIndex + 1} of ${totalQ}`;
+      
+      const mainRevBtnText = document.getElementById('mainRevealBtnText');
+      if (mainRevBtnText) mainRevBtnText.textContent = "Reveal Answer";
+      const mainRevIcon = document.getElementById('mainRevealIcon');
+      if (mainRevIcon) mainRevIcon.className = "fa-solid fa-eye";
 
       // Secret Host Answer
       const secretAnswer = document.getElementById('hostSecretAnswer');
@@ -1346,15 +1482,31 @@
       const round = quizData[currentRoundIndex];
       const q = round.questions[currentQuestionIndex];
       renderOptionsGrid(q);
-      const secretAnswer = document.getElementById('hostSecretAnswer');
+      
       if (hostAnswerRevealed) {
-        secretAnswer.classList.remove('hidden');
-        document.getElementById('secretIcon').className = "fa-solid fa-eye text-amber-400";
-        document.getElementById('secretText').textContent = "Hide Answer";
-      } else {
-        secretAnswer.classList.add('hidden');
-        document.getElementById('secretIcon').className = "fa-solid fa-eye-slash";
-        document.getElementById('secretText').textContent = "Peek Official Answer (Host Only)";
+        playSFX('correct');
+      }
+
+      const secretAnswer = document.getElementById('hostSecretAnswer');
+      if (secretAnswer) {
+        if (hostAnswerRevealed) {
+          secretAnswer.classList.remove('hidden');
+          document.getElementById('secretIcon').className = "fa-solid fa-eye text-amber-400";
+          document.getElementById('secretText').textContent = "Hide Answer";
+        } else {
+          secretAnswer.classList.add('hidden');
+          document.getElementById('secretIcon').className = "fa-solid fa-eye-slash";
+          document.getElementById('secretText').textContent = "Peek Official Answer (Host Only)";
+        }
+      }
+
+      const mainRevBtnText = document.getElementById('mainRevealBtnText');
+      const mainRevIcon = document.getElementById('mainRevealIcon');
+      if (mainRevBtnText) {
+        mainRevBtnText.textContent = hostAnswerRevealed ? "Hide Answer" : "Reveal Answer";
+      }
+      if (mainRevIcon) {
+        mainRevIcon.className = hostAnswerRevealed ? "fa-solid fa-eye-slash" : "fa-solid fa-eye";
       }
     }
 
@@ -1572,16 +1724,18 @@
       const secs = timerSeconds % 60;
       const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
       const elem = document.getElementById('timerDisplay');
-      if (elem) {
-        elem.textContent = formatted;
+      const tvElem = document.getElementById('tvTimerDisplay');
+      [elem, tvElem].forEach(el => {
+        if (!el) return;
+        el.textContent = formatted;
         if (timerSeconds <= 10) {
-          elem.classList.add('text-rose-400');
-          elem.classList.remove('text-amber-300');
+          el.classList.add('text-rose-400');
+          el.classList.remove('text-amber-300');
         } else {
-          elem.classList.remove('text-rose-400');
-          elem.classList.add('text-amber-300');
+          el.classList.remove('text-rose-400');
+          el.classList.add('text-amber-300');
         }
-      }
+      });
     }
 
     /* ==========================================================
@@ -1703,7 +1857,34 @@
       renderTeamsTable();
     }
 
+    let bigScreenActive = false;
+
+    function toggleBigScreenMode() {
+      bigScreenActive = !bigScreenActive;
+      document.body.classList.toggle('big-screen-active', bigScreenActive);
+      const tvBtn = document.getElementById('tvModeBtn');
+      const tvBtnTop = document.getElementById('tvModeBtnTop');
+      if (bigScreenActive) {
+        if (tvBtn) {
+          tvBtn.classList.add('bg-amber-500', 'text-gray-950', 'border-amber-400');
+          tvBtn.classList.remove('bg-gray-900', 'text-gray-200');
+        }
+        if (tvBtnTop) {
+          tvBtnTop.classList.add('ring-2', 'ring-amber-300');
+        }
+      } else {
+        if (tvBtn) {
+          tvBtn.classList.remove('bg-amber-500', 'text-gray-950', 'border-amber-400');
+          tvBtn.classList.add('bg-gray-900', 'text-gray-200');
+        }
+        if (tvBtnTop) {
+          tvBtnTop.classList.remove('ring-2', 'ring-amber-300');
+        }
+      }
+    }
+
     function toggleFullscreen() {
+
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(err => {
           console.warn(`Error enabling fullscreen: ${err.message}`);
@@ -1728,6 +1909,17 @@
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
         prevQuestion();
+      } else if (e.key === 'r' || e.key === 'R') {
+        e.preventDefault();
+        toggleHostAnswerSecret();
+      } else if (e.key === 'b' || e.key === 'B') {
+        e.preventDefault();
+        toggleBigScreenMode();
+      } else if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        toggleFullscreen();
+      } else if (e.key === 'Escape' && bigScreenActive) {
+        toggleBigScreenMode();
       } else if (e.key === '1') {
         playSFX('airhorn');
       } else if (e.key === '2') {
