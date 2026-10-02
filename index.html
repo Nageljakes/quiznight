@@ -133,101 +133,129 @@
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
-  <!-- TOP CONTROL DECK & HEADER -->
-  <header class="sticky top-0 z-50 glass-panel border-b border-amber-500/20 px-4 py-3">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-      <!-- DJ JC & Beerbox Brand Hub -->
-      <div class="flex items-center space-x-3">
-        <div class="relative w-11 h-11 rounded-full bg-gradient-to-tr from-amber-600 via-amber-400 to-yellow-200 flex items-center justify-center p-0.5 shadow-lg shadow-amber-500/30">
-          <div class="w-full h-full bg-gray-950 rounded-full flex items-center justify-center relative overflow-hidden group">
-            <i class="fa-solid fa-compact-disc text-amber-400 text-xl spin-vinyl group-hover:text-amber-300"></i>
-            <span class="absolute bottom-0 text-[7px] font-black tracking-tighter uppercase text-amber-500 bg-gray-900 px-1 rounded-sm">DJ JC</span>
-          </div>
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h1 class="text-xl font-extrabold tracking-tight font-display bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent">
-              BEERBOX PUB QUIZ
-            </h1>
-            <span class="bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-              Midrand
-            </span>
-          </div>
-          <p class="text-xs text-gray-400 flex items-center gap-1.5">
-            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            Hosted live by <strong class="text-gray-200">DJ JC</strong>
-          </p>
-        </div>
-      </div>
-
-      <!-- Live DJ Audio Effects Deck -->
-      <div class="flex items-center gap-1 sm:gap-2 bg-gray-950/80 p-1.5 rounded-xl border border-gray-800">
-        <span class="text-[10px] uppercase font-bold text-gray-400 px-2 hidden md:inline-flex items-center gap-1">
-          <i class="fa-solid fa-sliders text-amber-400"></i> FX Pad
-        </span>
-        <button onclick="playSFX('airhorn')" title="DJ Airhorn" class="px-2.5 py-1.5 bg-red-600/30 hover:bg-red-600 border border-red-500/40 text-red-200 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 active:scale-95">
-          <i class="fa-solid fa-bullhorn text-xs"></i> <span>Horn</span>
-        </button>
-        <button onclick="playSFX('correct')" title="Correct Ding" class="px-2.5 py-1.5 bg-emerald-600/30 hover:bg-emerald-600 border border-emerald-500/40 text-emerald-200 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 active:scale-95">
-          <i class="fa-solid fa-circle-check text-xs"></i> <span>Ding</span>
-        </button>
-        <button onclick="playSFX('wrong')" title="Wrong Buzzer" class="px-2.5 py-1.5 bg-rose-600/30 hover:bg-rose-600 border border-rose-500/40 text-rose-200 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 active:scale-95">
-          <i class="fa-solid fa-circle-xmark text-xs"></i> <span>Buzz</span>
-        </button>
-        <button onclick="playSFX('drumroll')" title="Suspense Drumroll" class="px-2.5 py-1.5 bg-amber-600/30 hover:bg-amber-600 border border-amber-500/40 text-amber-200 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 active:scale-95">
-          <i class="fa-solid fa-drum text-xs"></i> <span>Suspense</span>
-        </button>
-        <button onclick="playSFX('fanfare')" title="Winner Fanfare" class="px-2.5 py-1.5 bg-purple-600/30 hover:bg-purple-600 border border-purple-500/40 text-purple-200 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 active:scale-95">
-          <i class="fa-solid fa-trophy text-xs"></i> <span>Cheer</span>
-        </button>
-      </div>
-
-      <!-- Quick Nav Action Buttons -->
-      <div class="flex items-center gap-2">
-        <!-- Question Set Selector Dropdown & Rotation -->
-        <div class="relative flex items-center">
-          <button id="setSelectorBtn" onclick="toggleSetDropdown()" class="px-2.5 py-1.5 bg-gray-900 hover:bg-gray-800 text-amber-300 font-bold rounded-lg text-xs transition flex items-center gap-1.5 border border-amber-500/40 active:scale-95 shadow-sm" title="Active Question Set (1 to 10)">
-            <i class="fa-solid fa-layer-group text-amber-400"></i>
-            <span id="headerSetBadge" class="font-bold text-amber-300">Set 1/10</span>
-            <i class="fa-solid fa-chevron-down text-[9px] text-gray-400"></i>
-          </button>
-          <button onclick="rotateToNextSet(true)" class="p-1.5 bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-amber-400 rounded-lg text-xs border border-gray-700 ml-1 transition" title="Rotate to Next Set (↻)">
-            <i class="fa-solid fa-rotate text-xs"></i>
-          </button>
-          <div id="setDropdownMenu" class="hidden absolute top-full mt-2 left-0 w-64 bg-gray-900 border border-gray-700 rounded-xl shadow-2xl py-2 z-50">
-            <div class="px-3 py-1 text-[10px] font-black uppercase tracking-wider text-gray-400 border-b border-gray-800 flex items-center justify-between">
-              <span>Question Sets (10x5x10)</span>
-              <span class="text-amber-400">10 Sets</span>
-            </div>
-            <div id="setDropdownList" class="max-h-64 overflow-y-auto divide-y divide-gray-800/60">
+  <!-- TOP CONTROL DECK & HEADER (DESKTOP & MOBILE RESPONSIVE) -->
+  <header class="sticky top-0 z-50 glass-panel border-b border-amber-500/20 px-3 sm:px-4 py-2 sm:py-2.5">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2 sm:gap-3">
+      
+      <!-- Top Bar: Brand on Left, Quick Set & Score Badge on Mobile Right -->
+      <div class="flex items-center justify-between w-full md:w-auto gap-2">
+        <div class="flex items-center space-x-2.5 sm:space-x-3">
+          <div class="relative w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-amber-600 via-amber-400 to-yellow-200 flex items-center justify-center p-0.5 shadow-md shadow-amber-500/20 shrink-0">
+            <div class="w-full h-full bg-gray-950 rounded-full flex items-center justify-center relative overflow-hidden group">
+              <i class="fa-solid fa-compact-disc text-amber-400 text-base sm:text-xl spin-vinyl group-hover:text-amber-300"></i>
+              <span class="absolute bottom-0 text-[6px] sm:text-[7px] font-black tracking-tighter uppercase text-amber-500 bg-gray-900 px-1 rounded-sm">DJ JC</span>
             </div>
           </div>
+          <div>
+            <div class="flex items-center gap-1.5 sm:gap-2">
+              <h1 class="text-base sm:text-xl font-extrabold tracking-tight font-display bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent leading-none">
+                BEERBOX PUB QUIZ
+              </h1>
+              <span class="bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                Midrand
+              </span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-gray-400 flex items-center gap-1 mt-0.5">
+              <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              Live with <strong class="text-gray-200">DJ JC</strong>
+            </p>
+          </div>
         </div>
 
-        <!-- User Profile & Score Display -->
-        <button id="userProfileBtn" onclick="openUsernameModal(true)" class="px-3 py-1.5 bg-gray-900 hover:bg-gray-800 text-gray-200 font-bold rounded-lg text-xs transition flex items-center gap-1.5 border border-amber-500/30 active:scale-95 shadow-sm" title="Click to change your username / team">
-          <i class="fa-solid fa-user-astronaut text-amber-400"></i>
-          <span id="headerUsernameDisplay" class="font-semibold text-white max-w-[100px] sm:max-w-[140px] truncate">Player</span>
-          <span id="headerUserScoreBadge" class="bg-amber-500 text-gray-950 font-black text-[10px] px-1.5 py-0.2 rounded-full">0 pts</span>
-        </button>
-
-        <a href="Beerbox_Pub_Quiz_Team_Question_Paper_A4.docx" download class="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 hover:text-amber-300 font-bold rounded-lg text-xs transition flex items-center gap-1.5 border border-gray-700 active:scale-95" title="Download Printable A4 Question Paper (.docx)">
-          <i class="fa-solid fa-file-word text-blue-400"></i>
-          <span class="hidden sm:inline">A4 Papers</span>
-        </a>
-        <button onclick="toggleBigScreenMode()" id="tvModeBtnTop" title="Toggle Big Screen TV Mode (Key: B)" class="px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-gray-950 font-black rounded-lg text-xs transition flex items-center gap-1.5 shadow-md shadow-amber-500/25 active:scale-95">
-          <i class="fa-solid fa-tv"></i>
-          <span>TV Mode</span>
-        </button>
-        <button id="toggleScoreboardBtn" onclick="toggleScoreboardModal()" class="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold rounded-lg text-xs transition flex items-center gap-1.5 border border-gray-700 active:scale-95">
-          <i class="fa-solid fa-list-ol text-amber-400"></i>
-          <span>Scores</span>
-          <span id="teamBadgeCount" class="bg-gray-950 text-amber-300 text-[10px] px-1.5 py-0.2 rounded-full">4</span>
-        </button>
-        <button onclick="toggleFullscreen()" title="Toggle Fullscreen (Key: F)" class="p-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg text-xs border border-gray-700 transition">
-          <i class="fa-solid fa-expand"></i>
-        </button>
+        <!-- Mobile-Only Quick Icons: Set + Leaderboard Trigger -->
+        <div class="flex md:hidden items-center gap-1.5">
+          <button onclick="toggleSetDropdown()" class="px-2 py-1 bg-gray-900 hover:bg-gray-800 text-amber-300 font-bold rounded-lg text-xs border border-amber-500/40 flex items-center gap-1 shadow-sm active:scale-95" title="Change Set">
+            <i class="fa-solid fa-layer-group text-amber-400 text-[10px]"></i>
+            <span id="headerSetBadgeMobile" class="text-[11px]">Set 1</span>
+          </button>
+          <button onclick="toggleScoreboardModal()" class="px-2 py-1 bg-gray-900 hover:bg-gray-800 text-gray-200 font-bold rounded-lg text-xs border border-gray-700 flex items-center gap-1 shadow-sm active:scale-95" title="View Scoreboard">
+            <i class="fa-solid fa-trophy text-amber-400 text-[10px]"></i>
+            <span id="headerUserScoreBadgeMobile" class="bg-amber-500 text-gray-950 font-black text-[9px] px-1 py-0.2 rounded-full">0 pts</span>
+          </button>
+        </div>
       </div>
+
+      <!-- Action Deck: Sound FX + Quick Navigation (Single Row or Smooth Scroll) -->
+      <div class="flex items-center justify-between gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none pb-0.5 -mx-1 px-1">
+        <!-- Live DJ Audio Effects Deck -->
+        <div class="flex items-center gap-1 bg-gray-950/80 p-1 rounded-xl border border-gray-800 shrink-0">
+          <span class="text-[10px] uppercase font-bold text-gray-400 px-1.5 hidden lg:inline-flex items-center gap-1">
+            <i class="fa-solid fa-sliders text-amber-400"></i> FX
+          </span>
+          <button onclick="playSFX('airhorn')" title="DJ Airhorn" class="px-2 sm:px-2.5 py-1 bg-red-600/30 hover:bg-red-600 border border-red-500/40 text-red-200 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1 active:scale-95">
+            <i class="fa-solid fa-bullhorn text-[11px]"></i> <span class="hidden sm:inline">Horn</span>
+          </button>
+          <button onclick="playSFX('correct')" title="Correct Ding" class="px-2 sm:px-2.5 py-1 bg-emerald-600/30 hover:bg-emerald-600 border border-emerald-500/40 text-emerald-200 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1 active:scale-95">
+            <i class="fa-solid fa-circle-check text-[11px]"></i> <span class="hidden sm:inline">Ding</span>
+          </button>
+          <button onclick="playSFX('wrong')" title="Wrong Buzzer" class="px-2 sm:px-2.5 py-1 bg-rose-600/30 hover:bg-rose-600 border border-rose-500/40 text-rose-200 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1 active:scale-95">
+            <i class="fa-solid fa-circle-xmark text-[11px]"></i> <span class="hidden sm:inline">Buzz</span>
+          </button>
+          <button onclick="playSFX('drumroll')" title="Suspense Drumroll" class="px-2 sm:px-2.5 py-1 bg-amber-600/30 hover:bg-amber-600 border border-amber-500/40 text-amber-200 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1 active:scale-95">
+            <i class="fa-solid fa-drum text-[11px]"></i> <span class="hidden sm:inline">Suspense</span>
+          </button>
+          <button onclick="playSFX('fanfare')" title="Winner Fanfare" class="px-2 sm:px-2.5 py-1 bg-purple-600/30 hover:bg-purple-600 border border-purple-500/40 text-purple-200 hover:text-white rounded-lg text-xs font-bold transition flex items-center gap-1 active:scale-95">
+            <i class="fa-solid fa-trophy text-[11px]"></i> <span class="hidden sm:inline">Cheer</span>
+          </button>
+        </div>
+
+        <!-- Desktop & Tablet Quick Actions -->
+        <div class="flex items-center gap-1.5 shrink-0">
+          <!-- Question Set Selector Dropdown & Rotation -->
+          <div class="relative hidden md:flex items-center">
+            <button id="setSelectorBtn" onclick="toggleSetDropdown()" class="px-2.5 py-1 bg-gray-900 hover:bg-gray-800 text-amber-300 font-bold rounded-lg text-xs transition flex items-center gap-1.5 border border-amber-500/40 active:scale-95 shadow-sm" title="Active Question Set (1 to 10)">
+              <i class="fa-solid fa-layer-group text-amber-400 text-xs"></i>
+              <span id="headerSetBadge" class="font-bold text-amber-300">Set 1/10</span>
+              <i class="fa-solid fa-chevron-down text-[9px] text-gray-400"></i>
+            </button>
+            <button onclick="rotateToNextSet(true)" class="p-1 bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-amber-400 rounded-lg text-xs border border-gray-700 ml-1 transition" title="Rotate to Next Set (↻)">
+              <i class="fa-solid fa-rotate text-xs"></i>
+            </button>
+          </div>
+
+          <!-- User Profile & Score Display -->
+          <button id="userProfileBtn" onclick="openUsernameModal(true)" class="px-2.5 py-1 bg-gray-900 hover:bg-gray-800 text-gray-200 font-bold rounded-lg text-xs transition flex items-center gap-1.5 border border-amber-500/30 active:scale-95 shadow-sm" title="Click to change your username / team">
+            <i class="fa-solid fa-user-astronaut text-amber-400 text-xs"></i>
+            <span id="headerUsernameDisplay" class="font-semibold text-white max-w-[80px] sm:max-w-[120px] truncate">Player</span>
+            <span id="headerUserScoreBadge" class="bg-amber-500 text-gray-950 font-black text-[10px] px-1.5 py-0.2 rounded-full">0 pts</span>
+          </button>
+
+          <!-- A4 Papers Link -->
+          <a href="Beerbox_Pub_Quiz_Team_Question_Paper_A4.docx" download class="hidden sm:inline-flex px-2.5 py-1 bg-gray-800 hover:bg-gray-700 text-gray-200 hover:text-amber-300 font-bold rounded-lg text-xs transition items-center gap-1 border border-gray-700 active:scale-95" title="Download Printable A4 Question Paper (.docx)">
+            <i class="fa-solid fa-file-word text-blue-400 text-xs"></i>
+            <span>A4</span>
+          </a>
+
+          <!-- Big Screen TV Mode Toggle -->
+          <button onclick="toggleBigScreenMode()" id="tvModeBtnTop" title="Toggle Big Screen TV Mode (Key: B)" class="px-2.5 sm:px-3 py-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-gray-950 font-black rounded-lg text-xs transition flex items-center gap-1 shadow-sm active:scale-95">
+            <i class="fa-solid fa-tv text-xs"></i>
+            <span class="hidden sm:inline">TV</span>
+          </button>
+
+          <!-- Leaderboard Modal Trigger -->
+          <button id="toggleScoreboardBtn" onclick="toggleScoreboardModal()" class="hidden md:inline-flex px-2.5 py-1 bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold rounded-lg text-xs transition items-center gap-1 border border-gray-700 active:scale-95">
+            <i class="fa-solid fa-list-ol text-amber-400 text-xs"></i>
+            <span>Scores</span>
+            <span id="teamBadgeCount" class="bg-gray-950 text-amber-300 text-[9px] px-1 rounded-full">4</span>
+          </button>
+
+          <!-- Fullscreen button -->
+          <button onclick="toggleFullscreen()" title="Toggle Fullscreen (Key: F)" class="p-1 sm:p-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg text-xs border border-gray-700 transition">
+            <i class="fa-solid fa-expand text-xs"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Set Dropdown Menu for Both Desktop and Mobile -->
+      <div id="setDropdownMenu" class="hidden absolute top-full mt-2 left-3 right-3 sm:right-auto sm:left-auto md:right-4 w-auto sm:w-72 max-w-[95vw] bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl py-2 z-50">
+        <div class="px-3.5 py-1.5 text-[10px] font-black uppercase tracking-wider text-gray-400 border-b border-gray-800 flex items-center justify-between">
+          <span>Question Sets (10x5x10)</span>
+          <span class="text-amber-400 font-mono">10 Sets</span>
+        </div>
+        <div id="setDropdownList" class="max-h-64 overflow-y-auto divide-y divide-gray-800/60">
+        </div>
+      </div>
+
     </div>
   </header>
   <!-- MAIN QUIZ ARENA -->
@@ -321,27 +349,27 @@
       </button>
     </div>
     <!-- STAGE MODE SWITCH (QUESTION PRESENTATION vs ROUND ANSWERS REVEAL) -->
-    <div class="stage-mode-switch-bar flex items-center justify-between flex-wrap gap-3 bg-gray-900/80 p-2.5 rounded-xl border border-gray-800">
-      <div class="flex items-center gap-2">
-        <div class="inline-flex p-1 bg-gray-950 rounded-lg border border-gray-800">
-          <button id="modeAskBtn" onclick="setMode('ask')" class="px-4 py-1.5 rounded-md text-xs font-bold transition bg-amber-500 text-gray-950 shadow">
-            <i class="fa-solid fa-microphone-lines mr-1.5"></i> Ask Questions (Live)
+    <div class="stage-mode-switch-bar flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 bg-gray-900/80 p-2 sm:p-2.5 rounded-xl border border-gray-800">
+      <div class="flex items-center justify-center sm:justify-start gap-2">
+        <div class="inline-flex w-full sm:w-auto p-1 bg-gray-950 rounded-lg border border-gray-800">
+          <button id="modeAskBtn" onclick="setMode('ask')" class="flex-1 sm:flex-none px-3 sm:px-4 py-1.5 rounded-md text-xs font-bold transition bg-amber-500 text-gray-950 shadow text-center">
+            <i class="fa-solid fa-microphone-lines mr-1 sm:mr-1.5"></i> Live Questions
           </button>
-          <button id="modeRevealBtn" onclick="setMode('reveal')" class="px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition">
-            <i class="fa-solid fa-key mr-1.5"></i> End-of-Round Reveal
+          <button id="modeRevealBtn" onclick="setMode('reveal')" class="flex-1 sm:flex-none px-3 sm:px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition text-center">
+            <i class="fa-solid fa-key mr-1 sm:mr-1.5"></i> End-of-Round Key
           </button>
         </div>
       </div>
 
-      <div class="flex items-center gap-3">
+      <div class="flex items-center justify-center sm:justify-end gap-2.5">
         <!-- Pacing & Timer Widget -->
         <div class="flex items-center gap-2 bg-gray-950 px-3 py-1.5 rounded-lg border border-gray-800">
           <i class="fa-regular fa-clock text-amber-400 text-sm"></i>
           <span id="timerDisplay" class="font-mono text-base font-extrabold text-amber-300">00:10</span>
-          <button onclick="toggleTimer()" id="timerControlBtn" class="text-xs bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 font-bold px-2 py-0.5 rounded transition">
+          <button onclick="toggleTimer()" id="timerControlBtn" class="text-xs bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 font-bold px-2.5 py-0.5 rounded transition">
             Start
           </button>
-          <button onclick="resetTimer()" class="text-xs text-gray-500 hover:text-gray-300 transition" title="Reset Timer">
+          <button onclick="resetTimer()" class="text-xs text-gray-500 hover:text-gray-300 transition p-1" title="Reset Timer">
             <i class="fa-solid fa-rotate-right"></i>
           </button>
         </div>
@@ -395,33 +423,33 @@
         </div>
       </div>
 
-      <!-- Big Screen Friendly Controls -->
-      <div class="flex items-center justify-between gap-3 mt-3 flex-wrap">
-        <button onclick="prevQuestion()" id="prevBtn" class="px-6 py-3.5 rounded-2xl bg-gray-900 hover:bg-gray-800 border border-gray-700 text-gray-200 font-bold text-sm transition flex items-center justify-center gap-2 active:scale-95">
-          <i class="fa-solid fa-chevron-left"></i> <span>Previous</span>
+      <!-- Responsive Controls for Mobile & Desktop -->
+      <div class="flex items-center justify-between gap-2 sm:gap-3 mt-3">
+        <button onclick="prevQuestion()" id="prevBtn" class="px-3.5 sm:px-6 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-gray-900 hover:bg-gray-800 border border-gray-700 text-gray-200 font-bold text-xs sm:text-sm transition flex items-center justify-center gap-1 sm:gap-2 active:scale-95 shrink-0">
+          <i class="fa-solid fa-chevron-left text-xs"></i> <span>Prev</span>
         </button>
 
         <!-- Big Stage Reveal Answer Button -->
-        <button onclick="toggleHostAnswerSecret()" id="mainRevealBtn" class="flex-1 sm:flex-none px-7 py-3.5 rounded-2xl bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 border border-amber-500/50 font-black text-sm tracking-wide transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/15 active:scale-95">
-          <i class="fa-solid fa-eye" id="mainRevealIcon"></i>
-          <span id="mainRevealBtnText">Reveal Answer</span>
+        <button onclick="toggleHostAnswerSecret()" id="mainRevealBtn" class="flex-1 sm:flex-none px-3.5 sm:px-7 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 border border-amber-500/50 font-black text-xs sm:text-sm tracking-wide transition flex items-center justify-center gap-1.5 sm:gap-2 shadow-lg shadow-amber-500/15 active:scale-95">
+          <i class="fa-solid fa-eye text-xs" id="mainRevealIcon"></i>
+          <span id="mainRevealBtnText">Reveal</span>
           <span class="text-[10px] px-1.5 py-0.5 rounded bg-black/40 text-amber-300 border border-amber-500/30 hidden md:inline font-mono">Key: R</span>
         </button>
 
         <!-- Big Screen TV Mode Toggle -->
-        <button onclick="toggleBigScreenMode()" id="tvModeBtn" class="px-5 py-3.5 rounded-2xl bg-gray-900 hover:bg-amber-500/20 text-gray-200 hover:text-amber-300 border border-gray-700 font-bold text-sm transition flex items-center gap-2 active:scale-95">
-          <i class="fa-solid fa-tv text-amber-400"></i>
+        <button onclick="toggleBigScreenMode()" id="tvModeBtn" class="hidden sm:flex px-4 sm:px-5 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-gray-900 hover:bg-amber-500/20 text-gray-200 hover:text-amber-300 border border-gray-700 font-bold text-xs sm:text-sm transition items-center gap-2 active:scale-95">
+          <i class="fa-solid fa-tv text-amber-400 text-xs"></i>
           <span id="tvModeBtnText">TV Mode</span>
           <span class="text-[10px] px-1.5 py-0.5 rounded bg-black/40 text-gray-400 border border-gray-700 hidden md:inline font-mono">B</span>
         </button>
 
-        <button onclick="nextQuestion()" id="nextBtn" class="flex-1 sm:flex-none px-8 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-gray-950 font-black text-sm tracking-wide transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 active:scale-95">
-          <span>Next Question</span> <i class="fa-solid fa-chevron-right"></i>
+        <button onclick="nextQuestion()" id="nextBtn" class="flex-1 sm:flex-none px-4 sm:px-8 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-gray-950 font-black text-xs sm:text-sm tracking-wide transition flex items-center justify-center gap-1.5 sm:gap-2 shadow-lg shadow-amber-500/25 active:scale-95">
+          <span>Next</span> <i class="fa-solid fa-chevron-right text-xs"></i>
         </button>
       </div>
 
-      <!-- Keyboard Shortcuts Quick Bar for Host -->
-      <div class="text-center pt-1 text-[11px] text-gray-500 font-medium">
+      <!-- Keyboard Shortcuts Quick Bar for Host (Desktop Only) -->
+      <div class="text-center pt-1 text-[11px] text-gray-500 font-medium hidden md:block">
         <span class="text-gray-400 font-semibold">Presenter Hotkeys:</span>
         <span class="mx-1 text-gray-600">•</span>
         <kbd class="px-1.5 py-0.5 rounded bg-gray-900 border border-gray-800 text-gray-300 font-mono text-[10px]">Space / →</kbd> Next
@@ -538,8 +566,8 @@
       </div>
 
       <!-- Teams Table -->
-      <div class="overflow-y-auto flex-1 pr-1">
-        <table class="w-full text-left text-sm">
+      <div class="overflow-y-auto overflow-x-auto flex-1 pr-1 -mx-2 px-2">
+        <table class="w-full min-w-[520px] sm:min-w-full text-left text-xs sm:text-sm">
           <thead>
             <tr class="text-gray-400 border-b border-gray-800 text-[11px] uppercase tracking-wider">
               <th class="py-2.5 px-3">Rank</th>
@@ -786,13 +814,17 @@
     function updateUserHeaderDisplay() {
       const nameEl = document.getElementById('headerUsernameDisplay');
       const scoreEl = document.getElementById('headerUserScoreBadge');
+      const scoreElMobile = document.getElementById('headerUserScoreBadgeMobile');
       const userTeam = ensureUserTeam();
+      const pts = userTeam ? userTeam.total : 0;
       if (nameEl) {
         nameEl.textContent = currentUsername || 'Player';
       }
       if (scoreEl) {
-        const pts = userTeam ? userTeam.total : 0;
         scoreEl.textContent = `${pts} pts`;
+      }
+      if (scoreElMobile) {
+        scoreElMobile.textContent = `${pts} pts`;
       }
     }
 
@@ -856,6 +888,10 @@
       if (badge) {
         badge.textContent = `Set ${activeQuizSet.setId}/10`;
         badge.title = activeQuizSet.setName;
+      }
+      const badgeMobile = document.getElementById('headerSetBadgeMobile');
+      if (badgeMobile) {
+        badgeMobile.textContent = `Set ${activeQuizSet.setId}`;
       }
 
       const cardBadge = document.getElementById('cardSetBadge');
@@ -1076,26 +1112,26 @@
         if (hostAnswerRevealed) {
           // Host revealed official answer
           if (isCorrect) {
-            card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 transition-all text-left bg-emerald-950/90 border-emerald-400 text-emerald-100 shadow-2xl shadow-emerald-500/30 scale-[1.02] transform ring-2 ring-emerald-400/60";
+            card.className = "flex items-center justify-between p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border-2 transition-all text-left bg-emerald-950/90 border-emerald-400 text-emerald-100 shadow-xl shadow-emerald-500/20 scale-[1.01] transform ring-2 ring-emerald-400/60";
             card.innerHTML = `
-              <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
-                <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-500 text-gray-950 font-black text-lg sm:text-xl flex items-center justify-center shrink-0 shadow-md">
+              <div class="flex items-center gap-2.5 sm:gap-4 overflow-hidden">
+                <span class="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-emerald-500 text-gray-950 font-black text-base sm:text-xl flex items-center justify-center shrink-0 shadow-md">
                   ${letter}
                 </span>
-                <span class="text-lg sm:text-2xl font-black text-white leading-snug">${cleanText}</span>
+                <span class="text-sm sm:text-lg md:text-xl font-black text-white leading-snug break-words">${cleanText}</span>
               </div>
-              <span class="px-3 py-1.5 rounded-xl bg-emerald-500 text-gray-950 text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-1.5 shrink-0 shadow-md">
-                <i class="fa-solid fa-check"></i> Correct
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-500 text-gray-950 text-[11px] sm:text-xs font-black uppercase tracking-wider flex items-center gap-1 shrink-0 shadow-md">
+                <i class="fa-solid fa-check"></i> <span class="hidden sm:inline">Correct</span>
               </span>
             `;
           } else {
-            card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border transition-all text-left bg-gray-950/40 border-gray-900 text-gray-500 opacity-30";
+            card.className = "flex items-center justify-between p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border transition-all text-left bg-gray-950/40 border-gray-900 text-gray-500 opacity-30";
             card.innerHTML = `
-              <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
-                <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-900 text-gray-600 font-bold text-lg sm:text-xl flex items-center justify-center shrink-0">
+              <div class="flex items-center gap-2.5 sm:gap-4 overflow-hidden">
+                <span class="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-gray-900 text-gray-600 font-bold text-base sm:text-xl flex items-center justify-center shrink-0">
                   ${letter}
                 </span>
-                <span class="text-lg sm:text-2xl font-semibold text-gray-500 leading-snug">${cleanText}</span>
+                <span class="text-sm sm:text-lg md:text-xl font-semibold text-gray-500 leading-snug break-words">${cleanText}</span>
               </div>
             `;
           }
@@ -1103,54 +1139,54 @@
           // User already answered or timed out
           const isSelected = answerRecord.selectedIndex === optIdx;
           if (isCorrect) {
-            card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 transition-all text-left bg-emerald-950/90 border-emerald-400 text-emerald-100 shadow-2xl shadow-emerald-500/30 scale-[1.01] transform ring-2 ring-emerald-400/60";
+            card.className = "flex items-center justify-between p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border-2 transition-all text-left bg-emerald-950/90 border-emerald-400 text-emerald-100 shadow-xl shadow-emerald-500/20 ring-2 ring-emerald-400/60";
             card.innerHTML = `
-              <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
-                <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-500 text-gray-950 font-black text-lg sm:text-xl flex items-center justify-center shrink-0 shadow-md">
+              <div class="flex items-center gap-2.5 sm:gap-4 overflow-hidden">
+                <span class="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-emerald-500 text-gray-950 font-black text-base sm:text-xl flex items-center justify-center shrink-0 shadow-md">
                   ${letter}
                 </span>
-                <span class="text-lg sm:text-2xl font-black text-white leading-snug">${cleanText}</span>
+                <span class="text-sm sm:text-lg md:text-xl font-black text-white leading-snug break-words">${cleanText}</span>
               </div>
-              <span class="px-3 py-1.5 rounded-xl bg-emerald-500 text-gray-950 text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-1.5 shrink-0 shadow-md">
-                <i class="fa-solid fa-check"></i> ${isSelected ? 'Your Pick (+1)' : (answerRecord.timedOut ? "Time's Up" : 'Correct')}
+              <span class="px-2.5 py-1 rounded-lg bg-emerald-500 text-gray-950 text-[11px] sm:text-xs font-black uppercase tracking-wider flex items-center gap-1 shrink-0 shadow-md">
+                <i class="fa-solid fa-check"></i> ${isSelected ? '+1 pt' : (answerRecord.timedOut ? "Late" : 'Correct')}
               </span>
             `;
           } else if (isSelected) {
-            card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 transition-all text-left bg-rose-950/80 border-rose-500 text-rose-100 shadow-lg shadow-rose-500/20";
+            card.className = "flex items-center justify-between p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border-2 transition-all text-left bg-rose-950/80 border-rose-500 text-rose-100 shadow-md shadow-rose-500/20";
             card.innerHTML = `
-              <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
-                <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-rose-500 text-white font-black text-lg sm:text-xl flex items-center justify-center shrink-0">
+              <div class="flex items-center gap-2.5 sm:gap-4 overflow-hidden">
+                <span class="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-rose-500 text-white font-black text-base sm:text-xl flex items-center justify-center shrink-0">
                   ${letter}
                 </span>
-                <span class="text-lg sm:text-2xl font-semibold text-rose-200 leading-snug">${cleanText}</span>
+                <span class="text-sm sm:text-lg md:text-xl font-semibold text-rose-200 leading-snug break-words">${cleanText}</span>
               </div>
-              <span class="px-3 py-1.5 rounded-xl bg-rose-500 text-white text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-1.5 shrink-0">
-                <i class="fa-solid fa-xmark"></i> Incorrect (0 pts)
+              <span class="px-2.5 py-1 rounded-lg bg-rose-500 text-white text-[11px] sm:text-xs font-black uppercase tracking-wider flex items-center gap-1 shrink-0">
+                <i class="fa-solid fa-xmark"></i> 0 pts
               </span>
             `;
           } else {
-            card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border transition-all text-left bg-gray-950/40 border-gray-900 text-gray-500 opacity-30";
+            card.className = "flex items-center justify-between p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border transition-all text-left bg-gray-950/40 border-gray-900 text-gray-500 opacity-30";
             card.innerHTML = `
-              <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
-                <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-900 text-gray-600 font-bold text-lg sm:text-xl flex items-center justify-center shrink-0">
+              <div class="flex items-center gap-2.5 sm:gap-4 overflow-hidden">
+                <span class="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-gray-900 text-gray-600 font-bold text-base sm:text-xl flex items-center justify-center shrink-0">
                   ${letter}
                 </span>
-                <span class="text-lg sm:text-2xl font-semibold text-gray-500 leading-snug">${cleanText}</span>
+                <span class="text-sm sm:text-lg md:text-xl font-semibold text-gray-500 leading-snug break-words">${cleanText}</span>
               </div>
             `;
           }
         } else {
           // Interactive live question: player can pick!
-          card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 transition-all text-left bg-gray-900/90 border-gray-800 text-gray-100 hover:border-amber-400 hover:bg-gray-800/90 hover:scale-[1.01] shadow-md cursor-pointer active:scale-[0.99] group";
+          card.className = "flex items-center justify-between p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border-2 transition-all text-left bg-gray-900/90 border-gray-800 text-gray-100 hover:border-amber-400 hover:bg-gray-800/90 hover:scale-[1.01] shadow-md cursor-pointer active:scale-[0.98] group select-none";
           card.onclick = () => handleSelectOption(optIdx);
           card.innerHTML = `
-            <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
-              <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/40 group-hover:bg-amber-500 group-hover:text-gray-950 font-black text-lg sm:text-xl flex items-center justify-center shrink-0 transition">
+            <div class="flex items-center gap-2.5 sm:gap-4 overflow-hidden">
+              <span class="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/40 group-hover:bg-amber-500 group-hover:text-gray-950 font-black text-base sm:text-xl flex items-center justify-center shrink-0 transition">
                 ${letter}
               </span>
-              <span class="text-lg sm:text-2xl font-bold text-white leading-snug group-hover:text-amber-200 transition">${cleanText}</span>
+              <span class="text-sm sm:text-lg md:text-xl font-bold text-white leading-snug group-hover:text-amber-200 transition break-words">${cleanText}</span>
             </div>
-            <span class="hidden group-hover:inline-flex px-3 py-1 rounded-xl bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30">
+            <span class="hidden sm:group-hover:inline-flex px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30">
               Pick ${letter}
             </span>
           `;
