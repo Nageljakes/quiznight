@@ -349,6 +349,10 @@
         <div class="flex items-center gap-2.5 bg-gray-950/90 px-4 py-2 rounded-2xl border border-amber-500/30 shadow-lg">
           <i class="fa-regular fa-clock text-amber-400 text-lg animate-pulse"></i>
           <span id="tvTimerDisplay" class="font-mono text-2xl sm:text-3xl font-black text-amber-300">00:10</span>
+          <!-- TV Quick Timer Duration Preset Cycle Button -->
+          <button onclick="cycleTimerDuration()" id="tvTimerDurationBtn" class="ml-1 px-2 py-0.5 bg-gray-900 hover:bg-gray-800 text-amber-400 hover:text-white rounded-lg text-xs font-mono font-bold border border-gray-700 transition" title="Click to Cycle Timer Duration (5s, 10s, 15s, 20s, 30s, 45s, 60s)">
+            <span id="tvTimerDurationBadge">10s</span>
+          </button>
         </div>
         <button onclick="toggleTimer()" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-gray-950 font-black text-xs transition flex items-center gap-1 active:scale-95 shadow">
           <i class="fa-solid fa-play" id="tvTimerPlayIcon"></i> <span>Timer</span>
@@ -433,8 +437,8 @@
       </div>
 
       <div class="flex items-center justify-center sm:justify-end gap-2.5">
-        <!-- Pacing & Timer Widget -->
-        <div class="flex items-center gap-2 bg-gray-950 px-3 py-1.5 rounded-lg border border-gray-800">
+        <!-- Pacing & Timer Widget with Duration Selector -->
+        <div class="flex items-center gap-2 bg-gray-950 px-3 py-1.5 rounded-lg border border-gray-800 relative">
           <i class="fa-regular fa-clock text-amber-400 text-sm"></i>
           <span id="timerDisplay" class="font-mono text-base font-extrabold text-amber-300">00:10</span>
           <button onclick="toggleTimer()" id="timerControlBtn" class="text-xs bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 font-bold px-2.5 py-0.5 rounded transition">
@@ -443,6 +447,39 @@
           <button onclick="resetTimer()" class="text-xs text-gray-500 hover:text-gray-300 transition p-1" title="Reset Timer">
             <i class="fa-solid fa-rotate-right"></i>
           </button>
+
+          <!-- Timer Duration Selector Trigger -->
+          <div class="relative ml-0.5">
+            <button id="timerDurationBtn" onclick="toggleTimerDurationMenu()" class="px-2 py-0.5 bg-gray-900 hover:bg-gray-800 text-amber-300 hover:text-white rounded text-xs border border-gray-700 font-mono font-bold flex items-center gap-1 transition" title="Specify Timer Duration">
+              <i class="fa-solid fa-stopwatch text-[10px] text-amber-400"></i>
+              <span id="timerDurationBadge">10s</span>
+              <i class="fa-solid fa-chevron-down text-[8px] text-gray-400"></i>
+            </button>
+            <!-- Dropdown Menu -->
+            <div id="timerDurationMenu" class="absolute right-0 top-full mt-1.5 w-48 bg-gray-900 border border-gray-700 rounded-xl shadow-2xl p-2.5 hidden z-50 backdrop-blur-md">
+              <div class="text-[11px] font-bold text-gray-400 mb-1.5 flex items-center justify-between">
+                <span>TIMER DURATION</span>
+                <span id="currentDurationNote" class="text-amber-400 font-mono">10s</span>
+              </div>
+              <!-- Preset Buttons -->
+              <div class="grid grid-cols-3 gap-1 mb-2">
+                <button onclick="setTimerDuration(5)" class="duration-preset-btn px-2 py-1 text-xs rounded bg-gray-800 hover:bg-amber-500 hover:text-gray-950 font-bold text-gray-300 transition">5s</button>
+                <button onclick="setTimerDuration(10)" class="duration-preset-btn px-2 py-1 text-xs rounded bg-gray-800 hover:bg-amber-500 hover:text-gray-950 font-bold text-gray-300 transition">10s</button>
+                <button onclick="setTimerDuration(15)" class="duration-preset-btn px-2 py-1 text-xs rounded bg-gray-800 hover:bg-amber-500 hover:text-gray-950 font-bold text-gray-300 transition">15s</button>
+                <button onclick="setTimerDuration(20)" class="duration-preset-btn px-2 py-1 text-xs rounded bg-gray-800 hover:bg-amber-500 hover:text-gray-950 font-bold text-gray-300 transition">20s</button>
+                <button onclick="setTimerDuration(30)" class="duration-preset-btn px-2 py-1 text-xs rounded bg-gray-800 hover:bg-amber-500 hover:text-gray-950 font-bold text-gray-300 transition">30s</button>
+                <button onclick="setTimerDuration(60)" class="duration-preset-btn px-2 py-1 text-xs rounded bg-gray-800 hover:bg-amber-500 hover:text-gray-950 font-bold text-gray-300 transition">60s</button>
+              </div>
+              <!-- Custom Seconds Input -->
+              <div class="pt-1.5 border-t border-gray-800">
+                <label class="text-[10px] text-gray-400 block mb-1">Custom Seconds:</label>
+                <div class="flex items-center gap-1">
+                  <input type="number" id="customTimerInput" min="1" max="600" placeholder="Secs (e.g. 25)" class="w-full bg-gray-950 border border-gray-700 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-amber-400 font-mono">
+                  <button onclick="applyCustomTimerDuration()" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-gray-950 font-black text-xs rounded transition shrink-0 active:scale-95">Set</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -890,7 +927,11 @@
     let currentQuestionIndex = 0;
     let currentMode = 'ask'; // 'ask' or 'reveal'
     let timerInterval = null;
-    let timerSeconds = 10; // Automatic 10-second timer per question
+    let timerDuration = parseInt(localStorage.getItem('beerbox_timer_duration') || '10', 10);
+    if (isNaN(timerDuration) || timerDuration <= 0) {
+      timerDuration = 10;
+    }
+    let timerSeconds = timerDuration;
     let timerRunning = false;
     let hostAnswerRevealed = false;
     let currentUsername = localStorage.getItem('beerbox_quiz_username') || '';
@@ -1187,6 +1228,8 @@
       renderTeamsTable();
       updateRoundTabsUI();
       renderCurrentQuestion();
+      updateTimerDurationBadges();
+      updateTimerDisplay();
     }
 
     function switchRound(index) {
@@ -1700,7 +1743,7 @@
     }
 
     /* ==========================================================
-       AUTOMATIC 10-SECOND QUESTION TIMER CONTROLS
+       AUTOMATIC QUESTION TIMER CONTROLS & SPECIFIABLE DURATION
        ========================================================== */
     function startAutoTimerForCurrentQuestion() {
       clearInterval(timerInterval);
@@ -1709,7 +1752,7 @@
       // If username onboarding modal is open, hold timer until user joins or closes it
       const usernameModal = document.getElementById('usernameModal');
       if (usernameModal && !usernameModal.classList.contains('hidden')) {
-        timerSeconds = 10;
+        timerSeconds = timerDuration;
         updateTimerDisplay();
         return;
       }
@@ -1730,8 +1773,8 @@
         return;
       }
 
-      // Reset to 10 seconds and start automatically!
-      timerSeconds = 10;
+      // Reset to user-specified timer duration and start automatically!
+      timerSeconds = timerDuration;
       timerRunning = true;
       updateTimerDisplay();
 
@@ -1777,7 +1820,7 @@
         if (tvIcon) tvIcon.className = "fa-solid fa-play";
       } else {
         if (timerSeconds <= 0) {
-          timerSeconds = 10;
+          timerSeconds = timerDuration;
         }
         timerRunning = true;
         if (btn) {
@@ -1811,7 +1854,7 @@
     function resetTimer() {
       clearInterval(timerInterval);
       timerRunning = false;
-      timerSeconds = 10;
+      timerSeconds = timerDuration;
       updateTimerDisplay();
       const btn = document.getElementById('timerControlBtn');
       if (btn) {
@@ -1840,6 +1883,95 @@
         }
       });
     }
+
+    function setTimerDuration(seconds) {
+      const val = parseInt(seconds, 10);
+      if (isNaN(val) || val <= 0) return;
+      timerDuration = val;
+      localStorage.setItem('beerbox_timer_duration', timerDuration);
+
+      updateTimerDurationBadges();
+
+      // If timer is not running or at 0, reset to new duration
+      if (!timerRunning || timerSeconds <= 0) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        timerSeconds = timerDuration;
+        updateTimerDisplay();
+        const btn = document.getElementById('timerControlBtn');
+        if (btn) {
+          btn.textContent = 'Start';
+          btn.className = "text-xs bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 font-bold px-2.5 py-0.5 rounded transition";
+        }
+        const tvIcon = document.getElementById('tvTimerPlayIcon');
+        if (tvIcon) tvIcon.className = "fa-solid fa-play";
+      }
+
+      const menu = document.getElementById('timerDurationMenu');
+      if (menu) menu.classList.add('hidden');
+    }
+
+    function applyCustomTimerDuration() {
+      const input = document.getElementById('customTimerInput');
+      if (!input) return;
+      const val = parseInt(input.value, 10);
+      if (isNaN(val) || val < 1 || val > 600) {
+        alert('Please enter a duration between 1 and 600 seconds.');
+        return;
+      }
+      setTimerDuration(val);
+      input.value = '';
+    }
+
+    function cycleTimerDuration() {
+      const presets = [5, 10, 15, 20, 30, 45, 60];
+      const currentIdx = presets.indexOf(timerDuration);
+      let nextDuration = 10;
+      if (currentIdx !== -1 && currentIdx < presets.length - 1) {
+        nextDuration = presets[currentIdx + 1];
+      } else if (currentIdx === presets.length - 1) {
+        nextDuration = presets[0];
+      } else {
+        nextDuration = presets.find(p => p > timerDuration) || presets[0];
+      }
+      setTimerDuration(nextDuration);
+    }
+
+    function updateTimerDurationBadges() {
+      const badge = document.getElementById('timerDurationBadge');
+      if (badge) badge.textContent = `${timerDuration}s`;
+      const tvBadge = document.getElementById('tvTimerDurationBadge');
+      if (tvBadge) tvBadge.textContent = `${timerDuration}s`;
+      const note = document.getElementById('currentDurationNote');
+      if (note) note.textContent = `${timerDuration}s`;
+
+      document.querySelectorAll('.duration-preset-btn').forEach(btn => {
+        const btnVal = parseInt(btn.textContent, 10);
+        if (btnVal === timerDuration) {
+          btn.classList.add('bg-amber-500', 'text-gray-950');
+          btn.classList.remove('bg-gray-800', 'text-gray-300');
+        } else {
+          btn.classList.remove('bg-amber-500', 'text-gray-950');
+          btn.classList.add('bg-gray-800', 'text-gray-300');
+        }
+      });
+    }
+
+    function toggleTimerDurationMenu() {
+      const menu = document.getElementById('timerDurationMenu');
+      if (menu) menu.classList.toggle('hidden');
+    }
+
+    // Close timer duration menu if clicked outside
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('timerDurationMenu');
+      const btn = document.getElementById('timerDurationBtn');
+      if (menu && !menu.classList.contains('hidden')) {
+        if (!menu.contains(e.target) && !btn.contains(e.target)) {
+          menu.classList.add('hidden');
+        }
+      }
+    });
 
     /* ==========================================================
        TEAM SCOREBOARD & PERSISTENT LEADERBOARD MANAGEMENT
