@@ -183,6 +183,13 @@
 
       <!-- Quick Nav Action Buttons -->
       <div class="flex items-center gap-2">
+        <!-- User Profile & Score Display -->
+        <button id="userProfileBtn" onclick="openUsernameModal(true)" class="px-3 py-1.5 bg-gray-900 hover:bg-gray-800 text-gray-200 font-bold rounded-lg text-xs transition flex items-center gap-1.5 border border-amber-500/30 active:scale-95 shadow-sm" title="Click to change your username / team">
+          <i class="fa-solid fa-user-astronaut text-amber-400"></i>
+          <span id="headerUsernameDisplay" class="font-semibold text-white max-w-[100px] sm:max-w-[140px] truncate">Player</span>
+          <span id="headerUserScoreBadge" class="bg-amber-500 text-gray-950 font-black text-[10px] px-1.5 py-0.2 rounded-full">0 pts</span>
+        </button>
+
         <a href="Beerbox_Pub_Quiz_Team_Question_Paper_A4.docx" download class="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 hover:text-amber-300 font-bold rounded-lg text-xs transition flex items-center gap-1.5 border border-gray-700 active:scale-95" title="Download Printable A4 Question Paper (.docx)">
           <i class="fa-solid fa-file-word text-blue-400"></i>
           <span class="hidden sm:inline">A4 Papers</span>
@@ -221,7 +228,7 @@
       <div class="flex items-center gap-3">
         <div class="flex items-center gap-2.5 bg-gray-950/90 px-4 py-2 rounded-2xl border border-amber-500/30 shadow-lg">
           <i class="fa-regular fa-clock text-amber-400 text-lg animate-pulse"></i>
-          <span id="tvTimerDisplay" class="font-mono text-2xl sm:text-3xl font-black text-amber-300">00:45</span>
+          <span id="tvTimerDisplay" class="font-mono text-2xl sm:text-3xl font-black text-amber-300">00:10</span>
         </div>
         <button onclick="toggleTimer()" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-gray-950 font-black text-xs transition flex items-center gap-1 active:scale-95 shadow">
           <i class="fa-solid fa-play" id="tvTimerPlayIcon"></i> <span>Timer</span>
@@ -309,7 +316,7 @@
         <!-- Pacing & Timer Widget -->
         <div class="flex items-center gap-2 bg-gray-950 px-3 py-1.5 rounded-lg border border-gray-800">
           <i class="fa-regular fa-clock text-amber-400 text-sm"></i>
-          <span id="timerDisplay" class="font-mono text-base font-extrabold text-amber-300">00:45</span>
+          <span id="timerDisplay" class="font-mono text-base font-extrabold text-amber-300">00:10</span>
           <button onclick="toggleTimer()" id="timerControlBtn" class="text-xs bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 font-bold px-2 py-0.5 rounded transition">
             Start
           </button>
@@ -452,6 +459,32 @@
     </div>
 
   </main>
+    <!-- MODAL: USERNAME ONBOARDING & TEAM SELECTOR -->
+  <div id="usernameModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-gray-900 border border-amber-500/30 w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl relative text-center">
+      <button id="closeUsernameModalBtn" onclick="closeUsernameModal()" class="hidden absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-800 hover:bg-gray-700 text-gray-300 flex items-center justify-center transition" title="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mx-auto mb-4 text-3xl shadow-lg">
+        <i class="fa-solid fa-beer-mug-empty"></i>
+      </div>
+      <h3 class="text-2xl font-black font-display text-white mb-1">Welcome to Quiz Night!</h3>
+      <p class="text-xs text-gray-400 mb-5">Enter your player or team name to record your live score on the scoreboard:</p>
+      <form onsubmit="handleUsernameSubmit(event)" class="space-y-4">
+        <input type="text" id="usernameModalInput" placeholder="Enter your name / team name..." required class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-base text-white text-center font-bold focus:outline-none focus:border-amber-400 transition placeholder:text-gray-600">
+        <div class="flex flex-col gap-2">
+          <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-gray-950 font-black rounded-xl text-sm transition shadow-lg shadow-amber-500/25 active:scale-95 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-play"></i>
+            <span>Join & Start Quiz</span>
+          </button>
+          <button type="button" onclick="continueAsHost()" class="text-xs text-gray-400 hover:text-amber-300 font-medium py-1 transition">
+            Or continue as Host / Spectator
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- MODAL: TEAM LEADERBOARD & JOKER DOUBLE-DOWN TRACKER -->
   <div id="scoreboardModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="bg-gray-900 border border-gray-800 w-full max-w-3xl rounded-3xl p-6 sm:p-8 shadow-2xl relative max-h-[90vh] flex flex-col">
@@ -518,7 +551,7 @@
         <span class="text-gray-400 font-semibold">50 Questions • 5 Tiers of Escalating Difficulty</span>
       </div>
       <div>
-        Created for <strong class="text-amber-400">DJ JC</strong> — Midrand, South Africa
+        Created for <strong class="text-amber-400">DJ JC</strong> - Midrand, South Africa
       </div>
     </div>
   </footer>
@@ -1288,27 +1321,154 @@
       }
 ];
     /* ==========================================================
-       APPLICATION STATE
+       APPLICATION STATE & PERSISTENCE
        ========================================================== */
     let currentRoundIndex = 0;
     let currentQuestionIndex = 0;
     let currentMode = 'ask'; // 'ask' or 'reveal'
     let timerInterval = null;
-    let timerSeconds = 45;
+    let timerSeconds = 10; // Automatic 10-second timer per question
     let timerRunning = false;
     let hostAnswerRevealed = false;
+    let currentUsername = localStorage.getItem('beerbox_quiz_username') || '';
+    let userAnswers = JSON.parse(localStorage.getItem('beerbox_user_answers') || '{}');
 
     // Default Teams for Beerbox Midrand
-    let teams = [
+    const DEFAULT_TEAMS = [
       { id: 1, name: "The Hopheads", jokerRound: 2, scores: [8, 9, 7, 10, 8], total: 42 },
       { id: 2, name: "Midrand Mavericks", jokerRound: 4, scores: [9, 7, 8, 9, 7], total: 40 },
       { id: 3, name: "Quizzy Rascals", jokerRound: 1, scores: [9, 8, 7, 7, 6], total: 37 },
       { id: 4, name: "Springbok Geniuses", jokerRound: 3, scores: [7, 8, 9, 8, 8], total: 40 }
     ];
+
+    let teams = loadTeams();
+
+    function loadTeams() {
+      const saved = localStorage.getItem('beerbox_teams');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch (e) {
+          console.warn('Error reading saved teams:', e);
+        }
+      }
+      return JSON.parse(JSON.stringify(DEFAULT_TEAMS));
+    }
+
+    function saveTeams() {
+      localStorage.setItem('beerbox_teams', JSON.stringify(teams));
+    }
+
+    function ensureUserTeam() {
+      if (!currentUsername) return null;
+      let userTeam = teams.find(t => t.name.toLowerCase() === currentUsername.toLowerCase());
+      if (!userTeam) {
+        userTeam = {
+          id: Date.now(),
+          name: currentUsername,
+          jokerRound: 0,
+          scores: [0, 0, 0, 0, 0],
+          total: 0,
+          isUser: true
+        };
+        teams.unshift(userTeam);
+        saveTeams();
+      }
+      return userTeam;
+    }
+
+    function updateUserHeaderDisplay() {
+      const nameEl = document.getElementById('headerUsernameDisplay');
+      const scoreEl = document.getElementById('headerUserScoreBadge');
+      const userTeam = ensureUserTeam();
+      if (nameEl) {
+        nameEl.textContent = currentUsername || 'Player';
+      }
+      if (scoreEl) {
+        const pts = userTeam ? userTeam.total : 0;
+        scoreEl.textContent = `${pts} pts`;
+      }
+    }
+
+    /* ==========================================================
+       USERNAME ONBOARDING & MODAL
+       ========================================================== */
+    function checkUsernameOnLoad() {
+      if (!currentUsername) {
+        openUsernameModal(false);
+      } else {
+        ensureUserTeam();
+        updateUserHeaderDisplay();
+        recalculateScores();
+        renderTeamsTable();
+      }
+    }
+
+    function openUsernameModal(canClose = true) {
+      const modal = document.getElementById('usernameModal');
+      const closeBtn = document.getElementById('closeUsernameModalBtn');
+      const input = document.getElementById('usernameModalInput');
+      if (!modal) return;
+      if (closeBtn) {
+        if (canClose && currentUsername) {
+          closeBtn.classList.remove('hidden');
+        } else {
+          closeBtn.classList.add('hidden');
+        }
+      }
+      if (input) {
+        input.value = currentUsername || '';
+        setTimeout(() => input.focus(), 150);
+      }
+      modal.classList.remove('hidden');
+    }
+
+    function closeUsernameModal() {
+      const modal = document.getElementById('usernameModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function handleUsernameSubmit(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('usernameModalInput');
+      const name = input ? input.value.trim() : '';
+      if (!name) return;
+      currentUsername = name;
+      localStorage.setItem('beerbox_quiz_username', currentUsername);
+      
+      ensureUserTeam();
+      updateUserHeaderDisplay();
+      recalculateScores();
+      renderTeamsTable();
+      closeUsernameModal();
+      playSFX('fanfare');
+
+      if (currentMode === 'ask') {
+        startAutoTimerForCurrentQuestion();
+      }
+    }
+
+    function continueAsHost() {
+      currentUsername = 'Host';
+      localStorage.setItem('beerbox_quiz_username', currentUsername);
+      ensureUserTeam();
+      updateUserHeaderDisplay();
+      recalculateScores();
+      renderTeamsTable();
+      closeUsernameModal();
+      if (currentMode === 'ask') {
+        startAutoTimerForCurrentQuestion();
+      }
+    }
+
     /* ==========================================================
        UI RENDERING FUNCTIONS
        ========================================================== */
     function initApp() {
+      teams = loadTeams();
+      checkUsernameOnLoad();
+      updateUserHeaderDisplay();
       renderCurrentQuestion();
       renderTeamsTable();
       updateRoundTabsUI();
@@ -1324,7 +1484,6 @@
       } else {
         renderRevealGrid();
       }
-      resetTimer();
     }
 
     function updateRoundTabsUI() {
@@ -1350,53 +1509,172 @@
         return;
       }
       optionsGrid.classList.remove('hidden');
+
+      const qKey = `r${currentRoundIndex}_q${currentQuestionIndex}`;
+      const answerRecord = userAnswers[qKey];
+      const hasAnswered = !!answerRecord;
+
       q.options.forEach((optText, optIdx) => {
         const letter = ['A', 'B', 'C', 'D'][optIdx] || '';
         const isCorrect = q.a.trim().startsWith(letter);
         const card = document.createElement('div');
         card.id = `option-card-${optIdx}`;
-        
-        const showCorrect = hostAnswerRevealed && isCorrect;
-        const isIncorrectDim = hostAnswerRevealed && !isCorrect;
+
         const cleanText = optText.replace(/^[A-D]\)\s*/, '');
-        
-        if (showCorrect) {
-          card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 transition-all text-left bg-emerald-950/90 border-emerald-400 text-emerald-100 shadow-2xl shadow-emerald-500/30 scale-[1.02] transform ring-2 ring-emerald-400/60";
+
+        if (hostAnswerRevealed) {
+          // Host revealed official answer
+          if (isCorrect) {
+            card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 transition-all text-left bg-emerald-950/90 border-emerald-400 text-emerald-100 shadow-2xl shadow-emerald-500/30 scale-[1.02] transform ring-2 ring-emerald-400/60";
+            card.innerHTML = `
+              <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
+                <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-500 text-gray-950 font-black text-lg sm:text-xl flex items-center justify-center shrink-0 shadow-md">
+                  ${letter}
+                </span>
+                <span class="text-lg sm:text-2xl font-black text-white leading-snug">${cleanText}</span>
+              </div>
+              <span class="px-3 py-1.5 rounded-xl bg-emerald-500 text-gray-950 text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-1.5 shrink-0 shadow-md">
+                <i class="fa-solid fa-check"></i> Correct
+              </span>
+            `;
+          } else {
+            card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border transition-all text-left bg-gray-950/40 border-gray-900 text-gray-500 opacity-30";
+            card.innerHTML = `
+              <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
+                <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-900 text-gray-600 font-bold text-lg sm:text-xl flex items-center justify-center shrink-0">
+                  ${letter}
+                </span>
+                <span class="text-lg sm:text-2xl font-semibold text-gray-500 leading-snug">${cleanText}</span>
+              </div>
+            `;
+          }
+        } else if (hasAnswered) {
+          // User already answered or timed out
+          const isSelected = answerRecord.selectedIndex === optIdx;
+          if (isCorrect) {
+            card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 transition-all text-left bg-emerald-950/90 border-emerald-400 text-emerald-100 shadow-2xl shadow-emerald-500/30 scale-[1.01] transform ring-2 ring-emerald-400/60";
+            card.innerHTML = `
+              <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
+                <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-500 text-gray-950 font-black text-lg sm:text-xl flex items-center justify-center shrink-0 shadow-md">
+                  ${letter}
+                </span>
+                <span class="text-lg sm:text-2xl font-black text-white leading-snug">${cleanText}</span>
+              </div>
+              <span class="px-3 py-1.5 rounded-xl bg-emerald-500 text-gray-950 text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-1.5 shrink-0 shadow-md">
+                <i class="fa-solid fa-check"></i> ${isSelected ? 'Your Pick (+1)' : (answerRecord.timedOut ? "Time's Up" : 'Correct')}
+              </span>
+            `;
+          } else if (isSelected) {
+            card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 transition-all text-left bg-rose-950/80 border-rose-500 text-rose-100 shadow-lg shadow-rose-500/20";
+            card.innerHTML = `
+              <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
+                <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-rose-500 text-white font-black text-lg sm:text-xl flex items-center justify-center shrink-0">
+                  ${letter}
+                </span>
+                <span class="text-lg sm:text-2xl font-semibold text-rose-200 leading-snug">${cleanText}</span>
+              </div>
+              <span class="px-3 py-1.5 rounded-xl bg-rose-500 text-white text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-1.5 shrink-0">
+                <i class="fa-solid fa-xmark"></i> Incorrect (0 pts)
+              </span>
+            `;
+          } else {
+            card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border transition-all text-left bg-gray-950/40 border-gray-900 text-gray-500 opacity-30";
+            card.innerHTML = `
+              <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
+                <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-900 text-gray-600 font-bold text-lg sm:text-xl flex items-center justify-center shrink-0">
+                  ${letter}
+                </span>
+                <span class="text-lg sm:text-2xl font-semibold text-gray-500 leading-snug">${cleanText}</span>
+              </div>
+            `;
+          }
+        } else {
+          // Interactive live question: player can pick!
+          card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 transition-all text-left bg-gray-900/90 border-gray-800 text-gray-100 hover:border-amber-400 hover:bg-gray-800/90 hover:scale-[1.01] shadow-md cursor-pointer active:scale-[0.99] group";
+          card.onclick = () => handleSelectOption(optIdx);
           card.innerHTML = `
             <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
-              <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-500 text-gray-950 font-black text-lg sm:text-xl flex items-center justify-center shrink-0 shadow-md">
+              <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/40 group-hover:bg-amber-500 group-hover:text-gray-950 font-black text-lg sm:text-xl flex items-center justify-center shrink-0 transition">
                 ${letter}
               </span>
-              <span class="text-lg sm:text-2xl font-black text-white leading-snug">${cleanText}</span>
+              <span class="text-lg sm:text-2xl font-bold text-white leading-snug group-hover:text-amber-200 transition">${cleanText}</span>
             </div>
-            <span class="px-3 py-1.5 rounded-xl bg-emerald-500 text-gray-950 text-xs sm:text-sm font-black uppercase tracking-wider flex items-center gap-1.5 shrink-0 shadow-md">
-              <i class="fa-solid fa-check"></i> Correct
+            <span class="hidden group-hover:inline-flex px-3 py-1 rounded-xl bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30">
+              Pick ${letter}
             </span>
           `;
-        } else if (isIncorrectDim) {
-          card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border transition-all text-left bg-gray-950/40 border-gray-900 text-gray-500 opacity-30";
-          card.innerHTML = `
-            <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
-              <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gray-900 text-gray-600 font-bold text-lg sm:text-xl flex items-center justify-center shrink-0">
-                ${letter}
-              </span>
-              <span class="text-lg sm:text-2xl font-semibold text-gray-500 leading-snug">${cleanText}</span>
-            </div>
-          `;
-        } else {
-          card.className = "flex items-center justify-between p-4 sm:p-5 rounded-2xl border-2 transition-all text-left bg-gray-900/90 border-gray-800 text-gray-100 hover:border-amber-500/50 hover:bg-gray-800/90 shadow-md cursor-pointer active:scale-[0.99]";
-          card.onclick = () => toggleHostAnswerSecret();
-          card.innerHTML = `
-            <div class="flex items-center gap-3.5 sm:gap-4 overflow-hidden">
-              <span class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/40 font-black text-lg sm:text-xl flex items-center justify-center shrink-0">
-                ${letter}
-              </span>
-              <span class="text-lg sm:text-2xl font-bold text-white leading-snug">${cleanText}</span>
-            </div>
-          `;
         }
+
         optionsGrid.appendChild(card);
       });
+    }
+
+    function handleSelectOption(optIdx) {
+      if (currentMode !== 'ask') return;
+      const round = quizData[currentRoundIndex];
+      const q = round.questions[currentQuestionIndex];
+      const qKey = `r${currentRoundIndex}_q${currentQuestionIndex}`;
+      if (userAnswers[qKey]) return; // Already answered
+
+      if (!currentUsername) {
+        openUsernameModal(false);
+        return;
+      }
+
+      // Stop question timer immediately
+      clearInterval(timerInterval);
+      timerRunning = false;
+      const btn = document.getElementById('timerControlBtn');
+      if (btn) {
+        btn.textContent = 'Done';
+        btn.className = "text-xs bg-gray-800 text-gray-500 font-bold px-2 py-0.5 rounded transition cursor-not-allowed";
+      }
+
+      const letter = ['A', 'B', 'C', 'D'][optIdx];
+      const isCorrect = q.a.trim().startsWith(letter);
+
+      // Record answer
+      userAnswers[qKey] = {
+        selectedIndex: optIdx,
+        isCorrect: isCorrect,
+        timedOut: false
+      };
+      localStorage.setItem('beerbox_user_answers', JSON.stringify(userAnswers));
+
+      if (isCorrect) {
+        playSFX('correct');
+        const userTeam = ensureUserTeam();
+        if (userTeam) {
+          const rIdx = Math.min(currentRoundIndex, 4);
+          userTeam.scores[rIdx] = (userTeam.scores[rIdx] || 0) + 1;
+          recalculateScores();
+          saveTeams();
+          updateUserHeaderDisplay();
+          renderTeamsTable();
+        }
+      } else {
+        playSFX('wrong');
+      }
+
+      // Update options display immediately
+      renderOptionsGrid(q);
+    }
+
+    function onTimerExpired() {
+      if (currentMode !== 'ask') return;
+      const qKey = `r${currentRoundIndex}_q${currentQuestionIndex}`;
+      if (userAnswers[qKey]) return;
+
+      userAnswers[qKey] = {
+        selectedIndex: -1,
+        isCorrect: false,
+        timedOut: true
+      };
+      localStorage.setItem('beerbox_user_answers', JSON.stringify(userAnswers));
+
+      const round = quizData[currentRoundIndex];
+      const q = round.questions[currentQuestionIndex];
+      renderOptionsGrid(q);
     }
 
     function renderCurrentQuestion() {
@@ -1456,13 +1734,17 @@
           hostAnswerRevealed = false;
           renderCurrentQuestion();
         };
-        dot.className = `w-2.5 h-2.5 rounded-full transition-all ${
-          idx === currentQuestionIndex 
-            ? 'w-7 bg-amber-400 shadow-sm shadow-amber-400' 
-            : idx < currentQuestionIndex 
-              ? 'bg-amber-600/60' 
-              : 'bg-gray-700'
-        }`;
+        const dotKey = `r${currentRoundIndex}_q${idx}`;
+        const answeredState = userAnswers[dotKey];
+        let dotColor = 'bg-gray-700';
+        if (idx === currentQuestionIndex) {
+          dotColor = 'w-7 bg-amber-400 shadow-sm shadow-amber-400';
+        } else if (answeredState) {
+          dotColor = answeredState.isCorrect ? 'bg-emerald-500' : 'bg-rose-500';
+        } else if (idx < currentQuestionIndex) {
+          dotColor = 'bg-amber-600/60';
+        }
+        dot.className = `w-2.5 h-2.5 rounded-full transition-all ${dotColor}`;
         dotsContainer.appendChild(dot);
       });
 
@@ -1479,6 +1761,9 @@
         nextBtn.innerHTML = `<span>Next Question</span> <i class="fa-solid fa-chevron-right"></i>`;
         nextBtn.className = "flex-1 sm:flex-none px-8 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-gray-950 font-black text-sm tracking-wide transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 active:scale-95";
       }
+
+      // Automatically start the 10-second timer whenever the question starts!
+      startAutoTimerForCurrentQuestion();
     }
 
     function toggleHostAnswerSecret() {
@@ -1520,10 +1805,7 @@
         currentQuestionIndex++;
         hostAnswerRevealed = false;
         renderCurrentQuestion();
-        resetTimer();
-        playSFX('airhorn');
       } else {
-        // Transition to reveal mode
         setMode('reveal');
       }
     }
@@ -1533,7 +1815,6 @@
         currentQuestionIndex--;
         hostAnswerRevealed = false;
         renderCurrentQuestion();
-        resetTimer();
       }
     }
 
@@ -1543,9 +1824,9 @@
       currentQuestionIndex = randomIndex;
       hostAnswerRevealed = false;
       renderCurrentQuestion();
-      resetTimer();
       playSFX('drumroll');
     }
+
     /* ==========================================================
        MODE SWITCHING & REVEAL SYSTEM
        ========================================================== */
@@ -1563,6 +1844,9 @@
         viewReveal.classList.add('hidden');
         renderCurrentQuestion();
       } else {
+        // Stop timer when in round reveal / review mode
+        clearInterval(timerInterval);
+        timerRunning = false;
         revealBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold transition bg-amber-500 text-gray-950 shadow";
         askBtn.className = "px-4 py-1.5 rounded-md text-xs font-bold text-gray-400 hover:text-white transition";
         viewAsk.classList.add('hidden');
@@ -1574,7 +1858,7 @@
 
     function renderRevealGrid() {
       const round = quizData[currentRoundIndex];
-      document.getElementById('revealRoundTitle').textContent = `${round.title} — Official Answer Key`;
+      document.getElementById('revealRoundTitle').textContent = `${round.title} - Official Answer Key`;
       const grid = document.getElementById('revealQuestionsGrid');
       grid.innerHTML = '';
 
@@ -1675,37 +1959,106 @@
         setMode('ask');
         playSFX('fanfare');
       } else {
-        // Last round reached, open scoreboard for grand finale
         toggleScoreboardModal();
       }
     }
+
     /* ==========================================================
-       PACING TIMER CONTROLS
+       AUTOMATIC 10-SECOND QUESTION TIMER CONTROLS
        ========================================================== */
+    function startAutoTimerForCurrentQuestion() {
+      clearInterval(timerInterval);
+      timerRunning = false;
+
+      if (currentMode !== 'ask') return;
+
+      const qKey = `r${currentRoundIndex}_q${currentQuestionIndex}`;
+      const isAnswered = !!userAnswers[qKey];
+
+      if (isAnswered) {
+        timerSeconds = 0;
+        updateTimerDisplay();
+        const btn = document.getElementById('timerControlBtn');
+        if (btn) {
+          btn.textContent = 'Done';
+          btn.className = "text-xs bg-gray-800 text-gray-500 font-bold px-2 py-0.5 rounded transition cursor-not-allowed";
+        }
+        return;
+      }
+
+      // Reset to 10 seconds and start automatically!
+      timerSeconds = 10;
+      timerRunning = true;
+      updateTimerDisplay();
+
+      const btn = document.getElementById('timerControlBtn');
+      if (btn) {
+        btn.textContent = 'Pause';
+        btn.className = "text-xs bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white font-bold px-2 py-0.5 rounded transition";
+      }
+      const tvIcon = document.getElementById('tvTimerPlayIcon');
+      if (tvIcon) tvIcon.className = "fa-solid fa-pause";
+
+      timerInterval = setInterval(() => {
+        if (timerSeconds > 0) {
+          timerSeconds--;
+          updateTimerDisplay();
+          if (timerSeconds <= 3 && timerSeconds > 0) {
+            playSFX('drumroll');
+          }
+        } else {
+          clearInterval(timerInterval);
+          timerRunning = false;
+          if (btn) {
+            btn.textContent = 'Start';
+            btn.className = "text-xs bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 font-bold px-2 py-0.5 rounded transition";
+          }
+          if (tvIcon) tvIcon.className = "fa-solid fa-play";
+          playSFX('wrong');
+          onTimerExpired();
+        }
+      }, 1000);
+    }
+
     function toggleTimer() {
       const btn = document.getElementById('timerControlBtn');
+      const tvIcon = document.getElementById('tvTimerPlayIcon');
       if (timerRunning) {
         clearInterval(timerInterval);
         timerRunning = false;
-        btn.textContent = 'Resume';
-        btn.className = "text-xs bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 font-bold px-2 py-0.5 rounded transition";
+        if (btn) {
+          btn.textContent = 'Resume';
+          btn.className = "text-xs bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 font-bold px-2 py-0.5 rounded transition";
+        }
+        if (tvIcon) tvIcon.className = "fa-solid fa-play";
       } else {
+        if (timerSeconds <= 0) {
+          timerSeconds = 10;
+        }
         timerRunning = true;
-        btn.textContent = 'Pause';
-        btn.className = "text-xs bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white font-bold px-2 py-0.5 rounded transition";
+        if (btn) {
+          btn.textContent = 'Pause';
+          btn.className = "text-xs bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-white font-bold px-2 py-0.5 rounded transition";
+        }
+        if (tvIcon) tvIcon.className = "fa-solid fa-pause";
+
         timerInterval = setInterval(() => {
           if (timerSeconds > 0) {
             timerSeconds--;
             updateTimerDisplay();
-            if (timerSeconds === 10 || timerSeconds === 5) {
+            if (timerSeconds <= 3 && timerSeconds > 0) {
               playSFX('drumroll');
             }
           } else {
             clearInterval(timerInterval);
             timerRunning = false;
-            btn.textContent = 'Start';
-            btn.className = "text-xs bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 font-bold px-2 py-0.5 rounded transition";
+            if (btn) {
+              btn.textContent = 'Start';
+              btn.className = "text-xs bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 font-bold px-2 py-0.5 rounded transition";
+            }
+            if (tvIcon) tvIcon.className = "fa-solid fa-play";
             playSFX('wrong');
+            onTimerExpired();
           }
         }, 1000);
       }
@@ -1714,13 +2067,15 @@
     function resetTimer() {
       clearInterval(timerInterval);
       timerRunning = false;
-      timerSeconds = 45;
+      timerSeconds = 10;
       updateTimerDisplay();
       const btn = document.getElementById('timerControlBtn');
       if (btn) {
         btn.textContent = 'Start';
         btn.className = "text-xs bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 font-bold px-2 py-0.5 rounded transition";
       }
+      const tvIcon = document.getElementById('tvTimerPlayIcon');
+      if (tvIcon) tvIcon.className = "fa-solid fa-play";
     }
 
     function updateTimerDisplay() {
@@ -1732,7 +2087,7 @@
       [elem, tvElem].forEach(el => {
         if (!el) return;
         el.textContent = formatted;
-        if (timerSeconds <= 10) {
+        if (timerSeconds <= 3) {
           el.classList.add('text-rose-400');
           el.classList.remove('text-amber-300');
         } else {
@@ -1743,7 +2098,7 @@
     }
 
     /* ==========================================================
-       TEAM SCOREBOARD & LEADERBOARD MANAGEMENT
+       TEAM SCOREBOARD & PERSISTENT LEADERBOARD MANAGEMENT
        ========================================================== */
     function toggleScoreboardModal() {
       const modal = document.getElementById('scoreboardModal');
@@ -1755,7 +2110,6 @@
 
     function recalculateScores() {
       teams.forEach(t => {
-        // Total sum of scores, applying x2 if Joker round
         let total = 0;
         t.scores.forEach((sc, rIdx) => {
           const roundNum = rIdx + 1;
@@ -1776,7 +2130,10 @@
 
       teams.forEach((team, index) => {
         const tr = document.createElement('tr');
-        tr.className = index === 0 ? "bg-amber-500/10 font-bold" : "hover:bg-gray-800/50";
+        const isCurrentUser = currentUsername && team.name.toLowerCase() === currentUsername.toLowerCase();
+        tr.className = isCurrentUser 
+          ? "bg-amber-500/15 font-bold border-l-4 border-amber-400" 
+          : (index === 0 ? "bg-amber-500/10 font-bold" : "hover:bg-gray-800/50");
         
         let rankBadge = `${index + 1}`;
         if (index === 0) rankBadge = `<span class="text-amber-400"><i class="fa-solid fa-crown mr-1"></i>1st</span>`;
@@ -1785,7 +2142,12 @@
 
         tr.innerHTML = `
           <td class="py-3 px-3 text-xs">${rankBadge}</td>
-          <td class="py-3 px-3 font-semibold text-white">${team.name}</td>
+          <td class="py-3 px-3 font-semibold text-white">
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span>${team.name}</span>
+              ${isCurrentUser ? '<span class="text-[10px] bg-amber-500 text-gray-950 font-black px-1.5 py-0.5 rounded shadow">YOU</span>' : ''}
+            </div>
+          </td>
           <td class="py-3 px-3 text-center">
             <select onchange="updateTeamJoker(${team.id}, this.value)" class="bg-gray-950 border border-gray-800 text-[11px] rounded px-2 py-1 text-amber-300 focus:outline-none">
               <option value="0" ${team.jokerRound === 0 ? 'selected' : ''}>None</option>
@@ -1804,7 +2166,7 @@
           </td>
           <td class="py-3 px-3 text-right font-display text-base font-black text-amber-400">${team.total} pts</td>
           <td class="py-3 px-3 text-center">
-            <button onclick="removeTeam(${team.id})" class="text-gray-500 hover:text-rose-400 text-xs transition">
+            <button onclick="removeTeam(${team.id})" class="text-gray-500 hover:text-rose-400 text-xs transition" title="Delete Team">
               <i class="fa-solid fa-trash-can"></i>
             </button>
           </td>
@@ -1826,6 +2188,7 @@
         total: 0
       });
       input.value = '';
+      saveTeams();
       renderTeamsTable();
       playSFX('correct');
     }
@@ -1833,10 +2196,12 @@
     function modifyScore(teamId, delta) {
       const team = teams.find(t => t.id === teamId);
       if (team) {
-        // Adjust score for active round or general score
         const rIndex = Math.min(currentRoundIndex, 4);
         team.scores[rIndex] = Math.max(0, (team.scores[rIndex] || 0) + delta);
+        saveTeams();
+        recalculateScores();
         renderTeamsTable();
+        updateUserHeaderDisplay();
       }
     }
 
@@ -1844,21 +2209,36 @@
       const team = teams.find(t => t.id === teamId);
       if (team) {
         team.jokerRound = parseInt(val, 10);
+        saveTeams();
+        recalculateScores();
         renderTeamsTable();
+        updateUserHeaderDisplay();
       }
     }
 
     function removeTeam(teamId) {
       teams = teams.filter(t => t.id !== teamId);
+      saveTeams();
       renderTeamsTable();
+      updateUserHeaderDisplay();
     }
 
     function resetAllScores() {
-      teams.forEach(t => {
-        t.scores = [0, 0, 0, 0, 0];
-        t.total = 0;
-      });
-      renderTeamsTable();
+      if (confirm("Reset all team scores and clear recorded quiz answers for a fresh game?")) {
+        teams.forEach(t => {
+          t.scores = [0, 0, 0, 0, 0];
+          t.total = 0;
+          t.jokerRound = 0;
+        });
+        userAnswers = {};
+        localStorage.removeItem('beerbox_user_answers');
+        saveTeams();
+        recalculateScores();
+        renderTeamsTable();
+        updateUserHeaderDisplay();
+        renderCurrentQuestion();
+        playSFX('fanfare');
+      }
     }
 
     let bigScreenActive = false;
@@ -1888,7 +2268,6 @@
     }
 
     function toggleFullscreen() {
-
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(err => {
           console.warn(`Error enabling fullscreen: ${err.message}`);
@@ -1899,6 +2278,7 @@
         }
       }
     }
+
     /* ==========================================================
        KEYBOARD HOTKEYS FOR DJ JC LIVE HOSTING
        ========================================================== */
